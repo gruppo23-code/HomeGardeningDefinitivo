@@ -1,6 +1,5 @@
 import React from "react";
-import './Navbar.css';
-import LoginButton from 'frontend/src/Components/bottone_login.js';
+import LoginButton from './bottone_login.js';
 import {Link} from "react-router-dom";
 
 
