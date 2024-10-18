@@ -1,7 +1,6 @@
 import {
     createBrowserRouter,
     RouterProvider,
-    Route,
 } from "react-router-dom";
 
 import Registrazione from "./pages/registrazione.jsx";

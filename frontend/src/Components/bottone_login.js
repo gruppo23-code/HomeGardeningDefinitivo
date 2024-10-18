@@ -1,5 +1,5 @@
 import React from "react";
-import profile_img from "../images/icons/profile-circle.svg";
+import profile_img from "../img/profile-circle.svg";
 
 
 function LoginButton() {
