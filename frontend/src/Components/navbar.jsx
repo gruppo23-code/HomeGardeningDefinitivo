@@ -1,5 +1,5 @@
 import React from "react";
-import LoginButton from './bottone_login.js';
+import LoginButton from './bottone_login.jsx';
 import {Link} from "react-router-dom";
 
 

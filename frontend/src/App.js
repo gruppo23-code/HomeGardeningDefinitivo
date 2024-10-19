@@ -15,8 +15,8 @@ import Home from "./pages/home.jsx";
 
 //Import di componenti
 import Modal from "./Components/modal.jsx";
-import Navbar from "./Components/navbar.js";
-import Footer from "./Components/footer.js";
+import Navbar from "./Components/navbar.jsx";
+import Footer from "./Components/footer.jsx";
 
 
 //Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio", quindi:
