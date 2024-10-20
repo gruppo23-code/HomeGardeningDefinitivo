@@ -18,7 +18,7 @@ function Modal() {
                             <h1 className="modal-title fs-5" id="loginModalLabel">Accedi al tuo profilo!</h1>
                             <div className="container d-flex ps-0">
                                 <p style={{fontSize: '12px'}}>Nuovo da queste parti?&nbsp;</p>
-                                <a href="/Register">
+                                <a href="/registrazione">
                                     <p style={{fontSize: '12px'}}>Registrati</p>
                                 </a>
                             </div>
