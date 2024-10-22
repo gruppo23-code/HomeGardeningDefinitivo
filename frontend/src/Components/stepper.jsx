@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bs-stepper/dist/css/bs-stepper.min.css';
 import Stepper from 'bs-stepper';
+import axios from 'axios';
 
 
 const StepperComponent = () => {
@@ -24,6 +25,16 @@ const StepperComponent = () => {
         password: '',
     });
 
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Previene il ricaricamento della pagina
+        console.log(`Registrazione per: ${valori.nome} ${valori.password} ${valori.cognome} ${valori.email}`);
+        axios.post('http://localhost:8081/registrazione',valori)
+            .then(res => {
+                console.log('Registrazione avvenuta con successo!!');
+                alert('Registrazione avvenuta con successo!!');
+            })
+            .catch(err => console.log("Errore nella registrazione:",err));
+    }
 
     return (
         <div className="container mt-4 d-flex align-items-center justify-content-center">
@@ -65,7 +76,7 @@ const StepperComponent = () => {
                     <div className="bs-stepper-content">
                         <div id="email-part" className="content fade" role="tabpanel" aria-labelledby="email-part-trigger">
                             <h3>Inserisci Email</h3>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="email">Email</label>
                                     <input type="email" className="form-control" id="email" onChange={e => setValori({...valori, email:e.target.value})} required/>
@@ -78,7 +89,7 @@ const StepperComponent = () => {
                         </div>
                         <div id="name-part" className="content fade" role="tabpanel" aria-labelledby="name-part-trigger">
                             <h3>Inserisci Nome</h3>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="name">Nome</label>
                                     <input type="text" className="form-control" id="name" onChange={e => setValori({...valori, nome:e.target.value})} required/>
@@ -96,7 +107,7 @@ const StepperComponent = () => {
                         <div id="surname-part" className="content fade" role="tabpanel"
                              aria-labelledby="surname-part-trigger">
                             <h3>Inserisci Cognome</h3>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="surname">Cognome</label>
                                     <input type="text" className="form-control" id="surname" onChange={e => setValori({...valori, cognome:e.target.value})} required/>
@@ -114,7 +125,7 @@ const StepperComponent = () => {
                         <div id="password-part" className="content fade" role="tabpanel"
                              aria-labelledby="password-part-trigger">
                             <h3>Inserisci Password</h3>
-                            <form>
+                            <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="password">Password</label>
                                     <input type="password" className="form-control" id="password" onChange={e => setValori({...valori, password:e.target.value})} required/>
