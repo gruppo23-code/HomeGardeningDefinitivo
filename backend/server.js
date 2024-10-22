@@ -21,7 +21,7 @@ const connessione = mysql.createConnection({
 app.post('/registrazione', (req, res) => {
     const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
 
-    const saltRounds = Number(1); // Maggiore è il numero, più sicuro sarà l'hashing, ma richiederà più tempo
+    const saltRounds = 10; // Maggiore è il numero, più sicuro sarà l'hashing, ma richiederà più tempo
     const pass = req.body.password.toString();
     const hash = "";
 
@@ -29,6 +29,8 @@ app.post('/registrazione', (req, res) => {
     bcrypt.hash(pass,saltRounds, (err,hash) => {
         if (err) {
             console.error("Errore durante l'hashing della password: ", err);
+            //return res.status(500).send("Errore durante l'hashing della password");
+
         }
         const values = [
             req.body.nome,
