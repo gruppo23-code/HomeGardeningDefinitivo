@@ -1,1 +1,0 @@
-posts e users sono due tabelle del database
