@@ -24,6 +24,7 @@ const StepperComponent = () => {
         password: '',
     });
 
+
     return (
         <div className="container mt-4 d-flex align-items-center justify-content-center">
             <div className="border rounded">
