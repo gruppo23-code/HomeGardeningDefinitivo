@@ -11,11 +11,11 @@ app.use(cors());
 app.use(cookieParser());
 
 const connessione = mysql.createConnection({
-    host: "progettohomegardening-39-gruppo39poliba-ffa8perforza.d.aivencloud.com",
-    user: "avnadmin",
-    password: "AVNS_HTej7D3CNCR5WYd5V4_",
-    database: "homegardening",
-    port: 24939,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    port: process.env.DB_PORT,
 })
 
 app.post('/registrazione', (req, res) => {
