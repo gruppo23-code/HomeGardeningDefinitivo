@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import cookieParser from 'cookie-parser';
 
+import 'dotenv/config'
+
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -17,6 +19,10 @@ const connessione = mysql.createConnection({
     database: process.env.DB_DATABASE,
     port: process.env.DB_PORT,
 })
+
+app.get('/', (req, res) => {
+    res.send('Benvenuto alla homepage!');
+});
 
 app.post('/registrazione', (req, res) => {
     const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
@@ -34,10 +40,16 @@ app.post('/registrazione', (req, res) => {
             req.body.email,
             hash,
         ]
-        //console.log('Dati ricevuti:', req.body);
         connessione.query(sql, [values], (err, result) => {
             if (err) {
-                console.error("Errore durante l'esecuzione della query: ", err);
+                if (err.code === 'ER_DUP_ENTRY') {
+                    console.log('Errore: Email già esistente nel database.');
+
+                } else {
+                    console.error("Errore durante l'esecuzione della query: ", err);
+                }
+            } else {
+                console.log('Query eseguita con successo.');
             }
         })
     })
