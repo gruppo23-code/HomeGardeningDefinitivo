@@ -5,7 +5,6 @@ import Stepper from 'bs-stepper';
 import Popover from "./popover.jsx";
 import axios from 'axios';
 
-
 const StepperComponent = () => {
     const stepperRef = useRef(null);
     const stepperInstance = useRef(null);
