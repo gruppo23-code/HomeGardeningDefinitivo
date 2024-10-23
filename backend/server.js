@@ -22,15 +22,11 @@ app.post('/registrazione', (req, res) => {
     const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
 
     const saltRounds = 10; // Maggiore è il numero, più sicuro sarà l'hashing, ma richiederà più tempo
-    const pass = req.body.password.toString();
-    const hash = "";
 
 
-    bcrypt.hash(pass,saltRounds, (err,hash) => {
+    bcrypt.hash(req.body.password.toString(),saltRounds, (err,hash) => {
         if (err) {
             console.error("Errore durante l'hashing della password: ", err);
-            //return res.status(500).send("Errore durante l'hashing della password");
-
         }
         const values = [
             req.body.nome,
@@ -38,7 +34,7 @@ app.post('/registrazione', (req, res) => {
             req.body.email,
             hash,
         ]
-        console.log('Dati ricevuti:', req.body);
+        //console.log('Dati ricevuti:', req.body);
         connessione.query(sql, [values], (err, result) => {
             if (err) {
                 console.error("Errore durante l'esecuzione della query: ", err);

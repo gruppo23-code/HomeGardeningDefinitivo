@@ -27,7 +27,7 @@ const StepperComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault(); // Previene il ricaricamento della pagina
-        console.log(`Registrazione per: ${valori.nome} ${valori.password} ${valori.cognome} ${valori.email}`);
+        //console.log(`Registrazione per: ${valori.nome} ${valori.password} ${valori.cognome} ${valori.email}`);
         axios.post('http://localhost:8081/registrazione',valori)
             .then(res => {
                 console.log('Registrazione avvenuta con successo!!');
