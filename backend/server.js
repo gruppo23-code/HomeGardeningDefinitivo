@@ -16,7 +16,7 @@ const connessione = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    database: process.env.DB_NAME,
     port: process.env.DB_PORT,
 })
 
@@ -41,10 +41,11 @@ app.post('/registrazione', (req, res) => {
             hash,
         ]
         connessione.query(sql, [values], (err, result) => {
+            console.log(result);
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
-                    console.log('Errore: Email già esistente nel database.');
-
+                    //Ritorno il codice ER_DUP_ENTRY al frontend
+                    return res.status(409).json({ error: err.code });
                 } else {
                     console.error("Errore durante l'esecuzione della query: ", err);
                 }

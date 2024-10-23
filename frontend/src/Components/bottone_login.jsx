@@ -1,10 +1,10 @@
-import React from "react";
+import React, {forwardRef} from "react";
 import profile_img from "../img/profile-circle.svg";
 
-
-function LoginButton() {
+//forwardRef serve per ereditare la ref dalla pagina in cui è richiamato
+const LoginButton = forwardRef(( props, ref) => {
     return (
-        <div className="container d-flex justify-content-center align-items-center m-1 w-auto ms-auto btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+        <div className="container d-flex justify-content-center align-items-center m-1 w-auto ms-auto btn" data-bs-toggle="modal" data-bs-target="#loginModal" ref={ref}>
             <div className="row">
                 <div className="col-6 d-flex align-content-center justify-content-center ps-0 pe-1">
                     <img className="img-fluid mx-auto" src={profile_img} alt="Immagine profilo"/>
@@ -16,7 +16,7 @@ function LoginButton() {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+});
 
 export default LoginButton;
