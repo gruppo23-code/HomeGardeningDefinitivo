@@ -14,8 +14,8 @@ function Navbar() {
         //Quindi inizializzo un oggetto di tipo URLSearchParams per consentire l'interazione con le variabili all'interno dell'url
         if (params.get('showModal') === 'true') {
             // Simula il click del bottone se esso è montato nel DOM
-            if (buttonRef.current) {
-                buttonRef.current.click();
+            if (buttonRef.current) { //buttonRef.current punta all'oggetto avente come proprietà ref={buttonRef}
+                buttonRef.current.click(); //Simulo il click
             }
         }
     }, [location]);
