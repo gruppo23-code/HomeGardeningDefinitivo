@@ -81,7 +81,7 @@ app.post('/login', (req, res) => {
                 }
                 if (match) {
                     console.log("Le password matchano!");
-                    return res.status(200).send(req.cookies);
+                    return res.status(200).send("SUCCESSO");
                 } else {
                     console.log("Le password non matchano!");
                     return res.status(401).json({error: err});
