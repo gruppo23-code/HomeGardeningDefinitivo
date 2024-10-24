@@ -4,8 +4,10 @@ import 'bs-stepper/dist/css/bs-stepper.min.css';
 import Stepper from 'bs-stepper';
 import Popover from "./popover.jsx";
 import axios from 'axios';
+import {useNavigate} from "react-router-dom";
 
 const StepperComponent = () => {
+    const navigate = useNavigate();
     const stepperRef = useRef(null);
     const stepperInstance = useRef(null);
     //useRef ritorna un oggetto e negli onClick richiamo i metodi .next e .previous implementati nella libreria bs-stepper
@@ -33,6 +35,8 @@ const StepperComponent = () => {
         axios.post('http://localhost:8081/registrazione', valori)
             .then(res => {
                 //console.log(res.status);
+                console.log("Registrazione riuscita, reindirizzo...");
+                navigate('/');
             })
             .catch(err => {
                 console.error(err.response.data); // Log dell'errore

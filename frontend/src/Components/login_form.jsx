@@ -11,6 +11,8 @@ function LoginForm() {
         password: '',
     });
 
+    axios.defaults.withCredentials = true; //Dico ad axios di inviare i cookie insieme alle richieste al server
+
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post('http://localhost:8081/login', valori)
@@ -20,11 +22,12 @@ function LoginForm() {
                 console.log(res.data);
             })
             .catch(err => {
+                console.log(err);
                 //Catturo il codice di errore 401
                 //Errore 401 = Unauthorized: L'accesso alla risorsa è negato per mancanza di credenziali valide.
-                if (err.response.status === 401 || err.response.status === 404) {
+                /*if (err.response.status === 401 || err.response.status === 404) {
                     setAlert(true);
-                }
+                }*/
             })
     }
     return (

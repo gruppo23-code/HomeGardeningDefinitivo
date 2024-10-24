@@ -9,7 +9,11 @@ import 'dotenv/config'
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: ["http://localhost:3000"], //Che indirizzo è autorizzato a fare richieste
+    methods: ['GET', 'POST'], //Quali metodi HTTP sono consentiti per le richieste
+    credentials: true // Il browser invierà al backend oltre che le richieste i cookie
+}));
 app.use(cookieParser());
 
 const connessione = mysql.createConnection({
@@ -59,18 +63,18 @@ app.post('/registrazione', (req, res) => {
 
 //Funzione per il login
 app.post('/login', (req, res) => {
-    const query = 'SELECT password FROM utenti WHERE email = ?';
+    const query = 'SELECT * FROM utenti WHERE email = ?';
     const email = req.body.email;
 
 
     connessione.query(query, [email], (err, result) => {
         if (err) {
             console.error("Errore durante la query: ", err);
-            return result.status(500).send("Errore del server");
+            return res.status(500).send("Errore del server");
         }
         if (result.length === 0) {
             console.log(result)
-            return res.status(404).send("Utente non trovato");
+            return result.status(404).send("Utente non trovato");
         } else if (result.length === 1) {
             bcrypt.compare(req.body.password, result[0].password, (err, match) => {
                 //.compare serve a comparare le password, facendo automaticamente l'hash della password che passo
@@ -80,6 +84,16 @@ app.post('/login', (req, res) => {
                     return res.status(500).json({error: err});
                 }
                 if (match) {
+                    // Genero un token da memorizzare all'interno dei cookies
+                    try {
+                        const nome = result[0].nome;
+                        const token = jwt.sign({nome},process.env.PRIVATE_JWT_KEY,{ expiresIn: '30s' }); //Il payload vuole il json, quindi le graffe
+                        res.cookie('token',token)
+                    } catch (errore) {
+                        console.error('Errore durante la firma del token:', errore);
+                        return res.status(500).json(errore);
+                    }
+
                     console.log("Le password matchano!");
                     return res.status(200).send("SUCCESSO");
                 } else {
