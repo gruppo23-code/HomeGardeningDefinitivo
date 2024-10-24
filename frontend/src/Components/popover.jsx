@@ -18,7 +18,7 @@ function Popover({ title, content, contentLink, placement, show }) {
             trigger="manual"
             placement={placement}
             overlay={popover}
-            show={show} // Gestisci la visibilità qui
+            show={show} // Gestione della visibilità
         >
             {/* Elemento visibile per attivare il popover */}
             <span style={{ display: 'inline-block', width: '0px', height: '0px', visibility: 'visible' }} />

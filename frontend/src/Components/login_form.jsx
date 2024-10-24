@@ -1,9 +1,10 @@
 import React, {useRef} from "react";
+import Alert from "./alert.jsx";
 import axios from "axios";
 
 function LoginForm() {
     const alertRef = useRef(null);
-    const [alert, setAlert] = React.useState("invisible");
+    const [alert, setAlert] = React.useState(false);
 
     const [valori, setValori] = React.useState({
         email: '',
@@ -15,14 +16,14 @@ function LoginForm() {
         axios.post('http://localhost:8081/login', valori)
             .then(res => {
                 //Ritorno la stringa "SUCCESSO" nel backend
-                alert(res.data);
-                //console.log(res.data);
+                setAlert(false)
+                console.log(res.data);
             })
             .catch(err => {
                 //Catturo il codice di errore 401
                 //Errore 401 = Unauthorized: L'accesso alla risorsa è negato per mancanza di credenziali valide.
                 if (err.response.status === 401 || err.response.status === 404) {
-                    setAlert("visible");
+                    setAlert(true);
                 }
             })
     }
@@ -38,11 +39,7 @@ function LoginForm() {
                     <input type="password" className="form-control" id="InputPassword" placeholder="Password"
                            onChange={e => setValori({...valori, password: e.target.value})} required/>
                 </div>
-                <div  className={alert} >
-                    <div className="alert alert-danger mt-2" role="alert" style={{ fontSize: '12px'}} ref={alertRef}>
-                        Password o email errate!!!
-                    </div>
-                </div>
+                {alert && (<Alert/>)}
                 <div className="mt-3 w-auto">
                     <button type="submit" className="btn btn-success">Accedi</button>
                 </div>
