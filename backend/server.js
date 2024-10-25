@@ -93,7 +93,6 @@ app.post('/login', (req, res) => {
                         console.error('Errore durante la firma del token:', errore);
                         return res.status(400).json(errore);
                     }
-
                     console.log("Le password matchano!");
                     return res.status(200).send("SUCCESSO");
                 } else {

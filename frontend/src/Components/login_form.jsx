@@ -3,7 +3,6 @@ import Alert from "./alert.jsx";
 import axios from "axios";
 
 function LoginForm() {
-    const alertRef = useRef(null);
     const [alert, setAlert] = React.useState(false);
     const [alertMessage, setAlertMessage] = React.useState(''); // Aggiunta per gestire il messaggio di errore
 
@@ -20,7 +19,7 @@ function LoginForm() {
             .then(res => {
                 setAlert(false);
                 console.log(res.data);
-                // Puoi gestire il reindirizzamento o la logica di successo qui
+
             })
             .catch(err => {
                 console.log(err);
