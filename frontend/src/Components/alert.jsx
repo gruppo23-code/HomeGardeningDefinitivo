@@ -1,9 +1,9 @@
 import React from "react";
 
-function Alert() {
+function Alert({ message }) {
     return (
-        <div className="alert alert-danger mt-2" role="alert" style={{fontSize: '12px'}}>
-            Password o email errate!!!
+        <div className="alert alert-danger mt-2" role="alert" style={{ fontSize: '12px' }}>
+            {message}
         </div>
     )
 }
