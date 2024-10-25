@@ -74,14 +74,14 @@ app.post('/login', (req, res) => {
         }
         if (result.length === 0) {
             console.log(result)
-            return result.status(404).send("Utente non trovato");
+            return res.status(404).send("Utente non trovato");
         } else if (result.length === 1) {
             bcrypt.compare(req.body.password, result[0].password, (err, match) => {
                 //.compare serve a comparare le password, facendo automaticamente l'hash della password che passo
                 //dal frontend; ritorna una variabile che ho chiamato match, boolean quindi true se matchano altrimenti false
                 if (err) {
                     console.error("Errore durante il confronto delle password: ", err);
-                    return res.status(500).json({error: err});
+                    return res.status(400).json({error: err});
                 }
                 if (match) {
                     // Genero un token da memorizzare all'interno dei cookies
@@ -91,7 +91,7 @@ app.post('/login', (req, res) => {
                         res.cookie('token',token)
                     } catch (errore) {
                         console.error('Errore durante la firma del token:', errore);
-                        return res.status(500).json(errore);
+                        return res.status(400).json(errore);
                     }
 
                     console.log("Le password matchano!");
