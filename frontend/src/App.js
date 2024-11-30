@@ -12,6 +12,7 @@ import Guide from "./pages/guide.jsx";
 import Marketplace from "./pages/marketplace.jsx";
 import Community from "./pages/community.jsx";
 import Home from "./pages/home.jsx";
+import Profilo from "./pages/profilo.jsx";
 
 //Import di componenti
 import Modal from "./Components/modal.jsx";
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
             {
                 path: "/community",
                 element: <Community/>,
+            },
+            {
+                path: "/profilo",
+                element: <Profilo/>,
             },
         ]
     },

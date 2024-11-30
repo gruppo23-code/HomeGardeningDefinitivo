@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import Alert from "./alert.jsx";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
 
 function LoginForm() {
     const [alert, setAlert] = React.useState(false);
@@ -24,6 +23,7 @@ function LoginForm() {
 
 
                 setUtente({nome: res.data.nome, cognome: res.data.cognome});
+                window.location.reload();
                 //console.log(utente);
                 console.log(res.data);
             })

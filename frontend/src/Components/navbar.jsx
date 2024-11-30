@@ -1,6 +1,7 @@
 import React from "react";
 import LoginButton from './bottone_login.jsx';
 import {Link, useLocation} from "react-router-dom";
+import Cookies from 'js-cookie';
 
 
 function Navbar() {
@@ -19,6 +20,9 @@ function Navbar() {
             }
         }
     }, [location]);
+
+
+
     return (
         <nav className="navbar bg-light"> {/* Navbar */}
             <div className="container-fluid d-flex">
