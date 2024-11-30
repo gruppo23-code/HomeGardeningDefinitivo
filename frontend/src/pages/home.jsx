@@ -1,5 +1,5 @@
 import React from "react";
-import './css/home.css'; // Assicurati di avere uno stile per il tuo componente
+import './css/home.css';
 
 function Home() {
     return (
