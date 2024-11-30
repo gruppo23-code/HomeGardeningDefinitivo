@@ -4,7 +4,7 @@ import 'bs-stepper/dist/css/bs-stepper.min.css';
 import Stepper from 'bs-stepper';
 import Popover from "./popover.jsx";
 import axios from 'axios';
-import {useNavigate} from "react-router-dom";
+import {useNavigate, Navigate} from "react-router-dom";
 
 const StepperComponent = () => {
     const navigate = useNavigate();
@@ -36,7 +36,8 @@ const StepperComponent = () => {
             .then(res => {
                 //console.log(res.status);
                 console.log("Registrazione riuscita, reindirizzo...");
-                navigate('/');
+                //navigate('/');
+                return <Navigate to="/" replace/>;
             })
             .catch(err => {
                 console.error(err.response.data); // Log dell'errore

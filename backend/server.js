@@ -87,7 +87,9 @@ app.post('/login', (req, res) => {
                     // Genero un token da memorizzare all'interno dei cookies
                     try {
                         const nome = result[0].nome;
-                        const token = jwt.sign({nome},process.env.PRIVATE_JWT_KEY,{ expiresIn: '30s' }); //Il payload vuole il json, quindi le graffe
+                        const cognome = result[0].cognome;
+                        const email = result[0].email;
+                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '2h' }); //Il payload vuole il json, quindi le graffe
                         res.cookie('token',token)
                     } catch (errore) {
                         console.error('Errore durante la firma del token:', errore);
