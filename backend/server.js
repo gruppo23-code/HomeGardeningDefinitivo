@@ -28,6 +28,32 @@ app.get('/', (req, res) => {
     res.send('Benvenuto alla homepage!');
 });
 
+//Funzione per verificare che ci sia il token nei cookie
+const verificaToken = (req, res, next) => {
+    const token = req.cookies.token; // Ottieni il token dai cookie
+
+    if (!token) {
+        return res.status(401).json({ error: "Accesso negato. Token mancante." });
+    }
+
+    // Verifica il token
+    jwt.verify(token, process.env.PRIVATE_JWT_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: "Token non valido." });
+        }
+        req.user = user; // Memorizza i dati dell'utente nella richiesta
+        next(); // Passa al prossimo middleware o alla route
+    });
+};
+
+app.get('/verifica-token', verificaToken, (req, res) => {
+    // req.user contiene i dati dell'utente decodificati dal token
+    res.json({
+        nome: req.user.nome,
+        cognome: req.user.cognome
+    });
+});
+
 //Funzione per la registrazione
 app.post('/registrazione', (req, res) => {
     const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
@@ -96,7 +122,11 @@ app.post('/login', (req, res) => {
                         return res.status(400).json(errore);
                     }
                     console.log("Le password matchano!");
-                    return res.status(200).send("SUCCESSO");
+                    return res.status(200).send({
+                        success: true,
+                        nome: result[0].nome,
+                        cognome: result[0].cognome,
+                    });
                 } else {
                     console.log("Le password non matchano!");
                     return res.status(401).json({error: err});

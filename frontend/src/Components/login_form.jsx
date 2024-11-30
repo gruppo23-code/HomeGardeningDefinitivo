@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import Alert from "./alert.jsx";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 function LoginForm() {
     const [alert, setAlert] = React.useState(false);
@@ -11,6 +12,8 @@ function LoginForm() {
         password: '',
     });
 
+    const [utente , setUtente] = React.useState(null);
+
     axios.defaults.withCredentials = true;
 
     const handleSubmit = (e) => {
@@ -18,8 +21,11 @@ function LoginForm() {
         axios.post('http://localhost:8081/login', valori)
             .then(res => {
                 setAlert(false);
-                console.log(res.data);
 
+
+                setUtente({nome: res.data.nome, cognome: res.data.cognome});
+                //console.log(utente);
+                console.log(res.data);
             })
             .catch(err => {
                 console.log(err);
@@ -34,23 +40,30 @@ function LoginForm() {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="form-group align-content-center d-flex flex-column align-items-center">
-                <div className="mt-1 w-auto">
-                    <input type="email" className="form-control" id="InputEmail" aria-describedby="emailHelp"
-                           placeholder="Email"
-                           onChange={e => setValori({ ...valori, email: e.target.value })} required />
+        <div>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group align-content-center d-flex flex-column align-items-center">
+                    <div className="mt-1 w-auto">
+                        <input type="email" className="form-control" id="InputEmail" aria-describedby="emailHelp"
+                               placeholder="Email"
+                               onChange={e => setValori({ ...valori, email: e.target.value })} required />
+                    </div>
+                    <div className="mt-3 w-auto">
+                        <input type="password" className="form-control" id="InputPassword" placeholder="Password"
+                               onChange={e => setValori({ ...valori, password: e.target.value })} required />
+                    </div>
+                    {alert && (<Alert message={alertMessage} />)} {/* Passa il messaggio all'alert */}
+                    <div className="mt-3 w-auto">
+                        <button type="submit" className="btn btn-success">Accedi</button>
+                    </div>
                 </div>
-                <div className="mt-3 w-auto">
-                    <input type="password" className="form-control" id="InputPassword" placeholder="Password"
-                           onChange={e => setValori({ ...valori, password: e.target.value })} required />
+            </form>
+            {utente && ( // Mostra il messaggio di benvenuto se l'utente è autenticato
+                <div className="mt-3">
+                    <h1>Benvenuto, {utente.nome} {utente.cognome}!</h1>
                 </div>
-                {alert && (<Alert message={alertMessage} />)} {/* Passa il messaggio all'alert */}
-                <div className="mt-3 w-auto">
-                    <button type="submit" className="btn btn-success">Accedi</button>
-                </div>
-            </div>
-        </form>
+            )}
+        </div>
     )
 }
 
