@@ -89,7 +89,7 @@ app.post('/login', (req, res) => {
                         const nome = result[0].nome;
                         const cognome = result[0].cognome;
                         const email = result[0].email;
-                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '2h' }); //Il payload vuole il json, quindi le graffe
+                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '2h' }); //Il payload vuole il json, quindi le graffe.
                         res.cookie('token',token)
                     } catch (errore) {
                         console.error('Errore durante la firma del token:', errore);
