@@ -1,0 +1,5 @@
+.plant-image {
+    width: 100%; /* Larghezza al 100% del contenitore */
+    height: 200px; /* Altezza fissa */
+    object-fit: cover; /* Mantiene le proporzioni dell'immagine e la riempie */
+}

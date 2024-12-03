@@ -50,7 +50,8 @@ app.get('/verifica-token', verificaToken, (req, res) => {
     // req.user contiene i dati dell'utente decodificati dal token
     res.json({
         nome: req.user.nome,
-        cognome: req.user.cognome
+        cognome: req.user.cognome,
+        email: req.user.email
     });
 });
 
@@ -136,6 +137,28 @@ app.post('/login', (req, res) => {
     })
 
 
+})
+
+
+//Funzione per le card
+app.get('/cards', verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const query = 'SELECT id FROM utenti WHERE email = ?';
+    connessione.query(query,[mail], (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        const plants = "SELECT pu.id, p.nome AS name, pu.foto AS image, p.descrizione AS description FROM piante_utenti AS pu " +
+            "JOIN piante AS p ON pu.pianta_id = p.id " +
+            "WHERE utente_id = ?";
+        connessione.query(plants,result[0].id ,(err, piante) => {
+            res.json(JSON.parse(JSON.stringify(piante)));
+        })
+    })
 })
 
 

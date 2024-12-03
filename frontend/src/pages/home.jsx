@@ -1,5 +1,8 @@
 import React from "react";
 import './css/home.css';
+import rosaImage from '../img/rosa.jpg';
+import girasoleImage from '../img/girasole.jpg';
+import orchideaImg from '../img/orchidea.jpg';
 
 function Home() {
     return (
@@ -12,17 +15,17 @@ function Home() {
                 <h2>Le tue piante</h2>
                 <div className="plant-cards">
                     <div className="plant-card">
-                        <img src="link-alla-tua-immagine-rosa.jpg" alt="Rosa" className="plant-image" />
+                        <img src={rosaImage} alt="Rosa" className="rosa-img" />
                         <h3>Rosa</h3>
                         <p>Una pianta bellissima e profumata.</p>
                     </div>
                     <div className="plant-card">
-                        <img src="link-alla-tua-immagine-girasole.jpg" alt="Girasole" className="plant-image" />
+                        <img src={girasoleImage} alt="Girasole" className="girasole-img" />
                         <h3>Girasole</h3>
                         <p>Un fiore che segue il sole!</p>
                     </div>
                     <div className="plant-card">
-                        <img src="link-alla-tua-immagine-orchidea.jpg" alt="Orchidea" className="plant-image" />
+                        <img src={orchideaImg} alt="Orchidea" className="orchidea-img" />
                         <h3>Orchidea</h3>
                         <p>Elegante e raffinata.</p>
                     </div>

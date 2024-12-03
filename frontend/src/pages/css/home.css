@@ -37,3 +37,12 @@
     margin-top: 20px;
     font-style: italic;
 }
+
+.girasole-img,
+.rosa-img,
+.orchidea-img {
+    max-width: 100%; /* Limita la larghezza massima all'80% della card */
+    max-height: 150px; /* Limita l'altezza massima a 150px */
+    object-fit: cover; /* Ritaglia l'immagine per adattarla al contenitore mantenendo le proporzioni */
+    border-radius: 8px; /* Opzionale: aggiunge angoli arrotondati */
+}
