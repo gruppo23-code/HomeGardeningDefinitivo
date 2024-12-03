@@ -3,6 +3,7 @@ import {
     RouterProvider,
     Outlet,
 } from "react-router-dom";
+import {useState} from "react";
 
 
 //Import di pagine
@@ -35,8 +36,8 @@ const Comuni = () => {
 };
 
 
-{/* Funzione per la gestione del router: scelgo un percorso e gli elementi dea visualizzare al suo interno.
-    Con l'ausilio del tag children posso far */}
+/* Funzione per la gestione del router: scelgo un percorso e gli elementi dea visualizzare al suo interno.
+    Con l'ausilio del tag children posso far */
 const router = createBrowserRouter([
     {
         path: "/",
@@ -81,6 +82,8 @@ function App() {
         </div>
     );
 }
+
+
 
 
 export default App;
