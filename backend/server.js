@@ -162,6 +162,18 @@ app.get('/cards', verificaToken,(req, res) => {
 })
 
 
+//Funzione per la barra di ricerca in aggiungipianta
+app.get('/listapiante', (req, res) => {
+    const query = 'SELECT id,nome AS name FROM piante ORDER BY name';
+    connessione.query(query,(err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+        } else {
+            res.json(JSON.parse(JSON.stringify(result)));
+        }
+    })
+})
+
 app.listen(process.env.LISTEN_PORT || 8081, () => {
     console.log('Running...');
 })
