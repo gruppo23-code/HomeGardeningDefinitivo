@@ -3,6 +3,7 @@ import {
     RouterProvider,
     Outlet,
 } from "react-router-dom";
+import {useState} from "react";
 
 
 //Import di pagine
@@ -12,6 +13,7 @@ import Guide from "./pages/guide.jsx";
 import Marketplace from "./pages/marketplace.jsx";
 import Community from "./pages/community.jsx";
 import Home from "./pages/home.jsx";
+import Profilo from "./pages/profilo.jsx";
 
 //Import di componenti
 import Modal from "./Components/modal.jsx";
@@ -34,8 +36,8 @@ const Comuni = () => {
 };
 
 
-{/* Funzione per la gestione del router: scelgo un percorso e gli elementi dea visualizzare al suo interno.
-    Con l'ausilio del tag children posso far */}
+/* Funzione per la gestione del router: scelgo un percorso e gli elementi dea visualizzare al suo interno.
+    Con l'ausilio del tag children posso far */
 const router = createBrowserRouter([
     {
         path: "/",
@@ -61,6 +63,10 @@ const router = createBrowserRouter([
                 path: "/community",
                 element: <Community/>,
             },
+            {
+                path: "/profilo",
+                element: <Profilo/>,
+            },
         ]
     },
     {
@@ -76,6 +82,8 @@ function App() {
         </div>
     );
 }
+
+
 
 
 export default App;

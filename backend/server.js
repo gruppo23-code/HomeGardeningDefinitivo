@@ -28,6 +28,33 @@ app.get('/', (req, res) => {
     res.send('Benvenuto alla homepage!');
 });
 
+//Funzione per verificare che ci sia il token nei cookie
+const verificaToken = (req, res, next) => {
+    const token = req.cookies.token; // Ottieni il token dai cookie
+
+    if (!token) {
+        return res.status(401).json({ error: "Accesso negato. Token mancante." });
+    }
+
+    // Verifica il token
+    jwt.verify(token, process.env.PRIVATE_JWT_KEY, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: "Token non valido." });
+        }
+        req.user = user; // Memorizza i dati dell'utente nella richiesta
+        next(); // Passa al prossimo middleware o alla route
+    });
+};
+
+app.get('/verifica-token', verificaToken, (req, res) => {
+    // req.user contiene i dati dell'utente decodificati dal token
+    res.json({
+        nome: req.user.nome,
+        cognome: req.user.cognome,
+        email: req.user.email
+    });
+});
+
 //Funzione per la registrazione
 app.post('/registrazione', (req, res) => {
     const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
@@ -87,14 +114,20 @@ app.post('/login', (req, res) => {
                     // Genero un token da memorizzare all'interno dei cookies
                     try {
                         const nome = result[0].nome;
-                        const token = jwt.sign({nome},process.env.PRIVATE_JWT_KEY,{ expiresIn: '30s' }); //Il payload vuole il json, quindi le graffe
+                        const cognome = result[0].cognome;
+                        const email = result[0].email;
+                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '2h' }); //Il payload vuole il json, quindi le graffe.
                         res.cookie('token',token)
                     } catch (errore) {
                         console.error('Errore durante la firma del token:', errore);
                         return res.status(400).json(errore);
                     }
                     console.log("Le password matchano!");
-                    return res.status(200).send("SUCCESSO");
+                    return res.status(200).send({
+                        success: true,
+                        nome: result[0].nome,
+                        cognome: result[0].cognome,
+                    });
                 } else {
                     console.log("Le password non matchano!");
                     return res.status(401).json({error: err});
@@ -104,6 +137,28 @@ app.post('/login', (req, res) => {
     })
 
 
+})
+
+
+//Funzione per le card
+app.get('/cards', verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const query = 'SELECT id FROM utenti WHERE email = ?';
+    connessione.query(query,[mail], (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        const plants = "SELECT pu.id, p.nome AS name, pu.foto AS image, p.descrizione AS description FROM piante_utenti AS pu " +
+            "JOIN piante AS p ON pu.pianta_id = p.id " +
+            "WHERE utente_id = ?";
+        connessione.query(plants,result[0].id ,(err, piante) => {
+            res.json(JSON.parse(JSON.stringify(piante)));
+        })
+    })
 })
 
 
