@@ -6,6 +6,15 @@ import alert from "../Components/alert";
 import Cookies from "js-cookie";
 
 function Dashboard() {
+    const [showModal, setShowModal] = useState(false); // Stato per gestire la visibilità del modal
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedPlant, setSelectedPlant] = useState(null);
+    const [personalName, setPersonalName] = useState("");
+    const [plantingDate, setPlantingDate] = useState("");
+    const [photo, setPhoto] = useState(null);
+
+    const [pianteRicerca, setPianteRicerca] = useState([]);
+
     //Codice per generare il json per la visualizzazione delle cards
     const [plants,setPlants] = useState([]);
 
@@ -30,20 +39,6 @@ function Dashboard() {
     }, [plants]);
 
 
-    // Esempio di dati delle piante registrate
-    /*const plants = [
-        { id: 1, name: "Rosa", type: "Fiore", image: "link-alla-tua-immagine-rosa.jpg", description: "Una pianta bellissima e profumata." },
-        { id: 2, name: "Girasole", type: "Fiore", image: "link-alla-tua-immagine-girasole.jpg", description: "Un fiore che segue il sole!" },
-        { id: 3, name: "Orchidea", type: "Fiore", image: "link-alla-tua-immagine-orchidea.jpg", description: "Elegante e raffinata." },
-    ];*/
-
-    // Stato per gestire la visibilità del modal
-    const [showModal, setShowModal] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedPlant, setSelectedPlant] = useState(null);
-    const [personalName, setPersonalName] = useState("");
-    const [plantingDate, setPlantingDate] = useState("");
-    const [photo, setPhoto] = useState(null);
 
     // Funzione per aprire il modal
     const openModal = () => setShowModal(true);
@@ -59,8 +54,23 @@ function Dashboard() {
         setPhoto(null);
     };
 
+    //Ricerca nel db delle piante per la barra
+    const ricercaPiante = () => {
+        axios.get('http://localhost:8081/listapiante')
+            .then(res => {
+                console.log(res.data);
+                setPianteRicerca(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    useEffect(() => {
+        ricercaPiante();
+    }, []);
+
     // Filtra le piante in base al termine di ricerca
-    const filteredPlants = plants.filter(plant =>
+    const filteredPlants = pianteRicerca.filter(plant =>
         plant.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -177,7 +187,7 @@ function Dashboard() {
                                 </div>
                                 <div className="modal-footer">
                                     <button type="button" className="btn btn-secondary" onClick={closeModal}>Chiudi</button>
-                                    <button type="button" className="btn btn-primary">Salva</button>
+                                    <button type="submit" className="btn btn-primary">Salva</button>
                                 </div>
                             </div>
                         </div>
