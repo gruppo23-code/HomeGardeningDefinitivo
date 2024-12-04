@@ -21,6 +21,15 @@ function Navbar() {
         }
     }, [location]);
 
+    const isLoggedIn = () => {
+        const token = Cookies.get('token'); // Sostituisci 'token' con il nome del tuo cookie
+        return !!token; // Ritorna true se il token esiste, false altrimenti
+    };
+
+    const alertClick = () => {
+        alert("Accesso Negato. Devi essere loggato per accedere alla Dashboard.");
+    };
+
 
 
     return (
@@ -36,9 +45,15 @@ function Navbar() {
                 {/* d-none d-lg-block : nascondo su schermi più piccoli di lg, ovvero < 992px */}
                 {/* Neccessario poichè su schermi piccoli la visualizzazione non è ottimale*/}
                 <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
-                    <Link to={"/Dashboard"} className="text-decoration-none text-black">
-                        <h6>Dashboard</h6>
-                    </Link>
+                    {isLoggedIn() ? (
+                        <Link to="/Dashboard" className="text-decoration-none text-black">
+                            <h6>Dashboard</h6>
+                        </Link>
+                    ) : (
+                        <h6 className="text-black" style={{ cursor: 'pointer' }} onClick={alertClick}>
+                            Dashboard
+                        </h6>
+                    )}
                 </div>
                 <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
                     <Link to={"/Guide"} className="text-decoration-none text-black">
