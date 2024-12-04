@@ -133,8 +133,8 @@ function Dashboard() {
 
                                     {/* Selezione della pianta */}
                                     {searchTerm && (
-                                        <ul className="list-group mb-3">
-                                            {filteredPlants.map(plant => (
+                                        <ul className="list-group mb-3" style={{ position: 'absolute', zIndex: 1000 }}>
+                                            {filteredPlants.slice(0,6).map(plant => (
                                                 <li
                                                     key={plant.id}
                                                     className="list-group-item"
