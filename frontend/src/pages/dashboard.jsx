@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import defaultImage from '../img/pianta_stilizzata.jpg';
+import defaultImage from '../../public/assets/img/pianta_stilizzata.jpg';
 import './css/dashboard.css';
 import alert from "../Components/alert";
 

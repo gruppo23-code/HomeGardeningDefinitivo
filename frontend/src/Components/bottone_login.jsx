@@ -1,5 +1,5 @@
 import React, {forwardRef} from "react";
-import profile_img from "../img/profile-circle.svg";
+import profile_img from "../../public/assets/img/profile-circle.svg";
 import Cookies from "js-cookie";
 import {Link} from "react-router-dom";
 

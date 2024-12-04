@@ -1,8 +1,8 @@
 import React from "react";
 import './css/home.css';
-import rosaImage from '../img/rosa.jpg';
-import girasoleImage from '../img/girasole.jpg';
-import orchideaImg from '../img/orchidea.jpg';
+import rosaImage from '../../public/assets/img/rosa.jpg';
+import girasoleImage from '../../public/assets/img/girasole.jpg';
+import orchideaImg from '../../public/assets/img/orchidea.jpg';
 
 function Home() {
     return (
