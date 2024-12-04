@@ -74,10 +74,29 @@ function Dashboard() {
         plant.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    //Verifica se l'utente è loggato e quindi se è presente il token all'interni dei cookie
     const isLoggedIn = () => {
-        const token = Cookies.get('token'); // Sostituisci 'token' con il nome del tuo cookie
+        const token = Cookies.get('token');
         return !!token; // Ritorna true se il token esiste, false altrimenti
     };
+
+    //Gestione registrazione nuova pagina
+    const [valori, setValori] = useState({
+        nome: '',
+        soprannome: '',
+        data: '',
+        img: '',
+    });
+
+    const handleChange = (e) => { //Gestione dei due onChange sulla barra di ricerca
+        setSearchTerm(e.target.value);
+        setValori({ ...valori, nome: e.target.value })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        alert(valori.nome);
+    }
 
     if (isLoggedIn()) {
         return (
@@ -111,87 +130,89 @@ function Dashboard() {
 
                 {/* Modal */}
                 {showModal && (
-                    <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <h5 className="modal-title" id="exampleModalLabel">Aggiungi una Nuova Pianta</h5>
-                                </div>
-                                <div className="modal-body">
-                                    {/* Barra di ricerca per le piante */}
-                                    <div className="form-group">
-                                        < label htmlFor="plantSearch">Cerca Pianta</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="plantSearch"
-                                            placeholder="Cerca per nome"
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                        />
+                    <form onSubmit={handleSubmit}>
+                        <div className="modal fade show" style={{ display: 'block' }} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div className="modal-dialog" role="document">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h5 className="modal-title" id="exampleModalLabel">Aggiungi una Nuova Pianta</h5>
                                     </div>
+                                    <div className="modal-body">
+                                        {/* Barra di ricerca per le piante */}
+                                        <div className="form-group">
+                                            < label htmlFor="plantSearch">Cerca Pianta</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="plantSearch"
+                                                placeholder="Cerca per nome"
+                                                value={searchTerm}
+                                                onChange={handleChange}
+                                            />
+                                        </div>
 
-                                    {/* Selezione della pianta */}
-                                    {searchTerm && (
-                                        <ul className="list-group mb-3" style={{ position: 'absolute', zIndex: 1000 }}>
-                                            {filteredPlants.slice(0,6).map(plant => (
-                                                <li
-                                                    key={plant.id}
-                                                    className="list-group-item"
-                                                    onClick={() => {
-                                                        setSelectedPlant(plant);
-                                                        setPersonalName(plant.name); // Imposta il nome personale come il nome della pianta selezionata
-                                                    }}
-                                                >
-                                                    {plant.name}
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    )}
+                                        {/* Selezione della pianta */}
+                                        {searchTerm && (
+                                            <ul className="list-group mb-3" style={{ position: 'absolute', zIndex: 1000 }}>
+                                                {filteredPlants.slice(0,6).map(plant => (
+                                                    <li
+                                                        key={plant.id}
+                                                        className="list-group-item"
+                                                        onClick={() => {
+                                                            setSelectedPlant(plant);
+                                                            setPersonalName(plant.name); // Imposta il nome personale come il nome della pianta selezionata
+                                                        }}
+                                                    >
+                                                        {plant.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
 
-                                    {/* Campo "Nome pianta" */}
-                                    <div className="form-group">
-                                        <label htmlFor="personalName">Nome Personale della Pianta</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="personalName"
-                                            placeholder="Inserisci un nome personale"
-                                            value={personalName}
-                                            onChange={(e) => setPersonalName(e.target.value)}
-                                        />
+                                        {/* Campo "Nome pianta" */}
+                                        <div className="form-group">
+                                            <label htmlFor="personalName">Nome Personale della Pianta</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="personalName"
+                                                placeholder="Inserisci un nome personale"
+                                                value={personalName}
+                                                onChange={e => setValori({ ...valori, soprannome: e.target.value })}
+                                            />
+                                        </div>
+
+                                        {/* Data di piantagione */}
+                                        <div className="form-group">
+                                            <label htmlFor="plantingDate">Data di Piantagione</label>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                id="plantingDate"
+                                                value={plantingDate}
+                                                onChange={(e) => setPlantingDate(e.target.value)}
+                                            />
+                                        </div>
+
+                                        {/* Upload di una foto */}
+                                        <div className="form-group">
+                                            <label htmlFor="plantPhoto">Carica una Foto</label>
+                                            <input
+                                                type="file"
+                                                className="form-control-file"
+                                                id="plantPhoto"
+                                                onChange={(e) => setPhoto(e.target.files[0])}
+                                            />
+                                        </div>
                                     </div>
-
-                                    {/* Data di piantagione */}
-                                    <div className="form-group">
-                                        <label htmlFor="plantingDate">Data di Piantagione</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            id="plantingDate"
-                                            value={plantingDate}
-                                            onChange={(e) => setPlantingDate(e.target.value)}
-                                        />
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Chiudi</button>
+                                        <button type="submit" className="btn btn-primary">Salva</button>
                                     </div>
-
-                                    {/* Upload di una foto */}
-                                    <div className="form-group">
-                                        <label htmlFor="plantPhoto">Carica una Foto</label>
-                                        <input
-                                            type="file"
-                                            className="form-control-file"
-                                            id="plantPhoto"
-                                            onChange={(e) => setPhoto(e.target.files[0])}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-secondary" onClick={closeModal}>Chiudi</button>
-                                    <button type="submit" className="btn btn-primary">Salva</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 )}
             </div>
         );
@@ -202,8 +223,6 @@ function Dashboard() {
                     Devi essere loggato per poter visualizzare questa pagina!!!
                 </div>
             </div>
-
-
         )
     }
 

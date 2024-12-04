@@ -57,7 +57,7 @@ app.get('/verifica-token', verificaToken, (req, res) => {
 
 //Funzione per la registrazione
 app.post('/registrazione', (req, res) => {
-    const sql = `INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)`;
+    const sql = 'INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)';
 
     const saltRounds = 10; // Maggiore è il numero, più sicuro sarà l'hashing, ma richiederà più tempo
     //Commentato per utilizzo di variabili d'ambiente
@@ -172,6 +172,11 @@ app.get('/listapiante', (req, res) => {
             res.json(JSON.parse(JSON.stringify(result)));
         }
     })
+})
+
+//Funzione per la gestione dell'upload da parte dell'utente di una nuova pianta
+app.post('/inviapianta', (req, res) => {
+
 })
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
