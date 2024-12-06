@@ -7,8 +7,6 @@ import Cookies from "js-cookie";
 
 function Dashboard() {
     const [showModal, setShowModal] = useState(false); // Stato per gestire la visibilità del modal
-    const [searchTerm, setSearchTerm] = useState("");
-    const [selectedPlantId, setSelectedPlantId] = useState(null);
     const [pianta, setPianta] = useState("");
 
     const [pianteRicerca, setPianteRicerca] = useState([]);
@@ -19,7 +17,7 @@ function Dashboard() {
                 //console.log(res.data);
                 if (Array.isArray(res.data)) {
                     setPianteRicerca(res.data);
-                    console.log(pianteRicerca);
+                    //console.log(pianteRicerca);
                 } else {
                     console.error("Non è un array:" + res.data);
                 }
@@ -32,7 +30,7 @@ function Dashboard() {
         ricercaPiante();
     }, []);
     useEffect(() => {
-        //console.log("Piante Ricerca:", pianteRicerca);
+        console.log("Piante Ricerca:", pianteRicerca);
     }, [pianteRicerca]);
 
 
@@ -68,11 +66,6 @@ function Dashboard() {
         img: null,
     });
 
-    const handleChange = (e) => { //Gestione dei due onChange sulla barra di ricerca
-        setSearchTerm(e.target.value);
-        setValori({ ...valori, id: selectedPlantId })
-        console.log(valori);
-    }
 
     const handleFileChange = (e) => {
         const foto = e.target.files[0]; //Prendo il primo file
@@ -109,13 +102,18 @@ function Dashboard() {
         })
     };
 
+    //Gestione barra di ricerca piante
+    const [searchTerm, setSearchTerm] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
 
-    // Filtra le piante in base al termine di ricerca
     const filteredPlants = Array.isArray(pianteRicerca) ?
         pianteRicerca.filter(plant =>
             plant.name.toLowerCase().includes(searchTerm.toLowerCase())
         ) : [];
 
+
+    //Fine gestione barra di ricerca piante
 
     //Verifica se l'utente è loggato e quindi se è presente il token all'interni dei cookie
     const isLoggedIn = () => {
@@ -163,39 +161,43 @@ function Dashboard() {
                                         <h5 className="modal-title" id="exampleModalLabel">Aggiungi una Nuova Pianta</h5>
                                     </div>
                                     <div className="modal-body">
-                                        {/* Barra di ricerca per le piante */}
-                                        <div className="form-group">
-                                            <label htmlFor="plantSearch">Cerca Pianta</label>
+
+                                        {/*Inserisci barra di ricerca*/}
+
+                                        <div className="dropdown">
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                id="plantSearch"
-                                                placeholder="Cerca per nome"
+                                                placeholder="Cerca una pianta..."
+                                                onFocus={() => setIsOpen(true)}
+                                                onBlur={() => setIsOpen(false)}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
                                                 value={searchTerm}
-                                                onChange={handleChange}
                                             />
+                                            {isOpen && (
+                                                <ul className="dropdown-menu show">
+                                                    {filteredPlants.length > 0 ? (
+                                                        filteredPlants.map((plant) => (
+                                                            <li
+                                                                key={plant.id}
+                                                                className="dropdown-item"
+                                                                onMouseDown={() => {
+                                                                    setSearchTerm(plant.nome);
+                                                                    setSelectedId(plant.id); // Memorizza l'ID selezionato
+                                                                    setIsOpen(false);
+                                                                }}
+                                                            >
+                                                                {plant.nome}
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li className="dropdown-item disabled">Nessuna pianta trovata</li>
+                                                    )}
+                                                </ul>
+                                            )}
+                                            {selectedId && <p>ID selezionato: {selectedId}</p>} {/* Mostra l'ID selezionato */}
                                         </div>
 
-                                        {/* Selezione della pianta */}
-                                        {searchTerm && (
-                                            <ul className="list-group mb-3"
-                                                style={{position: 'absolute', zIndex: 9999}}>
-                                                {filteredPlants.slice(0, 6).map(plant => (
-                                                    <li
-                                                        key={plant.id}
-                                                        className="list-group-item"
-                                                        onClick={() => {
-                                                            setSearchTerm(plant.id);
-                                                            setPianteRicerca(plant);
-                                                            setSearchTerm(plant.name);
-
-                                                        }}
-                                                    >
-                                                        {plant.name}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        )}
 
                                         {/* Campo "Nome pianta" */}
                                         <div className="form-group">
