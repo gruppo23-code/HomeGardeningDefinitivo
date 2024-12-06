@@ -4,17 +4,4 @@
     object-fit: cover; /* Mantiene le proporzioni dell'immagine e la riempie */
 }
 
-.results-dropdown {
-    position: absolute; /* Sovrappone alla posizione relativa del contenitore */
-    top: 100%; /* Appena sotto l'input */
-    left: 0; /* Allineata all'input */
-    width: 100%; /* Stessa larghezza dell'input */
-    max-height: 200px; /* Limita l'altezza massima per evitare di occupare troppo spazio */
-    overflow-y: auto; /* Aggiunge lo scroll se ci sono molti elementi */
-    background: white; /* Sfondo per distinguere la lista */
-    border: 1px solid #ccc; /* Bordo visibile */
-    z-index: 10; /* Garantisce la sovrapposizione agli altri elementi */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Ombra per evidenziarla */
-    border-radius: 5px; /* Angoli arrotondati */
-}
 

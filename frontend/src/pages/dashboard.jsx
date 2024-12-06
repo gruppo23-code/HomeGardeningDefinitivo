@@ -8,12 +8,33 @@ import Cookies from "js-cookie";
 function Dashboard() {
     const [showModal, setShowModal] = useState(false); // Stato per gestire la visibilità del modal
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedPlant, setSelectedPlant] = useState(null);
-    const [personalName, setPersonalName] = useState("");
-    const [plantingDate, setPlantingDate] = useState("");
-    const [photo, setPhoto] = useState(null);
+    const [selectedPlantId, setSelectedPlantId] = useState(null);
+    const [pianta, setPianta] = useState("");
 
     const [pianteRicerca, setPianteRicerca] = useState([]);
+    //Ricerca nel db delle piante per la barra
+    const ricercaPiante = () => {
+        axios.get('http://localhost:8081/listapiante')
+            .then(res => {
+                //console.log(res.data);
+                if (Array.isArray(res.data)) {
+                    setPianteRicerca(res.data);
+                    console.log(pianteRicerca);
+                } else {
+                    console.error("Non è un array:" + res.data);
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+    useEffect(() => {
+        ricercaPiante();
+    }, []);
+    useEffect(() => {
+        //console.log("Piante Ricerca:", pianteRicerca);
+    }, [pianteRicerca]);
+
 
     //Codice per generare il json per la visualizzazione delle cards
     const [plants,setPlants] = useState([]);
@@ -22,7 +43,7 @@ function Dashboard() {
 
         axios.get('http://localhost:8081/cards')
             .then(res => {
-                console.log(res.data);
+                //console.log(res.data);
                 setPlants(res.data);
             })
             .catch(err => {
@@ -35,9 +56,41 @@ function Dashboard() {
     }, []);
     //Verifica aggiornamenti
     useEffect(() => {
-        console.log('Plants aggiornati:', plants);
+        //console.log('Plants aggiornati:', plants);
     }, [plants]);
 
+
+    //Gestione registrazione nuova pianta
+    const [valori, setValori] = useState({
+        id: null,
+        soprannome: '',
+        data: '',
+        img: null,
+    });
+
+    const handleChange = (e) => { //Gestione dei due onChange sulla barra di ricerca
+        setSearchTerm(e.target.value);
+        setValori({ ...valori, id: selectedPlantId })
+        console.log(valori);
+    }
+
+    const handleFileChange = (e) => {
+        const foto = e.target.files[0]; //Prendo il primo file
+        const validExtensions = ['image/jpeg', 'image/png'];
+        const isValidFile = validExtensions.includes(foto.type); //Controllo estensione del file
+        if (isValidFile) {
+            setValori({ ...valori, img: foto });
+        } else {
+            console.error("Tipo di file non valido");
+            alert("Tipo di file non valido!!!");
+        }
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(valori);
+    }
+    //Fine gestione registrazione nuova pianta
 
 
     // Funzione per aprire il modal
@@ -48,55 +101,27 @@ function Dashboard() {
         setShowModal(false);
         // Resetta i campi del modal
         setSearchTerm("");
-        setSelectedPlant(null);
-        setPersonalName("");
-        setPlantingDate("");
-        setPhoto(null);
+        setValori({
+            id: null,
+            soprannome: '',
+            data: '',
+            img: null
+        })
     };
 
-    //Ricerca nel db delle piante per la barra
-    const ricercaPiante = () => {
-        axios.get('http://localhost:8081/listapiante')
-            .then(res => {
-                console.log(res.data);
-                setPianteRicerca(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-    useEffect(() => {
-        ricercaPiante();
-    }, []);
 
     // Filtra le piante in base al termine di ricerca
-    const filteredPlants = pianteRicerca.filter(plant =>
-        plant.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredPlants = Array.isArray(pianteRicerca) ?
+        pianteRicerca.filter(plant =>
+            plant.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ) : [];
+
 
     //Verifica se l'utente è loggato e quindi se è presente il token all'interni dei cookie
     const isLoggedIn = () => {
         const token = Cookies.get('token');
         return !!token; // Ritorna true se il token esiste, false altrimenti
     };
-
-    //Gestione registrazione nuova pagina
-    const [valori, setValori] = useState({
-        nome: '',
-        soprannome: '',
-        data: '',
-        img: '',
-    });
-
-    const handleChange = (e) => { //Gestione dei due onChange sulla barra di ricerca
-        setSearchTerm(e.target.value);
-        setValori({ ...valori, nome: e.target.value })
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        alert(valori.nome);
-    }
 
     if (isLoggedIn()) {
         return (
@@ -140,7 +165,7 @@ function Dashboard() {
                                     <div className="modal-body">
                                         {/* Barra di ricerca per le piante */}
                                         <div className="form-group">
-                                            < label htmlFor="plantSearch">Cerca Pianta</label>
+                                            <label htmlFor="plantSearch">Cerca Pianta</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -153,14 +178,17 @@ function Dashboard() {
 
                                         {/* Selezione della pianta */}
                                         {searchTerm && (
-                                            <ul className="list-group mb-3" style={{ position: 'absolute', zIndex: 1000 }}>
-                                                {filteredPlants.slice(0,6).map(plant => (
+                                            <ul className="list-group mb-3"
+                                                style={{position: 'absolute', zIndex: 9999}}>
+                                                {filteredPlants.slice(0, 6).map(plant => (
                                                     <li
                                                         key={plant.id}
                                                         className="list-group-item"
                                                         onClick={() => {
-                                                            setSelectedPlant(plant);
-                                                            setPersonalName(plant.name); // Imposta il nome personale come il nome della pianta selezionata
+                                                            setSearchTerm(plant.id);
+                                                            setPianteRicerca(plant);
+                                                            setSearchTerm(plant.name);
+
                                                         }}
                                                     >
                                                         {plant.name}
@@ -171,14 +199,14 @@ function Dashboard() {
 
                                         {/* Campo "Nome pianta" */}
                                         <div className="form-group">
-                                            <label htmlFor="personalName">Nome Personale della Pianta</label>
+                                            <label htmlFor="personalName">Soprannome della Pianta</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
                                                 id="personalName"
                                                 placeholder="Inserisci un nome personale"
-                                                value={personalName}
-                                                onChange={e => setValori({ ...valori, soprannome: e.target.value })}
+                                                value={valori.soprannome}
+                                                onChange={e => setValori({...valori, soprannome: e.target.value})}
                                             />
                                         </div>
 
@@ -189,8 +217,7 @@ function Dashboard() {
                                                 type="date"
                                                 className="form-control"
                                                 id="plantingDate"
-                                                value={plantingDate}
-                                                onChange={(e) => setPlantingDate(e.target.value)}
+                                                onChange={e => setValori({...valori, data: e.target.value})}
                                             />
                                         </div>
 
@@ -201,12 +228,15 @@ function Dashboard() {
                                                 type="file"
                                                 className="form-control-file"
                                                 id="plantPhoto"
-                                                onChange={(e) => setPhoto(e.target.files[0])}
+                                                onChange={handleFileChange}
+                                                accept="image/jpeg, image/png, image/gif"
                                             />
                                         </div>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Chiudi</button>
+                                        <button type="button" className="btn btn-secondary"
+                                                onClick={closeModal}>Chiudi
+                                        </button>
                                         <button type="submit" className="btn btn-primary">Salva</button>
                                     </div>
                                 </div>
