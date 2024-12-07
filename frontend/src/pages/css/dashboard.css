@@ -4,4 +4,20 @@
     object-fit: cover; /* Mantiene le proporzioni dell'immagine e la riempie */
 }
 
+.dropdown-menu {
+    background-color: white; /* Sfondo bianco per la lista */
+    border: 1px solid #ccc; /* Aggiungi un bordo per distinguere la lista */
+    max-height: 200px; /* Limita l'altezza della lista */
+    overflow-y: auto; /* Aggiungi lo scroll se ci sono troppi elementi */
+}
 
+.dropdown-item {
+    color: black; /* Colore del testo */
+    padding: 10px; /* Padding per rendere gli elementi più cliccabili */
+    cursor: pointer; /* Cambia il cursore per indicare che è cliccabile */
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0; /* Colore di sfondo al passaggio del mouse */
+    color: black; /* Assicurati che il testo sia leggibile */
+}

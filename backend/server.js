@@ -156,7 +156,8 @@ app.get('/cards', verificaToken,(req, res) => {
             "JOIN piante AS p ON pu.pianta_id = p.id " +
             "WHERE utente_id = ?";
         connessione.query(plants,result[0].id ,(err, piante) => {
-            res.json(JSON.parse(JSON.stringify(piante)));
+            res.json(piante);
+            console.log(piante);
         })
     })
 })
@@ -175,7 +176,34 @@ app.get('/listapiante', (req, res) => {
 })
 
 //Funzione per la gestione dell'upload da parte dell'utente di una nuova pianta
-app.post('/inviapianta', (req, res) => {
+app.post('/inviapianta', verificaToken,(req, res) => {
+    const sql = "INSERT INTO piante_utenti (pianta_id,utente_id,foto,data_piantata,nome_pianta)" +
+        "values (?)";
+    const mail = req.user.email;
+    const sql_id_utente = 'SELECT id FROM utenti WHERE email = ?';
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        const id_utente = result[0].id;
+        const valori = [
+            req.body.id,
+            id_utente,
+            req.body.img,
+            req.body.data,
+            req.body.soprannome,
+        ]
+        connessione.query(sql, [valori], (err, result) => {
+            console.log(result);
+            if (err) {
+                console.error("Errore: ",err);
+            }
+        })
+    })
 
 })
 

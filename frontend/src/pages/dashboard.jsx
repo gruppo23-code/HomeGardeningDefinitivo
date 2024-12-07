@@ -4,6 +4,7 @@ import defaultImage from '../assets/img/pianta_stilizzata.jpg';
 import './css/dashboard.css';
 import alert from "../Components/alert";
 import Cookies from "js-cookie";
+import FormData from 'form-data';
 
 function Dashboard() {
     const [showModal, setShowModal] = useState(false); // Stato per gestire la visibilità del modal
@@ -17,7 +18,7 @@ function Dashboard() {
                 //console.log(res.data);
                 if (Array.isArray(res.data)) {
                     setPianteRicerca(res.data);
-                    //console.log(pianteRicerca);
+                    //console.log(res.data);
                 } else {
                     console.error("Non è un array:" + res.data);
                 }
@@ -30,7 +31,7 @@ function Dashboard() {
         ricercaPiante();
     }, []);
     useEffect(() => {
-        console.log("Piante Ricerca:", pianteRicerca);
+        //console.log("Piante Ricerca:", pianteRicerca);
     }, [pianteRicerca]);
 
 
@@ -38,16 +39,26 @@ function Dashboard() {
     const [plants,setPlants] = useState([]);
 
     const cards = () => {
-
         axios.get('http://localhost:8081/cards')
             .then(res => {
-                //console.log(res.data);
-                setPlants(res.data);
+                console.log(res.data);
+
+                const updatedPlants = res.data.map(plant => {
+                    if (plant.image) {
+                        // Converti il buffer in base64
+                        const base64String = btoa(String.fromCharCode(...new Uint8Array(plant.image.data)));
+                        const imageUrl = `data:image/jpg;base64,${base64String}`; // Assicurati di usare il tipo corretto
+                        //console.log('Image URL:', imageUrl); // Stampa l'URL dell'immagine
+                        return { ...plant, imageUrl }; // Aggiungi l'URL dell'immagine all'oggetto pianta
+                    }
+                    return { ...plant, imageUrl: defaultImage }; // Usa l'immagine predefinita se non c'è immagine
+                });
+                setPlants(updatedPlants); // Imposta le piante aggiornate nello stato
             })
-            .catch(err => {
-                console.log(err);
-            })
-    }
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    };
     //Richiamo la funzione non appena viene caricata la pagina
     useEffect(() => {
         cards(); // Chiama la funzione per ottenere le piante al montaggio del componente
@@ -81,7 +92,33 @@ function Dashboard() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(valori);
+        const formData = new FormData();
+        if (valori.img) {
+            formData.append('img', valori.img);
+            formData.append('id', valori.id);
+            formData.append('soprannome', valori.nome);
+            formData.append('data', valori.data);
+            // Invia formData al backend
+            axios.post('http://localhost:8081/inviapianta', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data' // Tipo di contenuto
+                }
+            })
+                .then(r => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            axios.post('http://localhost:8081/inviapianta', valori)
+                .then(r => {
+                    window.location.reload();
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
     }
     //Fine gestione registrazione nuova pianta
 
@@ -109,9 +146,20 @@ function Dashboard() {
 
     const filteredPlants = Array.isArray(pianteRicerca) ?
         pianteRicerca.filter(plant =>
+            typeof plant.name === 'string' &&
+            typeof searchTerm === 'string' &&
             plant.name.toLowerCase().includes(searchTerm.toLowerCase())
         ) : [];
 
+    useEffect(() => {
+        //console.log("ID selezionato:", selectedId);
+        setValori({ ...valori, id: selectedId })
+    }, [selectedId]);
+
+    const handleOnChange = (e) => { //Inutile, la lascio per comodità :)
+        setSearchTerm(e.target.value)
+        setValori({ ...valori, id: selectedId })
+    }
 
     //Fine gestione barra di ricerca piante
 
@@ -129,7 +177,11 @@ function Dashboard() {
                     {plants.map(plant => (
                         <div className="col-md-4 mb-4" key={plant.id}>
                             <div className="card">
-                                <img src={plant.image ? plant.image : defaultImage} className="card-img-top plant-image" alt={plant.name} />
+                                <img
+                                    src={plant.imageUrl} // Usa l'URL dell'immagine preparato
+                                    alt={plant.name}
+                                    className="card-img-top plant-image"
+                                />
                                 <div className="card-body">
                                     <h5 className="card-title">{plant.name}</h5>
                                     <p className="card-text">{plant.description}</p>
@@ -163,7 +215,7 @@ function Dashboard() {
                                     <div className="modal-body">
 
                                         {/*Inserisci barra di ricerca*/}
-
+                                        <label htmlFor="personalName">Scegli la pianta</label>
                                         <div className="dropdown">
                                             <input
                                                 type="text"
@@ -171,7 +223,7 @@ function Dashboard() {
                                                 placeholder="Cerca una pianta..."
                                                 onFocus={() => setIsOpen(true)}
                                                 onBlur={() => setIsOpen(false)}
-                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                onChange={handleOnChange}
                                                 value={searchTerm}
                                             />
                                             {isOpen && (
@@ -182,20 +234,20 @@ function Dashboard() {
                                                                 key={plant.id}
                                                                 className="dropdown-item"
                                                                 onMouseDown={() => {
-                                                                    setSearchTerm(plant.nome);
+                                                                    setSearchTerm(plant.name);
                                                                     setSelectedId(plant.id); // Memorizza l'ID selezionato
                                                                     setIsOpen(false);
                                                                 }}
                                                             >
-                                                                {plant.nome}
+                                                                {plant.name}
                                                             </li>
                                                         ))
                                                     ) : (
-                                                        <li className="dropdown-item disabled">Nessuna pianta trovata</li>
+                                                        <li className="dropdown-item disabled">Nessuna pianta
+                                                            trovata</li>
                                                     )}
                                                 </ul>
                                             )}
-                                            {selectedId && <p>ID selezionato: {selectedId}</p>} {/* Mostra l'ID selezionato */}
                                         </div>
 
 
@@ -231,7 +283,7 @@ function Dashboard() {
                                                 className="form-control-file"
                                                 id="plantPhoto"
                                                 onChange={handleFileChange}
-                                                accept="image/jpeg, image/png, image/gif"
+                                                accept="image/jpg"
                                             />
                                         </div>
                                     </div>
