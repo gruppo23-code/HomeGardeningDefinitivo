@@ -190,14 +190,19 @@ app.post('/inviapianta', verificaToken,(req, res) => {
             return res.status(404).send("Utente non trovato");
         }
         const id_utente = result[0].id;
-        const valori = [
+        const {id, data, soprannome} = req.body;
+        console.log(req.body);
+        const img = req.file;
+        const imgBuffer = img.buffer;
+
+        /*const valori = [
             req.body.id,
             id_utente,
             req.body.img,
             req.body.data,
             req.body.soprannome,
-        ]
-        connessione.query(sql, [valori], (err, result) => {
+        ]*/
+        connessione.query(sql, [id,imgBuffer,data,soprannome], (err, result) => {
             console.log(result);
             if (err) {
                 console.error("Errore: ",err);
