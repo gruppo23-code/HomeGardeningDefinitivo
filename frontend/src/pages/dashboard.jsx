@@ -106,12 +106,12 @@ function Dashboard() {
                 }
             })
                 .then(r => {
-                    console.log('Risposta dal server:', r.data);
                     window.location.reload();
                 })
                 .catch(err => {
                     console.log(err);
                 });
+        window.location.reload();
 
     }
     //Fine gestione registrazione nuova pianta
@@ -178,13 +178,14 @@ function Dashboard() {
                                 />
                                 <div className="card-body">
                                     <h5 className="card-title">{plant.name}</h5>
+                                    <p className="soprannome">{plant.soprannome_pianta}</p>
                                     <p className="card-text">{plant.description}</p>
                                     <p className="text-muted">{plant.type}</p>
+                                    {/*<button type="button" className="btn btn-outline-danger" value={pla}>Elimina</button>*/}
                                 </div>
                             </div>
                         </div>
                     ))}
-
                     {/* Card per aggiungere una nuova pianta */}
                     <div className="col-md-4 mb-4">
                         <div className="card text-center">

@@ -154,7 +154,7 @@ app.get('/cards', verificaToken,(req, res) => {
         if (result.length === 0) {
             return res.status(404).send("Utente non trovato");
         }
-        const plants = "SELECT pu.id, p.nome AS name, pu.foto AS image, p.descrizione AS description FROM piante_utenti AS pu " +
+        const plants = "SELECT pu.id, p.nome AS name, pu.foto AS image, p.descrizione AS description, nome_pianta AS soprannome_pianta FROM piante_utenti AS pu " +
             "JOIN piante AS p ON pu.pianta_id = p.id " +
             "WHERE utente_id = ?";
         connessione.query(plants,result[0].id ,(err, piante) => {

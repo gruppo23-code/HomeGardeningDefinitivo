@@ -21,3 +21,10 @@
     background-color: #f0f0f0; /* Colore di sfondo al passaggio del mouse */
     color: black; /* Assicurati che il testo sia leggibile */
 }
+
+.soprannome {
+    color: #808080; /* Colore grigio */
+    font-size: 1.2em; /* Dimensione del font */
+    font-style: italic; /* Stile corsivo */
+    margin: 10px 0; /* Margine sopra e sotto */
+}
