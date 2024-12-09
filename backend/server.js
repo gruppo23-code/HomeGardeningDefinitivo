@@ -4,6 +4,7 @@ import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import cookieParser from 'cookie-parser';
+import multer from 'multer';
 
 import 'dotenv/config'
 
@@ -15,6 +16,7 @@ app.use(cors({
     credentials: true // Il browser invierà al backend oltre che le richieste i cookie
 }));
 app.use(cookieParser());
+const upload = multer();
 
 const connessione = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -157,7 +159,7 @@ app.get('/cards', verificaToken,(req, res) => {
             "WHERE utente_id = ?";
         connessione.query(plants,result[0].id ,(err, piante) => {
             res.json(piante);
-            console.log(piante);
+            //console.log(piante);
         })
     })
 })
@@ -176,9 +178,7 @@ app.get('/listapiante', (req, res) => {
 })
 
 //Funzione per la gestione dell'upload da parte dell'utente di una nuova pianta
-app.post('/inviapianta', verificaToken,(req, res) => {
-    const sql = "INSERT INTO piante_utenti (pianta_id,utente_id,foto,data_piantata,nome_pianta)" +
-        "values (?)";
+app.post('/inviapianta', verificaToken,upload.single('img'),(req, res) => {
     const mail = req.user.email;
     const sql_id_utente = 'SELECT id FROM utenti WHERE email = ?';
     connessione.query(sql_id_utente,[mail] , (err, result) => {
@@ -189,21 +189,20 @@ app.post('/inviapianta', verificaToken,(req, res) => {
         if (result.length === 0) {
             return res.status(404).send("Utente non trovato");
         }
-        const id_utente = result[0].id;
-        const {id, data, soprannome} = req.body;
-        console.log(req.body);
-        const img = req.file;
-        const imgBuffer = img.buffer;
+        let imgBuffer = null;
+        if(req.file) {
+            imgBuffer = req.file.buffer;
+        }
+        //console.log(req.body);
+        let id_utente = result[0].id;
+        let {id, data, soprannome} = req.body;
+        let valori = [id, id_utente, imgBuffer, data, soprannome];
+        //console.log(valori);
 
-        /*const valori = [
-            req.body.id,
-            id_utente,
-            req.body.img,
-            req.body.data,
-            req.body.soprannome,
-        ]*/
-        connessione.query(sql, [id,imgBuffer,data,soprannome], (err, result) => {
-            console.log(result);
+        const sql = "INSERT INTO piante_utenti (pianta_id,utente_id,foto,data_piantata,nome_pianta)" +
+            "values (?)";
+        connessione.query(sql, [valori], (err, result) => {
+            //console.log(result);
             if (err) {
                 console.error("Errore: ",err);
             }

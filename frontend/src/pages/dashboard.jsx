@@ -93,11 +93,12 @@ function Dashboard() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        if (valori.img) {
             formData.append('img', valori.img);
             formData.append('id', valori.id);
-            formData.append('soprannome', valori.nome);
+            formData.append('soprannome', valori.soprannome);
             formData.append('data', valori.data);
+
+            console.log(...formData);
             // Invia formData al backend
             axios.post('http://localhost:8081/inviapianta', formData, {
                 headers: {
@@ -105,20 +106,13 @@ function Dashboard() {
                 }
             })
                 .then(r => {
+                    console.log('Risposta dal server:', r.data);
                     window.location.reload();
                 })
                 .catch(err => {
                     console.log(err);
                 });
-        } else {
-            axios.post('http://localhost:8081/inviapianta', valori)
-                .then(r => {
-                    window.location.reload();
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-        }
+
     }
     //Fine gestione registrazione nuova pianta
 
