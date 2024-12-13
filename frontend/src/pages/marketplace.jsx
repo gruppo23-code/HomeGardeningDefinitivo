@@ -80,7 +80,7 @@ function Marketplace() {
                         <button className="buy-button">Acquista</button>
                     ) : (
                         <button className="buy-button" onClick={alertClick}>Acquista</button>
-            )}
+                    )}
             </div>
             ))}
             </div>
