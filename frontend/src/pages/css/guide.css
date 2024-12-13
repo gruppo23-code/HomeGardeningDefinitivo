@@ -1,7 +1,7 @@
 .search-container {
     margin: auto;
     display: flex;
-    border: 2px solid #4CAF50; /* Bordo verde */
+    border: 2px solid #000000; /* Bordo verde */
     border-radius: 25px; /* Angoli arrotondati */
     overflow: hidden; /* Nasconde gli angoli del contenitore */
     background-color: white; /* Sfondo bianco */
