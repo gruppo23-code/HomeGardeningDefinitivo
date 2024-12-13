@@ -118,7 +118,7 @@ app.post('/login', (req, res) => {
                         const nome = result[0].nome;
                         const cognome = result[0].cognome;
                         const email = result[0].email;
-                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '2h' }); //Il payload vuole il json, quindi le graffe.
+                        const token = jwt.sign({nome, cognome, email},process.env.PRIVATE_JWT_KEY,{ expiresIn: '1d' }); //Il payload vuole il json, quindi le graffe.
                         res.cookie('token',token)
                     } catch (errore) {
                         console.error('Errore durante la firma del token:', errore);
@@ -141,7 +141,7 @@ app.post('/login', (req, res) => {
 
 })
 
-
+//Inizio funzioni per la gestione della dashboard
 //Funzione per le card
 app.get('/cards', verificaToken,(req, res) => {
     const mail = req.user.email;
@@ -210,6 +210,56 @@ app.post('/inviapianta', verificaToken,upload.single('img'),(req, res) => {
     })
 
 })
+
+app.post('/delete',verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = 'SELECT id FROM utenti WHERE email = ?';
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        const id_utente = result[0].id;
+        const id_pianta = req.body.plantId;
+        const valori = [
+            id_utente,
+            id_pianta,
+        ]
+        console.log(valori);
+        const sql = "DELETE FROM piante_utenti WHERE utente_id = ? AND id = ?"
+        connessione.query(sql,valori,(err, result) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            }
+            if (result.affectedRows === 0) {
+                return res.status(404).send("Nessuna pianta eliminata!");
+            } else {
+                res.send("Pianta eliminata con successo!");
+            }
+        })
+    })
+})
+//Fine dashboard
+
+//Inizio gestione guide di coltivazione
+app.post('/ricercaguide',(req, res) => {
+    const sql = "SELECT g.*, p.* FROM guide g " +
+        "JOIN piante p ON g.pianta_id = p.id " +
+        "WHERE p.nome LIKE ?"
+    const param = `%${req.body.ricerca}%`
+    connessione.query(sql, [param], (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+        } else {
+            console.log(result);
+            //res.send("Pianta eliminata con successo!");
+        }
+    })
+})
+//Fine gestione guide di coltivazione
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
     console.log('Running...');

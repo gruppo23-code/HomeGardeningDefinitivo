@@ -163,6 +163,19 @@ function Dashboard() {
         return !!token; // Ritorna true se il token esiste, false altrimenti
     };
 
+    const handleDelete = (e) => {
+        e.preventDefault();
+        const plantId = e.currentTarget.value;
+        axios.post('http://localhost:8081/delete', {plantId})
+            .then(r => {
+                console.log(r.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        window.location.reload();
+    }
+
     if (isLoggedIn()) {
         return (
             <div className="container mt-5">
@@ -181,7 +194,7 @@ function Dashboard() {
                                     <p className="soprannome">{plant.soprannome_pianta}</p>
                                     <p className="card-text">{plant.description}</p>
                                     <p className="text-muted">{plant.type}</p>
-                                    {/*<button type="button" className="btn btn-outline-danger" value={pla}>Elimina</button>*/}
+                                    <button type="button" className="btn btn-outline-danger" value={plant.id} onClick={handleDelete}>Elimina</button>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +233,7 @@ function Dashboard() {
                                                 onBlur={() => setIsOpen(false)}
                                                 onChange={handleOnChange}
                                                 value={searchTerm}
+                                                required
                                             />
                                             {isOpen && (
                                                 <ul className="dropdown-menu show">
@@ -256,6 +270,7 @@ function Dashboard() {
                                                 placeholder="Inserisci un nome personale"
                                                 value={valori.soprannome}
                                                 onChange={e => setValori({...valori, soprannome: e.target.value})}
+                                                required
                                             />
                                         </div>
 
@@ -267,6 +282,7 @@ function Dashboard() {
                                                 className="form-control"
                                                 id="plantingDate"
                                                 onChange={e => setValori({...valori, data: e.target.value})}
+                                                required
                                             />
                                         </div>
 
