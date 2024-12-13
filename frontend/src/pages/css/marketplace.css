@@ -1,119 +1,136 @@
-/* src/css/marketplace.css */
-.marketplace {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px;
-    text-align: center;
-    background-color: #e9f5e9; /* Soft green background */
-    border-radius: 10px; /* Rounded corners for the container */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+/* /src/Marketplace.css */
+
+.marketplace-container {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px; /* Limita la larghezza massima */
+    margin: auto; /* Centra il contenitore */
 }
 
 h1 {
-    color: #2c3e50; /* Darker color for the title */
-    margin-bottom: 30px;
-    font-family: 'Arial', sans-serif; /* Clean font */
-    font-size: 2.5em; /* Larger title */
+    text-align: center;
+    color: #3c763d;
+    margin-bottom: 20px; /* Aggiungi margine inferiore */
 }
 
-.search-container {
+.add-item {
     display: flex;
-    justify-content: center;
-    margin-bottom: 30px;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
+    justify-content: center; /* Centra il contenuto */
+    margin-bottom: 20px;
 }
 
-.search-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-right: none; /* Rimuove il bordo destro */
-    border-radius: 5px 0 0 5px; /* Arrotonda solo gli angoli sinistri */
-    font-size: 1em;
-    box-sizing: border-box;
-}
-
-.search-button {
-    display: flex; /* Usa Flexbox */
-    align-items: center; /* Allinea verticalmente al centro */
-    justify-content: center; /* Allinea orizzontalmente al centro */
-    padding: 10px; /* Padding uniforme */
-    border: 1px solid #3498db;
-    border-radius: 0 5px 5px 0;
-    background-color: #3498db;
+.add-button {
+    background-color: #5cb85c;
     color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 1.2em; /* Regola la dimensione della lente */
+    font-size: 16px;
+    transition: background-color 0.3s; /* Aggiungi transizione */
 }
 
-.search-button:hover {
-    background-color: #2980b9;
+.add-button:hover {
+    background-color: #4cae4c;
 }
 
-
-
-.item-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Increased min width */
-    gap: 30px; /* Increased gap for better spacing */
-    margin-top: 20px; /* Space above the item list */
+.items-container {
+    display: grid; /* Utilizza grid per una disposizione flessibile */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colonne adattabili */
+    gap: 20px; /* Spaziatura tra gli articoli */
 }
 
-.item {
-    background: #ffffff; /* White background for items */
-    border-radius: 12px; /* More rounded corners */
-    padding: 20px;
-    transition: transform 0.3s, box-shadow 0.3s; /* Complete transition properties */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for items */
+.item-card {
+    display: flex;
+    flex-direction: column; /* Dispone gli elementi in verticale */
+    background-color: white;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s; /* Aggiungi transizione */
 }
 
-.item:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+.item-card:hover {
+    transform: scale(1.02); /* Effetto di ingrandimento al passaggio del mouse */
 }
 
 .item-image {
-    max-width: 100%;
-    height: 200px; /* Fixed height for uniformity */
-    object-fit: cover; /* Cover the area without distortion */
-    border-radius: 10px; /* Rounded corners for images */
-    margin-bottom: 15px; /* Space between image and text */
+    max-width: 100%; /* Adatta l'immagine alla larghezza del contenitore */
+    height: auto; /* Mantiene le proporzioni */
+    border-radius: 5px; /* Arrotonda gli angoli */
 }
 
-.item h2 {
-    font-size: 1.5em; /* Larger item name */
-    color: #333; /* Darker text color */
-    margin: 10px 0; /* Space around item name */
+.item-content {
+    display: flex;
+    flex-direction: column; /* Dispone il contenuto in verticale */
+    justify-content: space-between;
+    flex-grow: 1; /* Permette al contenuto di espandersi */
+}
+
+.item-name {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 10px;
 }
 
 .item-description {
-    color: #666; /* Lighter color for description */
-    font-size: 0.9em; /* Smaller font size */
-    margin-bottom: 10px; /* Space below description */
+    font-size: 16px;
+    color: #495057;
+    margin-bottom: 5px;
 }
 
 .item-price {
+    font-size: 18px;
     font-weight: bold;
-    color: #27ae60; /* Green color for price */
-    font-size: 1.2em; /* Slightly larger price */
-    margin: 10px 0; /* Space around price */
+    color: #28a745;
+    margin-bottom: 10px;
+}
+
+.condition {
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.trade-button, .buy-button {
+    background-color: #0275d8;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Aggiungi transizione */
+}
+
+.trade-button:hover {
+    background-color: #025aa5;
 }
 
 .buy-button {
-    background-color: #3498db; /* Blue button */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 12px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    font-size: 1em; /* Button font size */
+    background-color: #5cb85c;
 }
 
 .buy-button:hover {
-    background-color: #2980b9; /* Darker blue on hover */
-    transform: scale(1.05); /* Slightly enlarge button on hover */
+    background-color: #4cae4c;
+}
+
+/* Media Queries per la responsività */
+@media (max-width: 768px) {
+    .add-item {
+        flex-direction: column; /* Dispone gli elementi in verticale su schermi piccoli */
+        align-items: center;
+    }
+
+    .add-button {
+        width: 100%; /* Pulsante a larghezza piena */
+    }
 }
