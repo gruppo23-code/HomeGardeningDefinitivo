@@ -1,4 +1,4 @@
-/* /src/Marketplace.css */
+/* /src/marketplace.css */
 
 .marketplace-container {
     font-family: Arial, sans-serif;
@@ -14,27 +14,42 @@ h1 {
     text-align: center;
     color: #3c763d;
     margin-bottom: 20px; /* Aggiungi margine inferiore */
+    font-size: 24px; /* Dimensione del titolo */
 }
 
-.add-item {
+.search-container {
+    margin: auto;
     display: flex;
-    justify-content: center; /* Centra il contenuto */
-    margin-bottom: 20px;
+    border: 2px solid #4CAF50; /* Bordo verde */
+    border-radius: 25px; /* Angoli arrotondati */
+    overflow: hidden; /* Nasconde gli angoli del contenitore */
+    background-color: white; /* Sfondo bianco */
+    margin-bottom: 20px; /* Aggiungi margine inferiore per aumentare la distanza */
 }
 
-.add-button {
-    background-color: #5cb85c;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s; /* Aggiungi transizione */
+.search-input {
+    border: none; /* Rimuove il bordo dell'input */
+    padding: 10px 15px; /* Padding interno */
+    font-size: 16px; /* Dimensione del testo */
+    outline: none; /* Rimuove il contorno al focus */
+    flex: 1; /* Occupa tutto lo spazio disponibile */
 }
 
-.add-button:hover {
-    background-color: #4cae4c;
+.search-button {
+    background-color: #4CAF50; /* Colore verde del pulsante */
+    color: white; /* Colore del testo del pulsante */
+    border: none; /* Rimuove il bordo del pulsante */
+    padding: 10px 15px; /* Padding interno */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+    transition: background-color 0.3s; /* Transizione per l'effetto hover */
+}
+
+.search-button:hover {
+    background-color: #45a049; /* Colore verde scuro al passaggio del mouse */
+}
+
+.search-button i {
+    margin-left: 5px; /* Spazio tra il testo e l'icona */
 }
 
 .items-container {
@@ -52,6 +67,8 @@ h1 {
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s; /* Aggiungi transizione */
+    height: 450px; /* Altezza fissa per le card */
+    overflow: hidden; /* Nasconde il contenuto in eccesso */
 }
 
 .item-card:hover {
@@ -59,41 +76,42 @@ h1 {
 }
 
 .item-image {
-    max-width: 100%; /* Adatta l'immagine alla larghezza del contenitore */
-    height: auto; /* Mantiene le proporzioni */
+    width: 100%; /* Larghezza fissa per le immagini */
+    height: 250px; /* Altezza fissa per le immagini */
+    object-fit: cover; /* Mantiene le proporzioni senza distorsioni */
     border-radius: 5px; /* Arrotonda gli angoli */
 }
 
 .item-content {
     display: flex;
     flex-direction: column; /* Dispone il contenuto in verticale */
-    justify-content: space-between;
+    justify-content: space-between; /* Spazia uniformemente il contenuto */
     flex-grow: 1; /* Permette al contenuto di espandersi */
 }
 
 .item-name {
-    font-size: 20px;
+    font-size: 18px; /* Dimensione del nome dell'articolo */
     color: #2c3e50;
-    margin-bottom: 10px;
+    margin: 5px 0; /* Margine ridotto per avvicinare le scritte */
 }
 
 .item-description {
-    font-size: 16px;
+    font-size: 14px; /* Dimensione della descrizione */
     color: #495057;
-    margin-bottom: 5px;
+    margin: 5px 0; /* Margine ridotto per avvicinare le scritte */
 }
 
 .item-price {
-    font-size: 18px;
+    font-size: 16px; /* Dimensione del prezzo */
     font-weight: bold;
     color: #28a745;
-    margin-bottom: 10px;
+    margin: 5px 0; /* Margine ridotto per avvic inare le scritte */
 }
 
 .condition {
-    font-size: 14px;
+    font-size: 12px; /* Dimensione della condizione */
     color: #6c757d;
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Margine inferiore per separazione */
 }
 
 .buttons {
@@ -109,6 +127,7 @@ h1 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s; /* Aggiungi transizione */
+    font-size: 14px; /* Dimensione dei pulsanti */
 }
 
 .trade-button:hover {
@@ -122,15 +141,47 @@ h1 {
 .buy-button:hover {
     background-color: #4cae4c;
 }
+.search-input {
+    border: none; /* Rimuove il bordo dell'input */
+    padding: 10px 15px; /* Padding interno */
+    font-size: 16px; /* Dimensione del testo */
+    outline: none; /* Rimuove il contorno al focus */
+    flex: 2; /* Occupa più spazio disponibile */
+    min-width: 300px; /* Larghezza minima per la casella di testo */
+}
+
+.add-item-button {
+    background-color: #007bff; /* Colore blu del pulsante */
+    color: white; /* Colore del testo del pulsante */
+    border: none; /* Rimuove il bordo del pulsante */
+    padding: 10px 15px; /* Padding interno */
+    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
+    transition: background-color 0.3s; /* Transizione per l'effetto hover */
+    margin-left: 10px; /* Spazio tra la barra di ricerca e il pulsante */
+}
+
+.add-item-button:hover {
+    background-color: #0056b3; /* Colore blu scuro al passaggio del mouse */
+}
 
 /* Media Queries per la responsività */
 @media (max-width: 768px) {
-    .add-item {
-        flex-direction: column; /* Dispone gli elementi in verticale su schermi piccoli */
-        align-items: center;
+    .search-container {
+        flex-direction: column; /* Disposizione verticale per schermi più piccoli */
+        align-items: center; /* Centra gli elementi */
     }
 
-    .add-button {
-        width: 100%; /* Pulsante a larghezza piena */
+    .search-input {
+        width: 100%; /* Barra di ricerca a larghezza piena */
+        margin-bottom: 10px; /* Margine inferiore per separazione */
+    }
+
+    .item-card {
+        height: auto; /* Altezza automatica per card su schermi piccoli */
+    }
+
+    .item-image {
+        height: 200px; /* Altezza ridotta per immagini su schermi piccoli */
     }
 }
+
