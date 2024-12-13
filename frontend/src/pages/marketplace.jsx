@@ -1,4 +1,3 @@
-// src/components/Marketplace.js
 import React, { useState } from "react";
 import './css/marketplace.css';
 import Cookies from "js-cookie";
@@ -60,6 +59,9 @@ function Marketplace() {
 
     return (
         <div className="marketplace mt-3 mb-3">
+            <div className="container m-0">
+                sas
+            </div>
             <h1>Marketplace di Giardinaggio</h1>
             <div className="search-container">
                 <input type="text" className="search-input" placeholder="Cerca..."/>
