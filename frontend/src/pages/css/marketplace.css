@@ -1,0 +1,119 @@
+/* src/css/marketplace.css */
+.marketplace {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    text-align: center;
+    background-color: #e9f5e9; /* Soft green background */
+    border-radius: 10px; /* Rounded corners for the container */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+h1 {
+    color: #2c3e50; /* Darker color for the title */
+    margin-bottom: 30px;
+    font-family: 'Arial', sans-serif; /* Clean font */
+    font-size: 2.5em; /* Larger title */
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-right: none; /* Rimuove il bordo destro */
+    border-radius: 5px 0 0 5px; /* Arrotonda solo gli angoli sinistri */
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+.search-button {
+    display: flex; /* Usa Flexbox */
+    align-items: center; /* Allinea verticalmente al centro */
+    justify-content: center; /* Allinea orizzontalmente al centro */
+    padding: 10px; /* Padding uniforme */
+    border: 1px solid #3498db;
+    border-radius: 0 5px 5px 0;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1.2em; /* Regola la dimensione della lente */
+}
+
+.search-button:hover {
+    background-color: #2980b9;
+}
+
+
+
+.item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Increased min width */
+    gap: 30px; /* Increased gap for better spacing */
+    margin-top: 20px; /* Space above the item list */
+}
+
+.item {
+    background: #ffffff; /* White background for items */
+    border-radius: 12px; /* More rounded corners */
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s; /* Complete transition properties */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for items */
+}
+
+.item:hover {
+    transform: translateY(-5px); /* Lift effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+.item-image {
+    max-width: 100%;
+    height: 200px; /* Fixed height for uniformity */
+    object-fit: cover; /* Cover the area without distortion */
+    border-radius: 10px; /* Rounded corners for images */
+    margin-bottom: 15px; /* Space between image and text */
+}
+
+.item h2 {
+    font-size: 1.5em; /* Larger item name */
+    color: #333; /* Darker text color */
+    margin: 10px 0; /* Space around item name */
+}
+
+.item-description {
+    color: #666; /* Lighter color for description */
+    font-size: 0.9em; /* Smaller font size */
+    margin-bottom: 10px; /* Space below description */
+}
+
+.item-price {
+    font-weight: bold;
+    color: #27ae60; /* Green color for price */
+    font-size: 1.2em; /* Slightly larger price */
+    margin: 10px 0; /* Space around price */
+}
+
+.buy-button {
+    background-color: #3498db; /* Blue button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-size: 1em; /* Button font size */
+}
+
+.buy-button:hover {
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}

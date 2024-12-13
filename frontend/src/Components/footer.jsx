@@ -5,7 +5,7 @@ function Footer() {
     return (
         <>
             <footer className="footer bg-light text-dark">
-                <div className="container pt-2">
+                <div className="container pt-5">
                     <div className="row">
                         <div className="col-md-4">
                             <h5>Informazioni</h5>
@@ -29,7 +29,7 @@ function Footer() {
                         <div className="col-md-4">
                             <h5>Iscriviti alla Newsletter</h5>
                             <form>
-                                <div className="mb-3">
+                                <div className="mb-1">
                                     <input type="email" placeholder="Inserisci la tua email" className="form-control"
                                            required/>
                                 </div>

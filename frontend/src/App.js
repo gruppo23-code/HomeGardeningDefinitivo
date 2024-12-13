@@ -23,8 +23,7 @@ import Footer from "./Components/footer.jsx";
 
 //Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio", quindi:
 // Quando viene caricata una rotta figlio, il suo contenuto viene visualizzato dov'è posizionato il tag OUTLET
-
-const Comuni = () => {
+/* const Comuni = () => {
     return (
         <>
             <Navbar/>
@@ -33,8 +32,21 @@ const Comuni = () => {
             <Footer/>
         </>
     )
-};
+}; */
 
+// Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio"
+const Comuni = () => {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <Navbar />
+            <Modal />
+            <div style={{ flexGrow: 1 }}> {/* Questo div occupa lo spazio disponibile */}
+                <Outlet />
+            </div>
+            <Footer />
+        </div>
+    );
+};
 
 /* Funzione per la gestione del router: scelgo un percorso e gli elementi dea visualizzare al suo interno.
     Con l'ausilio del tag children posso far */
