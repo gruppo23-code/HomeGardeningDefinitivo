@@ -1,94 +1,91 @@
-// /src/Marketplace.js
 import React, { useState } from "react";
-import "./css/marketplace.css";
+import './css/marketplace.css';
+import Cookies from "js-cookie";
+import {Link} from "react-router-dom";
 
-const Marketplace = () => {
-    const [items, setItems] = useState([
+function Marketplace() {
+    const [searchTerm, setSearchTerm] = useState("");
+
+    const items = [
         {
             id: 1,
-            name: "Vaso di Terracotta Vintage",
-            description: "Vaso antico in terracotta, perfetto per piante grasse",
-            price: 25,
-            condition: "Ottime Condizioni",
-            image: "https://www.giardinaggio.net/frutti/alberi-da-frutto/pianta-arachidi_NG1.jpg",
+            name: 'Pianta di Aloe Vera',
+            description: 'Una pianta succulenta facile da curare.',
+            price: 10,
+            image: 'https://example.com/aloe-vera.jpg' // Sostituisci con un URL reale
         },
         {
             id: 2,
-            name: "Set di Attrezzi da Giardinaggio",
-            description: "Set completo di 5 attrezzi in acciaio inossidabile",
-            price: 50,
-            condition: "Nuovo",
-            image: "https://www.giardinaggio.net/frutti/alberi-da-frutto/pianta-arachidi_NG1.jpg",
+            name: 'Semi di Pomodoro',
+            description: 'Semi di pomodoro biologici.',
+            price: 5,
+            image: 'https://example.com/semi-pomodoro.jpg' // Sostituisci con un URL reale
         },
         {
             id: 3,
-            name: "Piante Grasse Variegate",
-            description: "Collezione di piante grasse variegate, facili da curare.",
-            price: 30,
-            condition: "Nuovo",
-            image: "https://www.lombardaflor.it/wp-content/uploads/2018/03/Gossypium-come-coltivare-la-pianta-del-cotone-in-vaso.jpg",
+            name: 'Attrezzo da Giardinaggio',
+            description: 'Un attrezzo versatile per il giardinaggio.',
+            price: 15,
+            image: 'https://example.com/attrezzo-giardinaggio.jpg' // Sostituisci con un URL reale
         },
         {
             id: 4,
-            name: "Terrario in Vetro",
-            description: "Terrario elegante in vetro, ideale per piante tropicali.",
-            price: 45,
-            condition: "Ottime Condizioni",
-            image: "https://www.giardinaggio.net/frutti/alberi-da-frutto/pianta-arachidi_NG1.jpg",
+            name: 'Pianta di Lavanda',
+            description: 'Una pianta profumata e decorativa.',
+            price: 12,
+            image: 'https://example.com/lavanda.jpg' // Sostituisci con un URL reale
         },
         {
             id: 5,
-            name: "Compostiera da Giardino",
-            description: "Compostiera in legno per il riciclo dei rifiuti organici.",
-            price: 70,
-            condition: "Nuovo",
-            image: "https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/c0/98/66/c09866bc-427d-90cb-3093-f12760918f73/artwork.jpg/600x600bf-60.jpg",
-        },
-        {
-            id: 6,
-            name: "Piante Aromatiche",
-            description: "Set di piante aromatiche fresche per la cucina.",
-            price: 20,
-            condition: "Nuovo",
-            image: "https://www.lombardaflor.it/wp-content/uploads/2018/03/Gossypium-come-coltivare-la-pianta-del-cotone-in-vaso.jpg",
-        },
-        {
-            id: 7,
-            name: "Cesto per Piante",
-            description: "Cesto in vimini per piante, perfetto per decorare.",
-            price: 15,
-            condition: "Buone Condizioni",
-            image: "https://www.giardinaggio.net/frutti/alberi-da-frutto/pianta-arachidi_NG1.jpg",
-        },
-    ]);
+            name: 'Vaso Decorativo',
+            description: 'Un vaso elegante per le tue piante.',
+            price: 8,
+            image: 'https://example.com/vaso-decorativo.jpg' // Sostituisci con un URL reale
+        }
+    ];
+
+    const filteredItems = items.filter(item =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const isLoggedIn = () => {
+        const token = Cookies.get('token'); // Sostituisci 'token' con il nome del tuo cookie
+        return !!token; // Ritorna true se il token esiste, false altrimenti
+    };
+
+    const alertClick = () => {
+        alert("Accesso Negato. Devi essere loggato per fare acquisti.");
+    };
 
     return (
-        <div className="marketplace-container">
-            <h1>Marketplace di Giardinaggio</h1>
-
-            <div className="add-item">
-                <button className="add-button">Aggiungi Articolo</button>
+        <div className="marketplace mt-3 mb-3">
+            <div className="container m-0">
+                sas
             </div>
-
-            <div className="items-container">
-                {items.map((item) => (
-                    <div key={item.id} className="item-card">
-                        <img src={item.image} alt={item.name} className="item-image" />
-                        <div className="item-content">
-                            <h2 className="item-name">{item.name}</h2>
-                            <p className="item-description">{item.description}</p>
-                            <p className="item-price">€{item.price}</p>
-                            <span className="condition">{item.condition}</span>
-                            <div className="buttons">
-                                <button className="trade-button">Proponi Scambio</button>
-                                <button className="buy-button">Acquista</button>
-                            </div>
-                        </div>
-                    </div>
-                ))}
+            <h1>Marketplace di Giardinaggio</h1>
+            <div className="search-container">
+                <input type="text" className="search-input" placeholder="Cerca..."/>
+                <button className="search-button">
+                    🔍
+                </button>
+            </div>
+            <div className="item-list">
+            {filteredItems.map(item => (
+                <div key={item.id} className="item">
+                    <img src={item.image} alt={item.name} className="item-image"/>
+                    <h2>{item.name}</h2>
+                    <p className="item-description">{item.description}</p>
+                    <p className="item-price">Prezzo: {item.price}€</p>
+                    {isLoggedIn() ? (
+                        <button className="buy-button">Acquista</button>
+                    ) : (
+                        <button className="buy-button" onClick={alertClick}>Acquista</button>
+                    )}
+            </div>
+            ))}
             </div>
         </div>
     );
-};
+}
 
 export default Marketplace;
