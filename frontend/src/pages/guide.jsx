@@ -1,75 +1,109 @@
 import React, {useEffect, useState} from "react";
 import './css/guide.css';
 import axios from "axios";
+import { useLocation } from 'react-router-dom';
+
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
 
 function Guide() {
+    const location = useLocation();
     //Gestione della ricerca
     const [ricerca, setRicerca] = useState("");
+    const [debouncedRicerca, setDebouncedRicerca] = useState(ricerca);
+    const [risultato,setRisultato] = useState([]);
+    const [piante, setPiante] = useState([]);
+
     useEffect(() => {
-        //console.log(ricerca);
-        axios.post('http://localhost:8081/ricercaguide',{ricerca})
-            .then(res => {
-                console.log(res);
-            })
-            .catch(err => console.log(err));
+        const handler = setTimeout(() => {
+            setDebouncedRicerca(ricerca);
+        },300) //300 ms di debounce
+
+        return () => {
+            clearTimeout(handler);
+        }
     }, [ricerca]);
 
+    useEffect(() => {
+        //console.log(ricerca);
+        //if (debouncedRicerca) {
+            axios.post('http://localhost:8081/ricercaguide', {ricerca})
+                .then(res => {
+                    //console.log(res.data);
+                    setRisultato(res.data);
+                    //console.log(risultato);
+                })
+                .catch(err => console.log(err));
+        //}
+    }, [debouncedRicerca]);
 
-    return (
-        <div className="container my-5">
-            <header className="bg-success text-white text-center py-5 rounded">
-                <h1>Guide di Coltivazione</h1>
-                <p>Scopri come coltivare le tue piante preferite!</p>
-                <div className="search-container w-50 mx-auto">
-                    <input type="text" className="search-input" placeholder="Cerca..." onChange={(e) => setRicerca(e.target.value)} />
+    const query = useQuery();
+    const id_pianta = query.get('id');
 
-                </div>
-            </header>
-            <div style={{height: '30px'}}></div>
-            <div className="row">
-                <div className="col-md-3">
-                    <div className="card">
-                        <img src="https://via.placeholder.com/150" className="card-img-top" alt="Pianta 1"/>
-                        <div className="card-body">
-                            <h5 className="card-title">Pomodoro</h5>
-                            <p className="card-text">Scopri come coltivare pomodori freschi e succosi nel tuo giardino.</p>
-                            <a href="#" className="btn btn-primary">Leggi di più</a>
-                        </div>
+
+//Gestione della guida specifica
+    useEffect(() => {
+        if (id_pianta) {
+            axios.post(`http://localhost:8081/ricercaguide2`, { id_pianta })
+                .then(res => {
+                    //console.log("Sm"+res.data[0]);
+                    setPiante(res.data[0]);
+                    //console.log(piante);
+                })
+                .catch(err => console.log(err));
+        }
+    }, [id_pianta]);
+
+    if (!id_pianta) {
+        return (
+            <div className="container my-5">
+                <header className="bg-success text-white text-center py-5 rounded">
+                    <h1>Guide di Coltivazione</h1>
+                    <p>Scopri come coltivare le tue piante preferite!</p>
+                    <div className="search-container w-50 mx-auto">
+                        <input type="text" className="search-input" placeholder="Cerca..." onChange={(e) => setRicerca(e.target.value)} />
                     </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="card">
-                        <img src="https://via.placeholder.com/150" className="card-img-top" alt="Pianta 2"/>
-                        <div className="card-body">
-                            <h5 className="card-title">Basilico</h5>
-                            <p className="card-text">Impara a coltivare basilico aromatico per le tue ricette.</p>
-                            <a href="#" className="btn btn-primary">Leggi di più</a>
+                </header>
+                <div style={{height: '30px'}}></div>
+                <div className="row">
+                    {risultato.map((pianta) => (
+                        <div className="col-md-3  mb-3" key={pianta.id}>
+                            <div className="card">
+                                <img src={"https://image.pollinations.ai/prompt/Pianta_Realistica_InNatura_"+pianta.nome + "_" + pianta.descrizione} className="card-img-top" alt={pianta.nome} />
+                                <div className="card-body">
+                                    <h5 className="card-title">{pianta.nome}</h5>
+                                    <p className="card-text">{pianta.descrizione}</p>
+                                    <a href={"http://localhost:3000/Guide?id="+pianta.id} className="btn btn-primary">Leggi di più</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="card">
-                        <img src="https://via.placeholder.com/150" className="card-img-top" alt="Pianta 3"/>
-                        <div className="card-body">
-                            <h5 className="card-title">Peperoncino</h5>
-                            <p className="card-text">Scopri i segreti per coltivare peperoncini piccanti.</p>
-                            <a href="#" className="btn btn-primary">Leggi di più</a>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-3">
-                    <div className="card">
-                        <img src="https://via.placeholder.com/150" className="card-img-top" alt="Pianta 4"/>
-                        <div className="card-body">
-                            <h5 className="card-title">Rucola</h5>
-                            <p className="card-text">Scopri come coltivare rucola fresca e saporita.</p>
-                            <a href="#" className="btn btn-primary">Leggi di più</a>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
-        </div>
-    );
+        );
+    } else {
+        return (
+            <div className="pianta-card mt-3 mb-3 w-75">
+                {piante && (
+                    <>
+                        <div className="container d-flex justify-content-center align-items-center">
+                            <img src={"https://image.pollinations.ai/prompt/Pianta_Realistica_InNatura_" + piante.nome} alt={`Immagine di ${piante.guida_coltivazione}`} className="pianta-image" />
+                        </div>
+                        <h2>{piante.guida_coltivazione}</h2>
+                        <p><strong>Difficoltà:</strong> {piante.difficolta}</p>
+                        <p><strong>Tempo di crescita:</strong> {piante.tempo_crescita}</p>
+                        <p><strong>Esposizione alla luce:</strong> {piante.esposizione_luce}</p>
+                        <p><strong>Irrigazione:</strong> {piante.irrigazione}</p>
+                        <p><strong>Fertilizzazione:</strong> {piante.fertilizzazione}</p>
+                        <p><strong>Parassiti e malattie:</strong> {piante.parassiti_malattie}</p>
+                        <p><strong>Note:</strong> {piante.note}</p>
+                    </>
+                )}
+            </div>
+        );
+    }
+
 }
 
 export default Guide;

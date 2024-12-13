@@ -254,12 +254,30 @@ app.post('/ricercaguide',(req, res) => {
         if (err) {
             console.error("Errore durante la query: ", err);
         } else {
+            //console.log(result);
+            res.send(result);
+        }
+    })
+})
+
+app.post('/ricercaguide2', (req, res) => {
+    const sql = "SELECT g.*, p.* FROM guide g " +
+        "JOIN piante p ON g.pianta_id = p.id " +
+        "WHERE g.id= ?";
+    const param = req.body.id_pianta;
+    console.log(req.body.id_pianta);
+    connessione.query(sql, [param], (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+        } else {
             console.log(result);
-            //res.send("Pianta eliminata con successo!");
+            res.send(result);
         }
     })
 })
 //Fine gestione guide di coltivazione
+
+
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
     console.log('Running...');
