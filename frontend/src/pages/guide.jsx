@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import './css/guide.css';
 import axios from "axios";
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
+import { ArrowLeft, Droplet, Sun, Clock, ThermometerSun, Sprout, Bug, Info } from 'lucide-react';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -12,7 +13,7 @@ function Guide() {
     const [ricerca, setRicerca] = useState("");
     const [debouncedRicerca, setDebouncedRicerca] = useState(ricerca);
     const [risultato, setRisultato] = useState([]);
-    const [piante, setPiante] = useState([]);
+    const [piante, setPiante] = useState(null);
 
     useEffect(() => {
         const handler = setTimeout(() => {
@@ -64,7 +65,7 @@ function Guide() {
                                 <div className="card-body d-flex flex-column">
                                     <h5 className="card-title guide-card-title">{pianta.nome}</h5>
                                     <p className="card-text guide-card-description flex-grow-1">{pianta.descrizione}</p>
-                                    <a href={`http://localhost:3000/Guide?id=${pianta.id}`} className="btn btn-primary mt-auto">Leggi di più</a>
+                                    <Link to={`/Guide?id=${pianta.id}`} className="btn btn-primary mt-auto">Leggi di più</Link>
                                 </div>
                             </div>
                         </div>
@@ -74,20 +75,62 @@ function Guide() {
         );
     } else {
         return (
-            <div className="pianta-card mt-3 mb-3 w-75 mx-auto">
+            <div className="container my-5">
                 {piante && (
                     <>
-                        <div className="container d-flex justify-content-center align-items-center">
-                            <img src={`https://image.pollinations.ai/prompt/Pianta_Realistica_InNatura_${encodeURIComponent(piante.nome)}`} alt={`Immagine di ${piante.guida_coltivazione}`} className="pianta-image" />
+                        <Link to="/Guide" className="btn btn-link mb-4 guide-back-link">
+                            <ArrowLeft size={20} />
+                            <span>Torna alle guide</span>
+                        </Link>
+                        <div className="guide-plant-container">
+                            <div className="guide-plant-header">
+                                <div className="guide-plant-image">
+                                    <img src={`https://image.pollinations.ai/prompt/Pianta_Realistica_InNatura_${encodeURIComponent(piante.nome)}`} alt={`Immagine di ${piante.guida_coltivazione}`} className="img-fluid rounded shadow-sm" />
+                                </div>
+                                <div className="guide-plant-title-description">
+                                    <h1 className="guide-plant-name">{piante.nome}</h1>
+                                    <h2 className="guide-plant-subtitle">{piante.descrizione}</h2>
+                                    <p className="guide-plant-short-description">{piante.guida_coltivazione}</p>
+                                </div>
+                            </div>
+                            <div className="guide-plant-info">
+                                <div className="info-item">
+                                    <ThermometerSun size={24} />
+                                    <h3>Difficoltà</h3>
+                                    <p>{piante.difficolta}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Clock size={24} />
+                                    <h3>Tempo di crescita</h3>
+                                    <p>{piante.tempo_crescita}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Sun size={24} />
+                                    <h3>Esposizione alla luce</h3>
+                                    <p>{piante.esposizione_luce}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Droplet size={24} />
+                                    <h3>Irrigazione</h3>
+                                    <p>{piante.irrigazione}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Sprout size={24} />
+                                    <h3>Fertilizzazione</h3>
+                                    <p>{piante.fertilizzazione}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Bug size={24} />
+                                    <h3>Parassiti e malattie</h3>
+                                    <p>{piante.parassiti_malattie}</p>
+                                </div>
+                                <div className="info-item">
+                                    <Info size={24} />
+                                    <h3>Note</h3>
+                                    <p>{piante.note}</p>
+                                </div>
+                            </div>
                         </div>
-                        <h2 className="mt-4 mb-3">{piante.guida_coltivazione}</h2>
-                        <p><strong>Difficoltà:</strong> {piante.difficolta}</p>
-                        <p><strong>Tempo di crescita:</strong> {piante.tempo_crescita}</p>
-                        <p><strong>Esposizione alla luce:</strong> {piante.esposizione_luce}</p>
-                        <p><strong>Irrigazione:</strong> {piante.irrigazione}</p>
-                        <p><strong>Fertilizzazione:</strong> {piante.fertilizzazione}</p>
-                        <p><strong>Parassiti e malattie:</strong> {piante.parassiti_malattie}</p>
-                        <p><strong>Note:</strong> {piante.note}</p>
                     </>
                 )}
             </div>

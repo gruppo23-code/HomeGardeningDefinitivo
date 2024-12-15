@@ -6,6 +6,10 @@
     --font-family: 'Poppins', 'Roboto', sans-serif;
 }
 
+body {
+    font-family: var(--font-family);
+}
+
 .search-container {
     margin: auto;
     display: flex;
@@ -29,14 +33,12 @@
 }
 
 .guide-title {
-    font-family: var(--font-family);
-    font-size: 2.5rem;
+    font-size: 2.8rem; /* Increased from 2.5rem */
     font-weight: 600;
 }
 
 .guide-subtitle {
-    font-family: var(--font-family);
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Increased from 1.2rem */
 }
 
 .guide-card {
@@ -52,7 +54,6 @@
 }
 
 .guide-card-title {
-    font-family: var(--font-family);
     font-weight: 700;
     font-size: 1.2rem;
     color: var(--color-earth);
@@ -60,7 +61,6 @@
 }
 
 .guide-card-description {
-    font-family: var(--font-family);
     color: #333;
     font-size: 1rem;
     line-height: 1.4;
@@ -71,24 +71,138 @@
     object-fit: cover;
 }
 
-.pianta-card {
-    border: 2px solid var(--color-leaf);
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+.guide-back-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-leaf);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
-.pianta-image {
+.guide-back-link:hover {
+    color: var(--color-earth);
+}
+
+.guide-back-link span {
+    margin-left: 0.5rem;
+}
+
+.guide-plant-container {
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.guide-plant-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .guide-plant-header {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+.guide-plant-image {
+    flex: 1;
     max-width: 100%;
+}
+
+.guide-plant-image img {
+    width: 100%;
     height: auto;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.guide-plant-title-description {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding-right: 2rem;
+}
+
+@media (min-width: 768px) {
+    .guide-plant-title-description {
+        max-height: none;
+        overflow-y: visible;
+    }
+}
+
+.guide-plant-name {
+    font-size: 3.2rem; /* Increased from 3rem */
+    font-weight: 700;
+    color: #2E7D32;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-family);
+}
+
+.guide-plant-subtitle {
+    font-size: 1.8rem;
+    color: #43A047; /* Changed back to the original green color */
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    font-family: var(--font-family);
+}
+
+.guide-plant-short-description {
+    font-size: 1.4rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 800px;
+    font-family: var(--font-family);
+    color: var(--color-earth);
+}
+
+
+.guide-plant-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-item svg {
+    color: var(--color-leaf);
+    margin-bottom: 0.5rem;
+}
+
+.info-item h3 {
+    font-size: 1.4rem; /* Increased from 1.2rem */
+    font-weight: 600;
+    color: var(--color-earth);
+    margin-bottom: 0.5rem;
+}
+
+.info-item p {
+    font-size: 1.1rem; /* Increased from 1rem */
+    color: #333;
+    line-height: 1.5;
 }
 
 .btn-primary {
     background-color: var(--color-leaf);
     border-color: var(--color-leaf);
+    font-weight: 500;
 }
 
 .btn-primary:hover {
