@@ -1,113 +1,81 @@
 import React from "react";
 import LoginButton from './bottone_login.jsx';
-import {Link, useLocation} from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Cookies from 'js-cookie';
-
+import { Leaf, BookOpen, ShoppingBag, Users, LayoutDashboard } from 'lucide-react';
 
 function Navbar() {
     const buttonRef = React.useRef(null);
-    const location = useLocation(); //useLocation per accedere all'url
+    const location = useLocation();
 
-    //useEffect per eseguire l'azione a seguito di una variazione dell'url esclusivamente
     React.useEffect(() => {
-        // Controlla se c'è una variabile nell'URL
-        const params = new URLSearchParams(location.search); //location.search restituisce la parte della query dell'url
-        //Quindi inizializzo un oggetto di tipo URLSearchParams per consentire l'interazione con le variabili all'interno dell'url
+        const params = new URLSearchParams(location.search);
         if (params.get('showModal') === 'true') {
-            // Simula il click del bottone se esso è montato nel DOM
-            if (buttonRef.current) { //buttonRef.current punta all'oggetto avente come proprietà ref={buttonRef}
-                buttonRef.current.click(); //Simulo il click
+            if (buttonRef.current) {
+                buttonRef.current.click();
             }
         }
     }, [location]);
 
     const isLoggedIn = () => {
-        const token = Cookies.get('token'); // Sostituisci 'token' con il nome del tuo cookie
-        return !!token; // Ritorna true se il token esiste, false altrimenti
+        const token = Cookies.get('token');
+        return !!token;
     };
 
     const alertClick = () => {
         alert("Accesso Negato. Devi essere loggato per accedere alla Dashboard.");
     };
 
-
-
     return (
-        <nav className="navbar bg-light"> {/* Navbar */}
-            <div className="container-fluid d-flex">
-                <div className="col">
-                    <Link to={"/"} className="text-decoration-none text-black">
-                        <span className="navbar-brand m-1 h1 text-black">
-                            Home Gardening
-                        </span>
-                    </Link>
-                </div>
-                {/* d-none d-lg-block : nascondo su schermi più piccoli di lg, ovvero < 992px */}
-                {/* Neccessario poichè su schermi piccoli la visualizzazione non è ottimale*/}
-                <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
+        <nav className="navbar" style={{
+            backgroundColor: '#2E7D32',
+            fontFamily: "'Poppins', 'Roboto', sans-serif",
+            padding: '0.5rem 1rem',
+        }}>
+            <div className="container-fluid">
+                <Link to="/" className="navbar-brand d-flex align-items-center text-white">
+                    <Leaf className="me-2" size={32} strokeWidth={2.5} />
+                    <span style={{ fontSize: '1.5rem', fontWeight: 600 }}>Home Gardening</span>
+                </Link>
+                <div className="d-none d-lg-flex align-items-center">
                     {isLoggedIn() ? (
-                        <Link to="/Dashboard" className="text-decoration-none text-black">
-                            <h6>Dashboard</h6>
+                        <Link to="/Dashboard" className="nav-link text-white mx-3 d-flex align-items-center">
+                            <LayoutDashboard className="me-2" size={24} strokeWidth={2} />
+                            <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Dashboard</span>
                         </Link>
                     ) : (
-                        <h6 className="text-black" style={{ cursor: 'pointer' }} onClick={alertClick}>
-                            Dashboard
-                        </h6>
+                        <span className="nav-link text-white mx-3 d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={alertClick}>
+                            <LayoutDashboard className="me-2" size={24} strokeWidth={2} />
+                            <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Dashboard</span>
+                        </span>
                     )}
-                </div>
-                <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
-                    <Link to={"/Guide"} className="text-decoration-none text-black">
-                        <h6>Guide di coltivazione</h6>
+                    <Link to="/Guide" className="nav-link text-white mx-3 d-flex align-items-center">
+                        <BookOpen className="me-2" size={24} strokeWidth={2} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Guide</span>
                     </Link>
-                </div>
-                <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
-                    <Link to={"/Marketplace"} className="text-decoration-none text-black">
-                        <h6>Marketplace</h6>
+                    <Link to="/Marketplace" className="nav-link text-white mx-3 d-flex align-items-center">
+                        <ShoppingBag className="me-2" size={24} strokeWidth={2} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Marketplace</span>
                     </Link>
-                </div>
-                <div className="container col-4 d-flex m-1 w-auto d-none d-lg-block">
-                    <Link to={"/Community"} className="text-decoration-none text-black">
-                        <h6>Community</h6>
+                    <Link to="/Community" className="nav-link text-white mx-3 d-flex align-items-center">
+                        <Users className="me-2" size={24} strokeWidth={2} />
+                        <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Community</span>
                     </Link>
-                </div>
-                <div className="container col-4 d-flex m-1 w-auto ms-3 d-none d-lg-block">
-                    <LoginButton/>
+                    <LoginButton className="btn btn-outline-light ms-3" style={{ fontSize: '1rem', fontWeight: 500 }} />
                 </div>
 
-                {/* Dropdown visualizzato da dispositivi con schermo inferiore a 992px */}
-                {/* Mediante la classe d-lg-none che mostra questa componente solo per schermi di tale grandezza*/}
                 <div className="dropdown d-lg-none">
-                    <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        Menù
+                    <button className="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-expanded="false" style={{ fontSize: '1rem', fontWeight: 500 }}>
+                        Menu
                     </button>
-                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                        <li>
-                            <LoginButton ref={buttonRef}/>
-                        </li>
-                        <li>
-                            <hr className="dropdown-divider"/>
-                        </li>
-                        <li className="ps-3 pt-1">
-                            <Link to={"/Dashboard"} className="text-decoration-none text-black">
-                                <h6>Dashboard</h6>
-                            </Link>
-                        </li>
-                        <li className="ps-3 pt-1">
-                            <Link to={"/Guide"} className="text-decoration-none text-black">
-                                <h6>Guide</h6>
-                            </Link>
-                        </li>
-                        <li className="ps-3 pt-1">
-                            <Link to={"/Marketplace"} className="text-decoration-none text-black">
-                                <h6>Marketplace</h6>
-                            </Link>
-                        </li>
-                        <li className="ps-3 pt-1">
-                            <Link to={"/Community"} className="text-decoration-none text-black">
-                                <h6>Community</h6>
-                            </Link>
-                        </li>
+                    <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style={{ backgroundColor: '#2E7D32' }}>
+                        <li><LoginButton ref={buttonRef} className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }} /></li>
+                        <li><hr className="dropdown-divider" style={{ borderColor: 'rgba(255,255,255,0.2)' }} /></li>
+                        <li><Link to="/Dashboard" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Dashboard</Link></li>
+                        <li><Link to="/Guide" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Guide</Link></li>
+                        <li><Link to="/Marketplace" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Marketplace</Link></li>
+                        <li><Link to="/Community" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Community</Link></li>
                     </ul>
                 </div>
             </div>
@@ -116,3 +84,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

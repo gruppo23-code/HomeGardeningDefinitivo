@@ -20,20 +20,6 @@ import Modal from "./Components/modal.jsx";
 import Navbar from "./Components/navbar.jsx";
 import Footer from "./Components/footer.jsx";
 
-
-//Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio", quindi:
-// Quando viene caricata una rotta figlio, il suo contenuto viene visualizzato dov'è posizionato il tag OUTLET
-/* const Comuni = () => {
-    return (
-        <>
-            <Navbar/>
-            <Modal/>
-            <Outlet/>
-            <Footer/>
-        </>
-    )
-}; */
-
 // Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio"
 const Comuni = () => {
     return (
