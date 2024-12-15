@@ -33,12 +33,12 @@ body {
 }
 
 .guide-title {
-    font-size: 2.8rem; /* Increased from 2.5rem */
+    font-size: 2.8rem;
     font-weight: 600;
 }
 
 .guide-subtitle {
-    font-size: 1.4rem; /* Increased from 1.2rem */
+    font-size: 1.4rem;
 }
 
 .guide-card {
@@ -55,14 +55,14 @@ body {
 
 .guide-card-title {
     font-weight: 700;
-    font-size: 1.2rem;
-    color: var(--color-earth);
+    font-size: 1.4rem;
+    color: #1B5E20 !important;
     margin-bottom: 0.5rem;
 }
 
 .guide-card-description {
     color: #333;
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.4;
 }
 
@@ -137,7 +137,7 @@ body {
 }
 
 .guide-plant-name {
-    font-size: 3.2rem; /* Increased from 3rem */
+    font-size: 3.2rem;
     font-weight: 700;
     color: #2E7D32;
     margin-bottom: 0.75rem;
@@ -146,7 +146,7 @@ body {
 
 .guide-plant-subtitle {
     font-size: 1.8rem;
-    color: #43A047; /* Changed back to the original green color */
+    color: #43A047;
     line-height: 1.6;
     margin-bottom: 1.25rem;
     font-family: var(--font-family);
@@ -160,7 +160,6 @@ body {
     font-family: var(--font-family);
     color: var(--color-earth);
 }
-
 
 .guide-plant-info {
     display: grid;
@@ -187,26 +186,30 @@ body {
 }
 
 .info-item h3 {
-    font-size: 1.4rem; /* Increased from 1.2rem */
+    font-size: 1.4rem;
     font-weight: 600;
     color: var(--color-earth);
     margin-bottom: 0.5rem;
 }
 
 .info-item p {
-    font-size: 1.1rem; /* Increased from 1rem */
+    font-size: 1.1rem;
     color: #333;
     line-height: 1.5;
 }
 
 .btn-primary {
-    background-color: var(--color-leaf);
-    border-color: var(--color-leaf);
+    background-color: #1B5E20 !important;
+    border-color: #1B5E20 !important;
     font-weight: 500;
+    color: white !important;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #43A047;
-    border-color: #43A047;
+    background-color: #154c1a !important;
+    border-color: #154c1a !important;
+    transform: translateY(-1px);
 }
 
