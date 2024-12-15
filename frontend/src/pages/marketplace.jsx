@@ -25,6 +25,7 @@ const Marketplace = () => {
             { id: 5, name: 'Semi di lavanda', type: 'seeds', price: 3.99, image: 'https://via.placeholder.com/200?text=Lavender+Seeds' },
             { id: 6, name: 'Vaso in terracotta', type: 'accessory', price: 7.99, image: 'https://via.placeholder.com/200?text=Terracotta+Pot' }
         ];
+
         setItems(sampleItems);
         setFilteredItems(sampleItems);
     }, []);
