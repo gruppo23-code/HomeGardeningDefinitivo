@@ -46,6 +46,10 @@ const Marketplace = () => {
         setCart(cart.filter(item => item.id !== itemId));
     };
 
+    const clearCart = () => {
+        setCart([]);
+    };
+
     const toggleCart = () => {
         setIsCartOpen(!isCartOpen);
     };
@@ -84,7 +88,12 @@ const Marketplace = () => {
                 </div>
             </div>
             {isCartOpen && (
-                <Cart cart={cart} removeFromCart={removeFromCart} closeCart={() => setIsCartOpen(false)} />
+                <Cart
+                    cart={cart}
+                    removeFromCart={removeFromCart}
+                    clearCart={clearCart}
+                    closeCart={() => setIsCartOpen(false)}
+                />
             )}
             <AddProductPopup
                 isOpen={isAddProductOpen}
