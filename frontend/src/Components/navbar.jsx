@@ -61,7 +61,7 @@ function Navbar() {
                         <Users className="me-2" size={24} strokeWidth={2} />
                         <span style={{ fontSize: '1.1rem', fontWeight: 500 }}>Community</span>
                     </Link>
-                    <LoginButton className="btn btn-outline-light ms-3" style={{ fontSize: '1rem', fontWeight: 500 }} />
+                    <LoginButton className="nav-link text-white mx-3 d-flex align-items-center" style={{ fontSize: '1.1rem', fontWeight: 500 }} />
                 </div>
 
                 <div className="dropdown d-lg-none">
@@ -70,7 +70,7 @@ function Navbar() {
                         Menu
                     </button>
                     <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton" style={{ backgroundColor: '#2E7D32' }}>
-                        <li><LoginButton ref={buttonRef} className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }} /></li>
+                        <li><LoginButton className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }} /></li>
                         <li><hr className="dropdown-divider" style={{ borderColor: 'rgba(255,255,255,0.2)' }} /></li>
                         <li><Link to="/Dashboard" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Dashboard</Link></li>
                         <li><Link to="/Guide" className="dropdown-item text-white" style={{ fontSize: '1rem', fontWeight: 500 }}>Guide</Link></li>

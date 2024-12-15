@@ -1,60 +1,57 @@
-import React, {forwardRef} from "react";
-import profile_img from "../assets/img/profile-circle.svg";
+import React, { forwardRef } from "react";
+import { User, LogIn } from 'lucide-react';
 import Cookies from "js-cookie";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-//forwardRef serve per ereditare la ref dalla pagina in cui è richiamato
-const LoginButton = forwardRef(( props, ref) => {
+const LoginButton = forwardRef((props, ref) => {
     const isLoggedIn = () => {
-        const token = Cookies.get('token'); // Sostituisci 'token' con il nome del tuo cookie
-        return !!token; // Ritorna true se il token esiste, false altrimenti
+        const token = Cookies.get('token');
+        return !!token;
     };
 
-    const handleLogout = () => {
-        // Rimuove il token dai cookie
+    const handleLogout = (e) => {
+        e.preventDefault();
         Cookies.remove('token');
-        window.location.reload(); // Ricarica la pagina per riflettere il cambiamento
+        window.location.reload();
     };
 
-    // Controlla se l'utente è loggato
     if (isLoggedIn()) {
-        return(
-            <>
-                <div className="btn-group pb-1">
-                    <Link to={"/Profilo"} className="btn btn-light btn-sm text-decoration-none text-black">
-                        <h6 className="m-0">Profilo</h6>
-                    </Link>
-                    <button type="button" className="btn btn-light btn-sm dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                        <span className="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <ul className="dropdown-menu dropdown-menu-end">
-                        <li>
-                            <a className="dropdown-item text-danger" href="/" onClick={handleLogout}>
-                                Logout
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </>
-        ); // Non mostra nulla se l'utente è loggato
+        return (
+            <div className="nav-item dropdown">
+                <a className="nav-link dropdown-toggle text-white mx-3 d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ fontSize: '1.1rem', fontWeight: 500 }}>
+                    <User className="me-2" size={24} strokeWidth={2} />
+                    <span>Profilo</span>
+                </a>
+                <ul className="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <Link to="/Profilo" className="dropdown-item">
+                            Profilo
+                        </Link>
+                    </li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                        <a className="dropdown-item text-danger" href="/" onClick={handleLogout}>
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        );
     }
 
     return (
-        <div className="container d-flex justify-content-center align-items-center m-1 w-auto ms-auto btn"
-             data-bs-toggle="modal" data-bs-target="#loginModal" ref={ref}>
-            <div className="row">
-                <div className="col-6 d-flex align-content-center justify-content-center ps-0 pe-1">
-                    <img className="img-fluid mx-auto" src={profile_img} alt="Immagine profilo"/>
-                </div>
-                <div className="col-6 align-content-center ps-1 pe-0">
-                    <div className="row justify-content-center h-auto">
-                        <span style={{fontSize: '10px'}}>Accedi</span>
-                    </div>
-                </div>
-            </div>
+        <div
+            className="nav-link text-white mx-3 d-flex align-items-center"
+            data-bs-toggle="modal"
+            data-bs-target="#loginModal"
+            ref={ref}
+            style={{ cursor: 'pointer', fontSize: '1.1rem', fontWeight: 500 }}
+        >
+            <LogIn className="me-2" size={24} strokeWidth={2} />
+            <span>Accedi</span>
         </div>
     );
 });
-//{isLoggedIn() ? 'Profilo' : 'Accedi'}
+
 export default LoginButton;
+

@@ -1,52 +1,98 @@
+:root {
+    --color-leaf: #4CAF50;
+    --color-earth: #795548;
+    --color-sky: #03A9F4;
+    --color-sunlight: #FFC107;
+    --font-family: 'Poppins', 'Roboto', sans-serif;
+}
+
 .search-container {
     margin: auto;
     display: flex;
-    border: 2px solid #000000; /* Bordo verde */
-    border-radius: 25px; /* Angoli arrotondati */
-    overflow: hidden; /* Nasconde gli angoli del contenitore */
-    background-color: white; /* Sfondo bianco */
+    border: 2px solid #28a745;
+    border-radius: 25px;
+    overflow: hidden;
+    background-color: white;
 }
 
 .search-input {
-    border: none; /* Rimuove il bordo dell'input */
-    padding: 10px 15px; /* Padding interno */
-    font-size: 16px; /* Dimensione del testo */
-    outline: none; /* Rimuove il contorno al focus */
-    flex: 1; /* Occupa tutto lo spazio disponibile */
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    outline: none;
+    flex: 1;
+    width: 100%;
 }
 
-.search-button {
-    background-color: #4CAF50; /* Colore verde del pulsante */
-    color: white; /* Colore del testo del pulsante */
-    border: none; /* Rimuove il bordo del pulsante */
-    padding: 10px 15px; /* Padding interno */
-    cursor: pointer; /* Cambia il cursore al passaggio del mouse */
-    transition: background-color 0.3s; /* Transizione per l'effetto hover */
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
 }
 
-.search-button:hover {
-    background-color: #45a049; /* Colore verde scuro al passaggio del mouse */
+.guide-title {
+    font-family: var(--font-family);
+    font-size: 2.5rem;
+    font-weight: 600;
 }
 
-.piante-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px; /* Spaziatura tra le card */
+.guide-subtitle {
+    font-family: var(--font-family);
+    font-size: 1.2rem;
+}
+
+.guide-card {
+    border: 2px solid var(--color-leaf);
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.guide-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+}
+
+.guide-card-title {
+    font-family: var(--font-family);
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--color-earth);
+    margin-bottom: 0.5rem;
+}
+
+.guide-card-description {
+    font-family: var(--font-family);
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
 }
 
 .pianta-card {
-    border: 1px solid #ccc;
+    border: 2px solid var(--color-leaf);
     border-radius: 10px;
-    padding: 15px;
-    width: auto; /* Aumenta la larghezza della card */
+    padding: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
-    margin: auto; /* Centra la card */
 }
 
 .pianta-image {
-    margin: auto;
-    width: 50%;
+    max-width: 100%;
+    height: auto;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
+
+.btn-primary {
+    background-color: var(--color-leaf);
+    border-color: var(--color-leaf);
+}
+
+.btn-primary:hover {
+    background-color: #43A047;
+    border-color: #43A047;
+}
+
