@@ -121,17 +121,22 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
     color: #666666;
     flex-wrap: wrap;
     margin-bottom: 1rem;
+    justify-content: space-between;
 }
 
-.community-avatar {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    margin-right: 0.5rem;
+.community-card-meta > div {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    margin-bottom: 5px;
 }
 
-.community-author {
-    margin-right: 0.5rem;
+.community-card-meta .icon {
+    margin-right: 5px;
+}
+
+.community-card-meta .separator {
+    display: none;
 }
 
 .community-card-content {
@@ -255,6 +260,7 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    cursor: pointer;
 }
 
 .community-post-detail-content {
@@ -262,26 +268,36 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
     background-color: white;
     padding: 2rem;
     border-radius: 8px;
-    max-width: 600px;
+    max-width: 800px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: default;
     position: relative;
 }
 
 .community-close-button {
     position: absolute;
-    top: 0.5rem;
+    top: 1rem;
     right: 1rem;
     font-size: 1.5rem;
     background: none;
     border: none;
     cursor: pointer;
-    color: #333333;
+    color: #666;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.community-close-button:hover {
+    color: #333;
 }
 
 .community-post-meta {
-    font-family: 'Poppins', 'Roboto', sans-serif;
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
@@ -289,8 +305,43 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
     flex-wrap: wrap;
 }
 
+.community-post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.community-post-meta > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.community-post-meta .icon {
+    margin-right: 0.1rem;
+}
+
+.community-post-author-info,
+.community-post-date-info,
+.community-post-time-info,
+.community-post-topic-info {
+    flex-basis: 48%;
+    margin-right: 0.5rem;
+}
+
+@media (min-width: 768px) {
+    .community-post-author-info,
+    .community-post-date-info,
+    .community-post-time-info,
+    .community-post-topic-info {
+        flex-basis: auto;
+    }
+}
+
 .community-post-stats {
-    font-family: 'Poppins', 'Roboto', sans-serif;
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
@@ -306,14 +357,12 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
 }
 
 .community-post-detail-content h2 {
-    font-family: 'Poppins', 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 1.5rem;
     margin-bottom: 1rem;
 }
 
 .community-post-detail-content p {
-    font-family: 'Poppins', 'Roboto', sans-serif;
     font-size: 1rem;
     line-height: 1.6;
 }
@@ -369,5 +418,98 @@ body, .community-page, .community-card, .community-card-title, .community-card-m
     margin-left: 5px;
     font-weight: bold;
     font-size: 1rem;
+}
+
+.community-post-detail-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2E7D32;
+    margin-bottom: 0.5rem;
+}
+
+.community-post-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.community-post-author {
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+.community-post-date, .community-post-topic {
+    margin-left: 0.5rem;
+}
+
+.community-post-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.community-comments-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #2E7D32;
+}
+
+.community-comment {
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.community-comment-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.community-comment-author {
+    font-weight: 600;
+    color: #2E7D32;
+}
+
+.community-comment-date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.community-comment-content {
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.community-comment-form {
+    display: flex;
+    margin-top: 1rem;
+}
+
+.community-comment-input {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.community-comment-submit {
+    background-color: #2E7D32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.community-comment-submit:hover {
+    background-color: #1B5E20;
 }
 
