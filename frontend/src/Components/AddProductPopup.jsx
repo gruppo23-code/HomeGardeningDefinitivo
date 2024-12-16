@@ -3,23 +3,22 @@ import { X, Upload } from 'lucide-react';
 
 const AddProductPopup = ({ isOpen, onClose, onAddProduct }) => {
     const [name, setName] = useState('');
-    const [type, setType] = useState('seeds');
+    const [type, setType] = useState(1);
     const [price, setPrice] = useState('');
     const [image, setImage] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newProduct = {
-            id: Date.now(),
-            name,
-            type,
-            price: parseFloat(price),
-            image: image ? URL.createObjectURL(image) : '/placeholder.svg?height=200&width=200'
-        };
-        onAddProduct(newProduct);
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('type', type);
+        formData.append('price', price);
+        formData.append('image', image);
+
+        onAddProduct(formData);
         onClose();
         setName('');
-        setType('seeds');
+        setType(1);
         setPrice('');
         setImage(null);
     };
@@ -58,10 +57,10 @@ const AddProductPopup = ({ isOpen, onClose, onAddProduct }) => {
                                     onChange={(e) => setType(e.target.value)}
                                     style={{ fontWeight: 400, fontSize: '1rem' }}
                                 >
-                                    <option value="seeds">Semi</option>
-                                    <option value="plant">Piante</option>
-                                    <option value="tool">Attrezzi</option>
-                                    <option value="accessory">Accessori</option>
+                                    <option value="1">Semi</option>
+                                    <option value="2">Piante</option>
+                                    <option value="3">Attrezzi</option>
+                                    <option value="4">Accessori</option>
                                 </select>
                             </div>
                             <div className="mb-3">

@@ -47,7 +47,7 @@ function Dashboard() {
                     if (plant.image) {
                         // Converti il buffer in base64
                         const base64String = btoa(String.fromCharCode(...new Uint8Array(plant.image.data)));
-                        const imageUrl = `data:image/jpg;base64,${base64String}`; // Assicurati di usare il tipo corretto
+                        const imageUrl = `data:image/jpg;base64,${base64String}`;
                         //console.log('Image URL:', imageUrl); // Stampa l'URL dell'immagine
                         return { ...plant, imageUrl }; // Aggiungi l'URL dell'immagine all'oggetto pianta
                     }

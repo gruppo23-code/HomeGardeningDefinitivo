@@ -1,0 +1,307 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --color-primary: #4CAF50;
+    --color-primary-dark: #45a049;
+    --color-secondary: #8BC34A;
+    --color-text: #333333;
+    --color-text-light: #666666;
+    --color-background: #F1F8E9;
+    --color-card: #FFFFFF;
+    --color-border: #E0E0E0;
+    --font-family: 'Poppins', sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.community-header {
+    background-color: var(--color-primary);
+    color: white;
+    text-align: center;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.community-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.community-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.community-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    background-color: var(--color-card);
+    border-radius: 50px;
+    padding: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tab-button {
+    background-color: transparent;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-family);
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 25px;
+}
+
+.tab-button:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.tab-button.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.tab-button .icon {
+    transition: transform 0.3s ease;
+}
+
+.tab-button:hover .icon {
+    transform: scale(1.1);
+}
+
+.topic-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.topic-button {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 20px;
+    font-family: var(--font-family);
+}
+
+.topic-button.active {
+    background-color: var(--color-secondary);
+    color: white;
+    border-color: var(--color-secondary);
+}
+
+.community-posts {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.community-card {
+    background-color: var(--color-card);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 1rem;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+}
+
+.community-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+}
+
+.community-card-header {
+    margin-bottom: 1rem;
+}
+
+.community-card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--color-text);
+}
+
+.community-card-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--color-text-light);
+    flex-wrap: wrap;
+}
+
+.community-card-meta .icon {
+    margin-right: 0.25rem;
+}
+
+.community-card-meta .separator {
+    margin: 0 0.5rem;
+}
+
+.community-card-content {
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.community-card-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.community-card-stats {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-light);
+}
+
+.community-card-stats .icon {
+    margin-right: 0.25rem;
+}
+
+.new-post-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: var(--color-card);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.new-post-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: var(--font-family);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.post-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.post-detail-content {
+    background-color: var(--color-card);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    color: var(--color-text-light);
+    flex-wrap: wrap;
+}
+
+.post-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+}
+
+.stat .icon {
+    margin-right: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    .community-posts {
+        grid-template-columns: 1fr;
+    }
+
+    .topic-filter {
+        flex-direction: column;
+    }
+
+    .topic-button {
+        width: 100%;
+    }
+}
+

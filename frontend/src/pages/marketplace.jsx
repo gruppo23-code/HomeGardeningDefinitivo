@@ -5,6 +5,8 @@ import Cart from '../Components/Cart';
 import AddProductPopup from '../Components/AddProductPopup';
 import { ShoppingCart, PlusCircle } from 'lucide-react';
 import '../pages/css/marketplace.css';
+import axios from "axios";
+import defaultImage from "../assets/img/pianta_stilizzata.jpg";
 
 const Marketplace = () => {
     const [items, setItems] = useState([]);
@@ -16,18 +18,20 @@ const Marketplace = () => {
     const [isAddProductOpen, setIsAddProductOpen] = useState(false);
 
     useEffect(() => {
-        // Simulazione di una chiamata API
-        const sampleItems = [
-            { id: 1, name: 'Semi di pomodoro', type: 'seeds', price: 2.99, image: 'https://via.placeholder.com/200?text=Tomato+Seeds' },
-            { id: 2, name: 'Annaffiatoio', type: 'tool', price: 15.99, image: 'https://via.placeholder.com/200?text=Watering+Can' },
-            { id: 3, name: 'Pianta di basilico', type: 'plant', price: 5.99, image: 'https://via.placeholder.com/200?text=Basil+Plant' },
-            { id: 4, name: 'Guanti da giardinaggio', type: 'tool', price: 8.99, image: 'https://via.placeholder.com/200?text=Gardening+Gloves' },
-            { id: 5, name: 'Semi di lavanda', type: 'seeds', price: 3.99, image: 'https://via.placeholder.com/200?text=Lavender+Seeds' },
-            { id: 6, name: 'Vaso in terracotta', type: 'accessory', price: 7.99, image: 'https://via.placeholder.com/200?text=Terracotta+Pot' }
-        ];
-
-        setItems(sampleItems);
-        setFilteredItems(sampleItems);
+        axios.get('http://localhost:8081/listaannunci')
+        .then(res => {
+            const tempAnnunci = res.data.map(ann => {
+                if (ann.img) {
+                    // Converti il buffer in base64
+                    const base64String = btoa(String.fromCharCode(...new Uint8Array(ann.img.data)));
+                    const imageUrl = `data:image/jpg;base64,${base64String}`;
+                    return { ...ann, imageUrl };
+                }
+                return { ...ann, imageUrl: "https://via.placeholder.com/200?text="+ann.name+"+"+ann.type }; // Usa l'immagine predefinita se non c'è immagine
+            });
+            setItems(tempAnnunci);
+            setFilteredItems(tempAnnunci);
+        })
     }, []);
 
     useEffect(() => {
@@ -39,23 +43,84 @@ const Marketplace = () => {
     }, [searchTerm, filterType, items]);
 
     const addToCart = (item) => {
-        setCart([...cart, item]);
+        axios.post('http://localhost:8081/aggiungicarrello', {id: item.id})
+            .then(res => {
+                console.log("Aggiunta al carrello effettuata con successo!!!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
     const removeFromCart = (itemId) => {
-        setCart(cart.filter(item => item.id !== itemId));
+        axios.post('http://localhost:8081/rimuoviarticolo', {id: itemId})
+            .then(res => {
+                console.log("Rimozione articolo effettuata con successo!!!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
     const clearCart = () => {
-        setCart([]);
+        axios.post('http://localhost:8081/cancellacarrello')
+            .then(res => {
+                //console.log("Carrello ripulito correttamente!!!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
+
+    //Funzione per la gestione dell'acquisto (simulazione)
+    const [tempCart, setTempCart] = useState([]);
+    const buy = () => {
+        axios.get('http://localhost:8081/visualizzacarrello') //Prendo i dati degli oggetti nel carrello
+            .then(res => {
+                setTempCart(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        axios.post("http://localhost:8081/acquisto",tempCart) //Registro l'acquisto
+            .then(res => {
+                console.log("Acquisto effettuato con successo!!!");
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        //clearCart();
+    }
+
+    useEffect(() => {
+        axios.get('http://localhost:8081/visualizzacarrello')
+            .then(res => {
+                setCart(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    },[isCartOpen,addToCart,removeFromCart,clearCart,buy]);
+
 
     const toggleCart = () => {
         setIsCartOpen(!isCartOpen);
     };
 
-    const handleAddProduct = (newProduct) => {
-        setItems([...items, newProduct]);
+    const handleAddProduct = (newProduct) => { //Gestione aggiungi prodotto
+        axios.post('http://localhost:8081/aggiungiannuncio', newProduct,{
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(res => {
+                window.location.reload();
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
     return (
@@ -89,6 +154,7 @@ const Marketplace = () => {
             </div>
             {isCartOpen && (
                 <Cart
+                    buy={buy}
                     cart={cart}
                     removeFromCart={removeFromCart}
                     clearCart={clearCart}
