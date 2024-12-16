@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Trash2 } from 'lucide-react';
 
-const Cart = ({ cart, removeFromCart, clearCart, closeCart }) => {
+const Cart = ({ buy,cart, removeFromCart, clearCart, closeCart }) => {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
 
     return (
@@ -42,7 +42,7 @@ const Cart = ({ cart, removeFromCart, clearCart, closeCart }) => {
                     <div className="cart-total" style={{ marginTop: '20px', borderTop: '1px solid #e0e0e0', paddingTop: '15px' }}>
                         <strong style={{ fontSize: '1.3rem', fontWeight: 600 }}>Totale: €{total.toFixed(2)}</strong>
                     </div>
-                    <button className="checkout-button" style={{
+                    <button className="checkout-button" onClick={buy} style={{
                         fontSize: '1.2rem',
                         fontWeight: 500,
                         marginTop: '15px',

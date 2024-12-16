@@ -18,10 +18,10 @@ const SearchBar = ({ searchTerm, setSearchTerm, filterType, setFilterType }) => 
                 onChange={(e) => setFilterType(e.target.value)}
             >
                 <option value="all">Tutti i prodotti</option>
-                <option value="seeds">Semi</option>
-                <option value="plant">Piante</option>
-                <option value="tool">Attrezzi</option>
-                <option value="accessory">Accessori</option>
+                <option value="Semi">Semi</option>
+                <option value="Piante">Piante</option>
+                <option value="Attrezzi">Attrezzi</option>
+                <option value="Accessori">Accessori</option>
             </select>
         </div>
     );

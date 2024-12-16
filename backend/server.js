@@ -277,6 +277,188 @@ app.post('/ricercaguide2', (req, res) => {
 })
 //Fine gestione guide di coltivazione
 
+//Inizio gestione marketplace
+
+app.post('/aggiungiannuncio', verificaToken, upload.single('image'),(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let imgBuffer = null;
+        if(req.file) {
+            imgBuffer = req.file.buffer;
+        }
+        let id_utente = result[0].id;
+        let {name,type,price} = req.body;
+        let valori = [name,type,price,imgBuffer,1,id_utente];
+        const sql = "INSERT INTO annunci (nome,tipo,prezzo,immagine,attivo,id_utente) " +
+            "VALUES (?)";
+        connessione.query(sql,[valori],(errore, r) => {
+            if (errore) {
+                console.error("Errore: ",errore);
+            }
+        })
+    })
+})
+
+app.get('/listaannunci', (req, res) => {
+    const query = 'SELECT a.id, a.nome as name, t.tipo as type, a.prezzo as price,immagine as img, CONCAT(u.nome,\' \' ,u.cognome) as user  FROM annunci a ' +
+        'JOIN tipo_annunci t ON a.tipo = t.id ' +
+        'JOIN utenti u ON u.id = a.id_utente';
+    connessione.query(query,(err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+        } else {
+            res.json(JSON.parse(JSON.stringify(result)));
+        }
+    })
+})
+
+app.post('/aggiungicarrello', verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        const query = "INSERT INTO carrello (id_articolo,id_utente) VALUES (?)";
+        let id_utente = result[0].id;
+        const valori = [req.body.id,id_utente];
+        connessione.query(query,[valori],(err, r) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            }
+        })
+    })
+})
+
+app.get("/visualizzacarrello",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query = "SELECT c.id as id,a.nome as name, a.prezzo as price, a.id as id_articolo FROM carrello c " +
+            "JOIN annunci a ON c.id_articolo = a.id " +
+            "WHERE c.id_utente = ?";
+        connessione.query(query,[id_utente],(err, result) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            } else {
+                res.status(200).send(JSON.parse(JSON.stringify(result)));
+            }
+        })
+    })
+})
+
+app.post("/rimuoviarticolo",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        let id_articolo = req.body.id;
+        const query = "DELETE FROM carrello WHERE `carrello`.`id` = ?";
+        connessione.query(query,[id_articolo],(err, result) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            } else {
+                //console.log(JSON.stringify(result));
+            }
+        })
+    })
+})
+
+app.post("/cancellacarrello",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query = "DELETE FROM carrello WHERE id_utente = ?";
+        connessione.query(query,[id_utente],(err, result) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            }
+        })
+    })
+})
+
+app.post("/acquisto", verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const acquisti = req.body;
+        const query= "INSERT INTO acquisti (id_articolo, prezzo, id_utente, data, ora) " +
+            "VALUES (?, ?, ?, CURDATE(), CURTIME());"
+        connessione.beginTransaction((err) => {
+            if (err) {
+                return res.status(500).send("Errore nella transazione");
+            }
+            acquisti.forEach((row) => {
+                console.log(row)
+                connessione.query(query, [row.id_articolo,row.price,id_utente], (err, r) => {
+                    if (err) {
+                        return connessione.rollback(() => {
+                            console.error("Errore durante l'inserimento: ", err);
+                            return res.status(500).send("Errore durante l'inserimento");
+                        });
+                    }
+
+                })
+            })
+        })
+        connessione.commit((err) => {
+            if (err) {
+                return connessione.rollback(() => {
+                    console.error("Errore durante il commit: ", err);
+                    return res.status(500).send("Errore durante il commit");
+                });
+            }
+            res.send("Acquisti inseriti con successo");
+        })
+
+    })
+})
+
+//Fine gestione marketplace
+
 
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
