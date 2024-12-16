@@ -15,20 +15,20 @@ const footerStyle = `
 
 function Footer() {
     return (
-        <footer className="bg-success text-white py-5 font-navbar">
+        <footer className="bg-success text-white py-3 font-navbar">
             <style>{footerStyle}</style>
-            <div className="container">
+            <div className="container footer-content rounded-3 p-2">
                 <div className="row">
-                    <div className="col-md-4 mb-4 mb-md-0">
-                        <h5 className="mb-3 fw-bold fs-4">Informazioni</h5>
+                    <div className="col-md-4 mb-2 mb-md-0">
+                        <h5 className="mb-1 fw-bold fs-4">Informazioni</h5>
                         <ul className="list-unstyled">
                             <li><a href="/about" className="text-white text-decoration-none fw-semibold">Chi Siamo</a></li>
                             <li><a href="/contact" className="text-white text-decoration-none fw-semibold">Contattaci</a></li>
                             <li><a href="/privacy" className="text-white text-decoration-none fw-semibold">Privacy Policy</a></li>
                         </ul>
                     </div>
-                    <div className="col-md-4 mb-4 mb-md-0">
-                        <h5 className="mb-3 fw-bold fs-4">Seguici</h5>
+                    <div className="col-md-4 mb-2 mb-md-0">
+                        <h5 className="mb-1 fw-bold fs-4">Seguici</h5>
                         <ul className="list-unstyled">
                             <li><a href="https://facebook.com" className="text-white text-decoration-none fw-semibold" target="_blank" rel="noopener noreferrer">Facebook</a></li>
                             <li><a href="https://x.com" className="text-white text-decoration-none fw-semibold" target="_blank" rel="noopener noreferrer">X</a></li>
@@ -36,9 +36,9 @@ function Footer() {
                         </ul>
                     </div>
                     <div className="col-md-4">
-                        <h5 className="mb-3 fw-bold fs-4">Iscriviti alla Newsletter</h5>
+                        <h5 className="mb-1 fw-bold fs-4">Iscriviti alla Newsletter</h5>
                         <form>
-                            <div className="mb-3">
+                            <div className="mb-2">
                                 <input
                                     type="email"
                                     className="form-control"
@@ -59,9 +59,9 @@ function Footer() {
                         </form>
                     </div>
                 </div>
-                <hr className="my-4 border-light border-2" />
-                <div className="text-center">
-                    <p className="mb-0 fw-semibold">&copy; {new Date().getFullYear()} Home Gardening. Tutti i diritti riservati.</p>
+                <hr className="my-2 border-light border-2" />
+                <div className="text-center d-flex align-items-center" style={{ height: '40px' }}>
+                    <p className="mb-0 fw-semibold w-100">&copy; {new Date().getFullYear()} Home Gardening. Tutti i diritti riservati.</p>
                 </div>
             </div>
         </footer>

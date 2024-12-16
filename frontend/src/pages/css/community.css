@@ -1,7 +1,8 @@
 .community-page {
     font-family: 'Poppins', 'Roboto', sans-serif;
-    background-color: #f0f4f8;
+    background-color: #e8f5e9;  /* Cambia questo valore con una tonalità di verde chiaro */
     color: #333333;
+    min-height: 100vh;  /* Assicura che lo sfondo copra l'intera altezza della viewport */
 }
 
 .community-container {
