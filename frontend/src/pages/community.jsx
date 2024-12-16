@@ -60,8 +60,8 @@ const NewPostForm = ({ onPostSubmit }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="new-post-form">
-            <div className="form-group">
+        <form onSubmit={handleSubmit} className="community-new-post-form">
+            <div className="community-form-group">
                 <label htmlFor="title">Titolo</label>
                 <input
                     type="text"
@@ -69,17 +69,17 @@ const NewPostForm = ({ onPostSubmit }) => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="form-control"
+                    className="community-form-control"
                 />
             </div>
-            <div className="form-group">
+            <div className="community-form-group">
                 <label htmlFor="topic">Topic</label>
                 <select
                     id="topic"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
                     required
-                    className="form-control"
+                    className="community-form-control"
                 >
                     <option value="">Seleziona un topic</option>
                     {topics.map((t) => (
@@ -87,28 +87,28 @@ const NewPostForm = ({ onPostSubmit }) => {
                     ))}
                 </select>
             </div>
-            <div className="form-group">
+            <div className="community-form-group">
                 <label htmlFor="content">Contenuto</label>
                 <textarea
                     id="content"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     required
-                    className="form-control"
+                    className="community-form-control"
                     rows="5"
                 ></textarea>
             </div>
-            <button type="submit" className="btn btn-primary">Pubblica</button>
+            <button type="submit" className="community-btn community-btn-primary">Pubblica</button>
         </form>
     );
 };
 
 const PostDetail = ({ post, onClose }) => (
-    <div className="post-detail-overlay">
-        <div className="post-detail-content">
-            <button className="close-button" onClick={onClose}>&times;</button>
+    <div className="community-post-detail-overlay">
+        <div className="community-post-detail-content">
+            <button className="community-close-button" onClick={onClose}>&times;</button>
             <h2>{post.title}</h2>
-            <div className="post-meta">
+            <div className="community-post-meta">
                 <User className="icon" size={16} />
                 <span>{post.author.name}</span>
                 <span className="separator">•</span>
@@ -119,12 +119,12 @@ const PostDetail = ({ post, onClose }) => (
                 <span>{post.topic}</span>
             </div>
             <p>{post.content}</p>
-            <div className="post-stats">
-                <div className="stat">
+            <div className="community-post-stats">
+                <div className="community-stat">
                     <ThumbsUp className="icon" size={16} />
                     <span>{post.likes} Mi piace</span>
                 </div>
-                <div className="stat">
+                <div className="community-stat">
                     <MessageSquare className="icon" size={16} />
                     <span>{post.comments} Commenti</span>
                 </div>
@@ -183,66 +183,68 @@ function Community() {
         : posts.filter(post => post.topic === activeTopic);
 
     return (
-        <div className="container my-5">
-            <header className="community-header">
-                <h1 className="community-title">Community Home Gardening</h1>
-                <p className="community-subtitle">Condividi la tua passione per il giardinaggio!</p>
-            </header>
+        <div className="community-page">
+            <div className="community-container">
+                <header className="community-header">
+                    <h1 className="community-title">Community Home Gardening</h1>
+                    <p className="community-subtitle">Condividi la tua passione per il giardinaggio!</p>
+                </header>
 
-            <div className="community-tabs">
-                <button
-                    className={`tab-button ${activeTab === "posts" ? "active" : ""}`}
-                    onClick={() => setActiveTab("posts")}
-                >
-                    <MessageSquare className="icon" size={20} />
-                    Post
-                </button>
-                <button
-                    className={`tab-button ${activeTab === "new" ? "active" : ""}`}
-                    onClick={() => setActiveTab("new")}
-                >
-                    <PlusCircle className="icon" size={20} />
-                    Nuovo Post
-                </button>
-            </div>
-
-            {activeTab === "posts" && (
-                <>
-                    <div className="topic-filter">
-                        <button
-                            className={`topic-button ${activeTopic === "all" ? "active" : ""}`}
-                            onClick={() => setActiveTopic("all")}
-                        >
-                            Tutti
-                        </button>
-                        {topics.map(topic => (
-                            <button
-                                key={topic}
-                                className={`topic-button ${activeTopic === topic ? "active" : ""}`}
-                                onClick={() => setActiveTopic(topic)}
-                            >
-                                {topic}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="community-posts">
-                        {filteredPosts.map((post) => (
-                            <PostCard key={post.id} post={post} onPostClick={setSelectedPost} />
-                        ))}
-                    </div>
-                </>
-            )}
-
-            {activeTab === "new" && (
-                <div className="new-post-container">
-                    <h2>Crea un nuovo post</h2>
-                    <NewPostForm onPostSubmit={handlePostSubmit} />
+                <div className="community-tabs">
+                    <button
+                        className={`community-tab-button ${activeTab === "posts" ? "active" : ""}`}
+                        onClick={() => setActiveTab("posts")}
+                    >
+                        <MessageSquare className="icon" size={20} />
+                        Post
+                    </button>
+                    <button
+                        className={`community-tab-button ${activeTab === "new" ? "active" : ""}`}
+                        onClick={() => setActiveTab("new")}
+                    >
+                        <PlusCircle className="icon" size={20} />
+                        Nuovo Post
+                    </button>
                 </div>
-            )}
 
-            {selectedPost && (
-                <PostDetail post={selectedPost} onClose={() => setSelectedPost(null)} />
-            )}
+                {activeTab === "posts" && (
+                    <>
+                        <div className="community-topic-filter">
+                            <button
+                                className={`community-topic-button ${activeTopic === "all" ? "active" : ""}`}
+                                onClick={() => setActiveTopic("all")}
+                            >
+                                Tutti
+                            </button>
+                            {topics.map(topic => (
+                                <button
+                                    key={topic}
+                                    className={`community-topic-button ${activeTopic === topic ? "active" : ""}`}
+                                    onClick={() => setActiveTopic(topic)}
+                                >
+                                    {topic}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="community-posts">
+                            {filteredPosts.map((post) => (
+                                <PostCard key={post.id} post={post} onPostClick={setSelectedPost} />
+                            ))}
+                        </div>
+                    </>
+                )}
+
+                {activeTab === "new" && (
+                    <div className="community-new-post-container">
+                        <h2>Crea un nuovo post</h2>
+                        <NewPostForm onPostSubmit={handlePostSubmit} />
+                    </div>
+                )}
+
+                {selectedPost && (
+                    <PostDetail post={selectedPost} onClose={() => setSelectedPost(null)} />
+                )}
+            </div>
         </div>
     );
 }
