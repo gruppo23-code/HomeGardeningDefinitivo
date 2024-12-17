@@ -1,17 +1,17 @@
-import React, { useRef } from "react";
-import Alert from "./alert.jsx";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Alert from "./alert";
 import axios from "axios";
+import "./css/LoginForm.css";
 
 function LoginForm() {
-    const [alert, setAlert] = React.useState(false);
-    const [alertMessage, setAlertMessage] = React.useState(''); // Aggiunta per gestire il messaggio di errore
-
-    const [valori, setValori] = React.useState({
+    const [alert, setAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [valori, setValori] = useState({
         email: '',
         password: '',
     });
-
-    const [utente , setUtente] = React.useState(null);
+    const [utente, setUtente] = useState(null);
 
     axios.defaults.withCredentials = true;
 
@@ -20,51 +20,83 @@ function LoginForm() {
         axios.post('http://localhost:8081/login', valori)
             .then(res => {
                 setAlert(false);
-
-
                 setUtente({nome: res.data.nome, cognome: res.data.cognome});
                 window.location.reload();
-                //console.log(utente);
                 console.log(res.data);
             })
             .catch(err => {
                 console.log(err);
                 if (err.response && (err.response.status === 401 || err.response.status === 404)) {
                     setAlert(true);
-                    setAlertMessage('Email o password errate!'); // Imposta il messaggio di errore
+                    setAlertMessage('Email o password errate!');
                 } else {
                     setAlert(true);
-                    setAlertMessage('Si è verificato un errore. Riprova.'); // Messaggio generico per altri errori
+                    setAlertMessage('Si è verificato un errore. Riprova.');
                 }
             });
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group align-content-center d-flex flex-column align-items-center">
-                    <div className="mt-1 w-auto">
-                        <input type="email" className="form-control" id="InputEmail" aria-describedby="emailHelp"
-                               placeholder="Email"
-                               onChange={e => setValori({ ...valori, email: e.target.value })} required />
+        <div className="login-page">
+            <div className="login-container">
+                <div className="login-card">
+                    <div className="login-header">
+                        <h2>Benvenuto</h2>
+                        <p>Accedi al tuo account Home Gardening</p>
+                        <div className="register-prompt">
+                            <span>Nuovo da queste parti? </span>
+                            <Link
+                                to="/registrazione"
+                                className="register-link"
+                                onClick={() => {
+                                    // Rimuovi il modal-backdrop
+                                    const backdrop = document.querySelector('.modal-backdrop');
+                                    if (backdrop) {
+                                        backdrop.remove();
+                                    }
+                                    // Rimuovi la classe modal-open dal body
+                                    document.body.classList.remove('modal-open');
+                                }}
+                            >
+                                Registrati
+                            </Link>
+                        </div>
                     </div>
-                    <div className="mt-3 w-auto">
-                        <input type="password" className="form-control" id="InputPassword" placeholder="Password"
-                               onChange={e => setValori({ ...valori, password: e.target.value })} required />
-                    </div>
-                    {alert && (<Alert message={alertMessage} />)} {/* Passa il messaggio all'alert */}
-                    <div className="mt-3 w-auto">
-                        <button type="submit" className="btn btn-success">Accedi</button>
-                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="InputEmail">Email</label>
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="InputEmail"
+                                placeholder="Inserisci la tua email"
+                                onChange={e => setValori({ ...valori, email: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="InputPassword">Password</label>
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="InputPassword"
+                                placeholder="Inserisci la tua password"
+                                onChange={e => setValori({ ...valori, password: e.target.value })}
+                                required
+                            />
+                        </div>
+                        {alert && <Alert message={alertMessage} />}
+                        <div className="buttons-container">
+                            <button type="submit" className="login-btn">
+                                Accedi
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </form>
-            {utente && ( // Mostra il messaggio di benvenuto se l'utente è autenticato
-                <div className="mt-3">
-                    <h1>Benvenuto, {utente.nome} {utente.cognome}!</h1>
-                </div>
-            )}
+            </div>
         </div>
-    )
+    );
 }
 
 export default LoginForm;
+

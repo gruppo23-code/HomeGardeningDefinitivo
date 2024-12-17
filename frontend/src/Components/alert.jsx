@@ -1,11 +1,12 @@
-import React from "react";
+import React from 'react';
 
 function Alert({ message }) {
     return (
-        <div className="alert alert-danger mt-2" role="alert" style={{fontSize: '12px'}}>
+        <div className="custom-alert" role="alert">
             {message}
         </div>
-    )
+    );
 }
 
 export default Alert;
+
