@@ -432,7 +432,6 @@ app.post("/acquisto", verificaToken,(req, res) => {
                 return res.status(500).send("Errore nella transazione");
             }
             acquisti.forEach((row) => {
-                console.log(row)
                 connessione.query(query, [row.id_articolo,row.price,id_utente], (err, r) => {
                     if (err) {
                         return connessione.rollback(() => {
@@ -459,6 +458,10 @@ app.post("/acquisto", verificaToken,(req, res) => {
 
 //Fine gestione marketplace
 
+//Inizio gestione sezione community
+
+
+//Fine gestione sezione community
 
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {

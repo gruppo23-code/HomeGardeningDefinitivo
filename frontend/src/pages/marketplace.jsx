@@ -6,7 +6,6 @@ import AddProductPopup from '../Components/AddProductPopup';
 import { ShoppingCart, PlusCircle } from 'lucide-react';
 import '../pages/css/marketplace.css';
 import axios from "axios";
-import defaultImage from "../assets/img/pianta_stilizzata.jpg";
 
 const Marketplace = () => {
     const [items, setItems] = useState([]);
@@ -73,26 +72,16 @@ const Marketplace = () => {
     };
 
     //Funzione per la gestione dell'acquisto (simulazione)
-    const [tempCart, setTempCart] = useState([]);
-    const buy = () => {
-        axios.get('http://localhost:8081/visualizzacarrello') //Prendo i dati degli oggetti nel carrello
-            .then(res => {
-                setTempCart(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-
-        axios.post("http://localhost:8081/acquisto",tempCart) //Registro l'acquisto
-            .then(res => {
-                console.log("Acquisto effettuato con successo!!!");
-            })
-            .catch(err => {
-                console.log(err);
-            })
-
-        //clearCart();
-    }
+    const buy = async () => {
+        try {
+            const res = await axios.get('http://localhost:8081/visualizzacarrello'); // Prendo i dati degli oggetti nel carrello
+            await axios.post("http://localhost:8081/acquisto", res.data);
+            console.log("Acquisto effettuato con successo!!!");
+            clearCart();
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         axios.get('http://localhost:8081/visualizzacarrello')
