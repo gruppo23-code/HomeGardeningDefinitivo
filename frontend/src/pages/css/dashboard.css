@@ -1,30 +1,103 @@
+.plant-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    width: 400px; /* Increased width for larger size */
+    height: 400px; /* Increased height for larger size */
+    display: flex;
+    flex-direction: column;
+}
+
+.plant-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.plant-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 60%; /* Adjusted height for image */
+    overflow: hidden;
+}
+
 .plant-image {
-    width: 100%; /* Larghezza al 100% del contenitore */
-    height: 200px; /* Altezza fissa */
-    object-fit: cover; /* Mantiene le proporzioni dell'immagine e la riempie */
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
 }
 
-.dropdown-menu {
-    background-color: white; /* Sfondo bianco per la lista */
-    border: 1px solid #ccc; /* Aggiungi un bordo per distinguere la lista */
-    max-height: 200px; /* Limita l'altezza della lista */
-    overflow-y: auto; /* Aggiungi lo scroll se ci sono troppi elementi */
+.plant-image-wrapper:hover .plant-image {
+    transform: scale(1.1); /* Zoom effect on hover */
 }
 
-.dropdown-item {
-    color: black; /* Colore del testo */
-    padding: 10px; /* Padding per rendere gli elementi più cliccabili */
-    cursor: pointer; /* Cambia il cursore per indicare che è cliccabile */
+.card-content {
+    padding: 1rem; /* Adjusted padding */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
-.dropdown-item:hover {
-    background-color: #f0f0f0; /* Colore di sfondo al passaggio del mouse */
-    color: black; /* Assicurati che il testo sia leggibile */
+.plant-name {
+    font-size: 1.5rem; /* Adjusted font size */
+    color: #2E7D32;
+    margin: 0;
+    font-weight: bold;
 }
 
-.soprannome {
-    color: #808080; /* Colore grigio */
-    font-size: 1.2em; /* Dimensione del font */
-    font-style: italic; /* Stile corsivo */
-    margin: 10px 0; /* Margine sopra e sotto */
+.plant-nickname {
+    color: #666;
+    font-style: italic;
+    margin: 0.5rem 0;
+    font-size: 1rem; /* Adjusted font size */
+}
+
+.plant-description {
+    color: #444;
+    font-size: 0.9rem; /* Adjusted font size */
+    line-height: 1.4;
+    margin-bottom: auto;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    -webkit-box-orient: vertical;
+}
+
+.card-actions {
+    padding: 0.5rem; /* Adjusted padding */
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-actions .btn {
+    flex: 1;
+    margin: 0 0.5rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-edit {
+    color: #2E7D32;
+    border: 1px solid #2E7D32;
+}
+
+.btn-edit:hover {
+    background-color: #2E7D32;
+    color: white;
+}
+
+.btn-delete {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+.btn-delete:hover {
+    background-color: #dc3545;
+    color: white;
 }
