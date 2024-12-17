@@ -459,7 +459,113 @@ app.post("/acquisto", verificaToken,(req, res) => {
 //Fine gestione marketplace
 
 //Inizio gestione sezione community
+app.post("/aggiungipost", verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_topic ="SELECT id FROM topics WHERE topic = ?";
+        connessione.query(query_topic,req.body.topic, (err, res) => {
+            const query = "INSERT INTO post (titolo, contenuto, autore, data, likes, topic) VALUES (?,?,?,NOW(),?,?)";
+            connessione.query(query,[req.body.title,req.body.content,id_utente,0,res[0].id], (err, r) => {
+                if (err){
+                    console.error("Errore durante la query: ", err);
+                    return res.status(500).send("Errore del server");
+                }
+                console.log("Post inserito correttamente!!!");
+            })
+        })
+    })
+})
 
+app.post("/aggiungicommento", verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query = "INSERT INTO commenti (id_post,autore,contenuto,data) VALUES (?,?,?,NOW())";
+        connessione.query(query,[req.body.postId,id_utente,req.body.comment], (err, res) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+                return res.status(500).send("Errore del server");
+            }
+        })
+    })
+})
+
+app.get("/visualizzapost", (req, res) => {
+    const query = "SELECT p.id as id, p.titolo as titolo, p.contenuto as content, p.data as date, p.likes as likes, t.topic as topic, CONCAT(u.nome, \' \', u.cognome) as autore " +
+        "FROM post p " +
+        "JOIN topics t ON p.topic = t.id " +
+        "JOIN utenti u ON p.autore = u.id";
+
+    connessione.query(query, (err, posts) => {
+        if (err) {
+            console.error("Errore nella query dei post:", err);
+            return res.status(500).json({ error: "Errore nel recupero dei post." });
+        }
+
+        // Creazione di un array di Promesse per ottenere i commenti di ogni post
+        const postPromises = posts.map(post => {
+            return new Promise((resolve, reject) => {
+                const query_commenti = "SELECT c.id as id, CONCAT(u.nome, \' \', u.cognome) as author, c.contenuto as content, c.data as date FROM commenti c " +
+                    "JOIN utenti u ON c.autore = u.id " +
+                    "WHERE id_post = " + post.id;
+
+                connessione.query(query_commenti, (err, comments) => {
+                    if (err) {
+                        console.error("Errore nella query dei commenti:", err);
+                        return reject(err);
+                    }
+
+                    // Costruzione dell'oggetto post con i commenti
+                    const postWithComments = {
+                        id: post.id,
+                        title: post.titolo,
+                        content: post.content,
+                        author: { name: post.autore },
+                        date: post.date,
+                        likes: post.likes,
+                        comments: comments.map(comment => ({
+                            id: comment.id,
+                            author: comment.author,
+                            content: comment.content,
+                            date: comment.date
+                        })),
+                        topic: post.topic
+                    };
+
+                    resolve(postWithComments);
+                });
+            });
+        });
+
+        // Attendo che tutte le promesse siano risolte
+        Promise.all(postPromises)
+            .then(postsWithComments => {
+                console.log(postsWithComments);
+                res.json(postsWithComments); // Invio risposta al frontend
+            })
+            .catch(err => {
+                console.error("Errore durante il recupero dei commenti:", err);
+                res.status(500).json({ error: "Errore nel recupero dei commenti." });
+            });
+    });
+});
 
 //Fine gestione sezione community
 
