@@ -30,11 +30,11 @@ const api = {
     fetchPosts: async () => {
         try {
             const response = await axios.get("http://localhost:8081/visualizzapost");
-            console.log(response.data);
-            return response.data; // Restituisci i dati ottenuti dalla query
+            //console.log(response.data);
+            return response.data;
         } catch (error) {
             console.error("Errore durante il recupero dei post:", error);
-            throw error; // Rilancia l'errore per gestirlo nel componente
+            throw error;
         }
     },
     createPost: async (post) => {
@@ -68,12 +68,13 @@ const api = {
     },
     deleteComment: async (postId, commentId) => {
         console.log(commentId);
-        // Simulating API call
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({ success: true });
-            }, 500);
-        });
+        axios.post("http://localhost:8081/cancellacommento", {commentId: commentId})
+            .then(response => {
+                console.log(response);
+            })
+        .catch(error => {
+            console.log(error);
+        })
     }
 };
 

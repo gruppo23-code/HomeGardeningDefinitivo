@@ -567,6 +567,17 @@ app.get("/visualizzapost", (req, res) => {
     });
 });
 
+app.post("/cancellacommento", verificaToken, (req, res) => {
+    const query="DELETE from commenti where id = ?";
+    connessione.query(query,req.body.commentId, (err, result) => {
+        if (err) {
+            console.error("Errore durante la cancellazione del commento:", err);
+        } else {
+            console.log(result);
+        }
+    })
+})
+
 //Fine gestione sezione community
 
 
