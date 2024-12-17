@@ -458,6 +458,10 @@ app.post("/acquisto", verificaToken,(req, res) => {
 
 //Fine gestione marketplace
 
+//Inizio gestione sezione community
+
+
+//Fine gestione sezione community
 
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
