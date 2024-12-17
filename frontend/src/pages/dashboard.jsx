@@ -184,16 +184,17 @@ function Dashboard() {
                 </div>
             )}
 
-            <div className="dashboard-header">
+            <header className="dashboard-header">
                 <h1 className="dashboard-title">Le tue Piante</h1>
+                <p className="dashboard-subtitle">Gestisci la tua collezione di piante e tieni traccia della loro crescita</p>
                 <button
-                    className="btn btn-success add-plant-btn"
+                    className="add-plant-btn"
                     onClick={() => setShowModal(true)}
                 >
                     <i className="fas fa-plus me-2"></i>
-                    Aggiungi Pianta
+                    Aggiungi Nuova Pianta
                 </button>
-            </div>
+            </header>
 
             {loading ? (
                 <div className="text-center my-5">
@@ -222,17 +223,17 @@ function Dashboard() {
                             </div>
                             <div className="card-actions">
                                 <button
-                                    className="btn btn-outline-primary btn-edit"
+                                    className="btn btn-edit"
                                     onClick={() => handleEdit(plant)}
                                 >
-                                    <i className="fas fa-edit"></i>
+                                    <i className="fas fa-edit me-2"></i>
                                     Modifica
                                 </button>
                                 <button
-                                    className="btn btn-outline-danger btn-delete"
+                                    className="btn btn-delete"
                                     onClick={() => handleDelete(plant.id)}
                                 >
-                                    <i className="fas fa-trash-alt"></i>
+                                    <i className="fas fa-trash-alt me-2"></i>
                                     Elimina
                                 </button>
                             </div>

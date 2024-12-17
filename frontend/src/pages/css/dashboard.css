@@ -1,103 +1,77 @@
-.plant-card {
-    background: white;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
-    width: 400px; /* Increased width for larger size */
-    height: 400px; /* Increased height for larger size */
-    display: flex;
-    flex-direction: column;
+:root {
+    --color-leaf: #4CAF50;
+    --color-earth: #795548;
+    --color-sky: #03A9F4;
+    --color-sunlight: #FFC107;
+    --font-family: 'Poppins', 'Roboto', sans-serif;
 }
 
-.plant-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+.dashboard-container {
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #F1F8E9;
+    font-family: var(--font-family);
 }
 
-.plant-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 60%; /* Adjusted height for image */
-    overflow: hidden;
+.dashboard-header {
+    text-align: center;
+    margin: 0 auto 3rem auto;
+    background-color: var(--color-leaf);
+    padding: 3rem;
+    border-radius: 20px;
+    color: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
 }
 
-.plant-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s;
+.dashboard-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: white;
 }
 
-.plant-image-wrapper:hover .plant-image {
-    transform: scale(1.1); /* Zoom effect on hover */
+.dashboard-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.card-content {
-    padding: 1rem; /* Adjusted padding */
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-}
-
-.plant-name {
-    font-size: 1.5rem; /* Adjusted font size */
-    color: #2E7D32;
-    margin: 0;
-    font-weight: bold;
-}
-
-.plant-nickname {
-    color: #666;
-    font-style: italic;
-    margin: 0.5rem 0;
-    font-size: 1rem; /* Adjusted font size */
-}
-
-.plant-description {
-    color: #444;
-    font-size: 0.9rem; /* Adjusted font size */
-    line-height: 1.4;
-    margin-bottom: auto;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 3; /* Limit to 3 lines */
-    -webkit-box-orient: vertical;
-}
-
-.card-actions {
-    padding: 0.5rem; /* Adjusted padding */
-    background-color: #f8f9fa;
-    border-top: 1px solid #e9ecef;
-    display: flex;
-    justify-content: space-between;
-}
-
-.card-actions .btn {
-    flex: 1;
-    margin: 0 0.5rem;
-    padding: 0.5rem;
-    font-size: 0.9rem;
+.add-plant-btn {
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
     font-weight: 500;
-    transition: background-color 0.3s, color 0.3s;
+    background-color: white;
+    color: var(--color-leaf);
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn-edit {
-    color: #2E7D32;
-    border: 1px solid #2E7D32;
+.add-plant-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    background-color: #f0f0f0;
 }
 
-.btn-edit:hover {
-    background-color: #2E7D32;
-    color: white;
+@media (max-width: 1400px) {
+    .dashboard-header {
+        max-width: 1000px;
+    }
 }
 
-.btn-delete {
-    color: #dc3545;
-    border: 1px solid #dc3545;
+@media (max-width: 768px) {
+    .dashboard-header {
+        margin: 0 1rem 2rem 1rem;
+        padding: 2rem;
+    }
+
+    .dashboard-title {
+        font-size: 2.5rem;
+    }
 }
 
-.btn-delete:hover {
-    background-color: #dc3545;
-    color: white;
-}
