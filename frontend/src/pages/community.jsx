@@ -30,11 +30,11 @@ const api = {
     fetchPosts: async () => {
         try {
             const response = await axios.get("http://localhost:8081/visualizzapost");
-            //console.log(response.data);
-            return response.data;
+            console.log(response.data);
+            return response.data; // Restituisci i dati ottenuti dalla query
         } catch (error) {
             console.error("Errore durante il recupero dei post:", error);
-            throw error;
+            throw error; // Rilancia l'errore per gestirlo nel componente
         }
     },
     createPost: async (post) => {
@@ -67,14 +67,14 @@ const api = {
         }
     },
     deleteComment: async (postId, commentId) => {
-        console.log(commentId);
-        axios.post("http://localhost:8081/cancellacommento", {commentId: commentId})
-            .then(response => {
-                console.log(response);
-            })
-        .catch(error => {
-            console.log(error);
-        })
+        try {
+            const response = await axios.post("http://localhost:8081/cancellacommento", { commentId: commentId });
+            console.log(response);
+            return response.data;
+        } catch (error) {
+            console.error("Errore durante l'eliminazione del commento:", error);
+            throw error;
+        }
     }
 };
 
@@ -196,10 +196,22 @@ const NewPostForm = ({ onPostSubmit, isSubmitting }) => {
 
 const PostDetail = ({ post, onClose, onLike, onComment, onDeleteComment }) => {
     const [newComment, setNewComment] = useState("");
+    const [localComments, setLocalComments] = useState(post.comments);
+
+    useEffect(() => {
+        setLocalComments(post.comments);
+    }, [post.comments]);
 
     const handleCommentSubmit = (e) => {
         e.preventDefault();
         if (newComment.trim()) {
+            const tempComment = {
+                id: Date.now(), // Temporary ID
+                content: newComment,
+                author: "You", // Or the current user's name
+                date: new Date().toISOString()
+            };
+            setLocalComments(prevComments => [...prevComments, tempComment]);
             onComment(post.id, newComment);
             setNewComment("");
         }
@@ -211,13 +223,18 @@ const PostDetail = ({ post, onClose, onLike, onComment, onDeleteComment }) => {
         }
     };
 
+    const handleLocalDeleteComment = (commentId) => {
+        setLocalComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+        onDeleteComment(post.id, commentId);
+    };
+
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString('it-IT', options);
     };
     const isLoggedIn = () => {
         const token = Cookies.get('token');
-        return !!token; // Ritorna true se il token esiste, false altrimenti
+        return !!token; // Returns true if the token exists, false otherwise
     };
 
     return (
@@ -258,12 +275,12 @@ const PostDetail = ({ post, onClose, onLike, onComment, onDeleteComment }) => {
                     </div>
                     <div className="community-stat">
                         <MessageSquare className="icon" />
-                        <span>{post.comments.length} Commenti</span>
+                        <span>{localComments.length} Commenti</span>
                     </div>
                 </div>
                 <div className="community-comments">
                     <h3 className="community-comments-title">Commenti</h3>
-                    {post.comments.map((comment) => (
+                    {localComments.map((comment) => (
                         <div key={comment.id} className="community-comment">
                             <div className="community-comment-header">
                                 <div>
@@ -273,7 +290,7 @@ const PostDetail = ({ post, onClose, onLike, onComment, onDeleteComment }) => {
                                 {isLoggedIn() && (
                                     <button
                                         className="community-comment-delete"
-                                        onClick={() => onDeleteComment(post.id, comment.id)}
+                                        onClick={() => handleLocalDeleteComment(comment.id)}
                                         aria-label="Elimina commento"
                                     >
                                         <Trash2 size={16}/>
@@ -314,12 +331,39 @@ const Community = () => {
         loadPosts();
     }, []);
 
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            loadPosts();
+        }, 30000); // Poll every 30 seconds
+
+        return () => clearInterval(intervalId);
+    }, []);
+
     const loadPosts = async () => {
         setIsLoading(true);
         setError(null);
         try {
             const fetchedPosts = await api.fetchPosts();
-            setPosts(fetchedPosts.map(post => ({ ...post, liked: false })));
+            setPosts(prevPosts => fetchedPosts.map(newPost => {
+                const existingPost = prevPosts.find(p => p.id === newPost.id);
+                return {
+                    ...newPost,
+                    liked: existingPost ? existingPost.liked : false,
+                    comments: existingPost ? existingPost.comments : newPost.comments
+                };
+            }));
+
+            // Aggiorna il post selezionato se presente
+            if (selectedPost) {
+                const updatedSelectedPost = fetchedPosts.find(p => p.id === selectedPost.id);
+                if (updatedSelectedPost) {
+                    setSelectedPost(prevPost => ({
+                        ...updatedSelectedPost,
+                        liked: prevPost.liked,
+                        comments: prevPost.comments
+                    }));
+                }
+            }
         } catch (err) {
             setError("Si è verificato un errore durante il caricamento dei post. Riprova più tardi.");
         } finally {
@@ -364,10 +408,15 @@ const Community = () => {
     const handleComment = async (postId, comment) => {
         try {
             const newComment = await api.addComment(postId, comment);
+
+            // Aggiorna immediatamente lo stato locale
             const updatedPosts = posts.map(post =>
-                post.id === postId ? { ...post, comments: [...post.comments, newComment] } : post
+                post.id === postId
+                    ? { ...post, comments: [...post.comments, newComment] }
+                    : post
             );
             setPosts(updatedPosts);
+
             if (selectedPost && selectedPost.id === postId) {
                 setSelectedPost(prevPost => ({
                     ...prevPost,
@@ -432,7 +481,12 @@ const Community = () => {
                     </button>
                 </div>
 
-                {error && <div className="community-error">{error}</div>}
+                {error && (
+                    <div className="community-error">
+                        <p>{error}</p>
+                        <button onClick={() => setError(null)}>Chiudi</button>
+                    </div>
+                )}
 
                 {activeTab === "posts" && (
                     <>
