@@ -40,9 +40,6 @@ const Profilo  =  () => {
         return <div>Loading...</div>; // Mostra un messaggio di caricamento
     }
 
-    console.log(userInfo.recentPurchases);
-
-
     const handleBioChange = (e) => {
         setBio(e.target.value);
     };

@@ -612,7 +612,7 @@ app.get("/visualizzaprofilo", verificaToken, (req, res) => {
                     }
                     const tipsArray = r.map(row => row.tip);
                     userInfo.personalizedTips = tipsArray;
-                    console.log(userInfo);
+                    //console.log(userInfo);
                     res.send(userInfo);
                 })
             })
