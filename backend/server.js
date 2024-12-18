@@ -580,6 +580,48 @@ app.post("/cancellacommento", verificaToken, (req, res) => {
 
 //Fine gestione sezione community
 
+//Inizio gestione profilo
+
+app.get("/visualizzaprofilo", verificaToken, (req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_utente = "SELECT CONCAT(nome, ' ', cognome) AS name, " +
+            "location, " +
+            "CONCAT(MONTHNAME(DATE(data_registrazione)), ' ', YEAR(DATE(data_registrazione))) AS joinDate, " +
+            "email, telefono AS phone, username, DATE_FORMAT(data_registrazione, '%d-%m-%Y') AS registrationDate " +
+            "FROM utenti WHERE id = ?";
+        connessione.query(query_utente,id_utente,(err, result) => {
+            let userInfo = result[0];
+            const query_acquisti = "SELECT a.id, an.nome AS name,DATE_FORMAT(a.data, '%d-%m-%Y') AS date,CONCAT('€',an.prezzo) AS price FROM acquisti a " +
+                "JOIN annunci an ON a.id_articolo = an.id " +
+                "WHERE a.id_utente = ?"
+            connessione.query(query_acquisti,id_utente,(err, resu) => {
+                userInfo.recentPurchases = resu;
+                connessione.query("SELECT tip FROM tips", (error, r) => {
+                    if (error) {
+                        return console.error("Errore nella query: ",error);
+                    }
+                    const tipsArray = r.map(row => row.tip);
+                    userInfo.personalizedTips = tipsArray;
+                    console.log(userInfo);
+                    res.send(userInfo);
+                })
+            })
+        })
+    })
+})
+
+//Fine gestione profilo
+
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
     console.log('Running...');

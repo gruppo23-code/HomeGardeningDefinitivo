@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { MapPin, Calendar, Mail, Phone, User, ShoppingBag, Edit2, Leaf } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import gardenImg from '../assets/img/Garden.jpg';
+import axios from "axios";
 
 const fontFamily = "'Poppins', 'Roboto', sans-serif";
 
@@ -15,51 +17,31 @@ const carouselStyle = `
     }
 `;
 
-const Profilo = () => {
+const Profilo  =  () => {
     const [isEditing, setIsEditing] = useState(false);
     const [bio, setBio] = useState("Appassionata di giardinaggio urbano. Amo coltivare erbe aromatiche e verdure sul mio balcone. Sempre alla ricerca di nuovi consigli per rendere il mio spazio più verde!");
 
-    const userInfo = {
-        name: "Maria Rossi",
-        location: "Milano, Italia",
-        joinDate: "Maggio 2022",
-        email: "maria.rossi@example.com",
-        phone: "+39 123 456 7890",
-        recentPurchases: [
-            { id: 1, name: "Set di attrezzi da giardinaggio", date: "15/05/2023", price: "€29.99" },
-            { id: 2, name: "Semi di pomodoro biologici", date: "02/05/2023", price: "€4.50" },
-            { id: 3, name: "Vaso in terracotta 20cm", date: "28/04/2023", price: "€12.00" },
-        ],
-        username: "maria_rossi",
-        registrationDate: "15/05/2022",
-        plants: [
-            { id: 1, name: "Basilico", health: "Ottima" },
-            { id: 2, name: "Pomodori ciliegini", health: "Buona" },
-            { id: 3, name: "Lavanda", health: "Discreta" },
-        ],
-        personalizedTips: [
-            "Ricordati di annaffiare il basilico regolarmente, ma evita di bagnare le foglie.",
-            "I pomodori amano il sole diretto. Assicurati che ricevano almeno 6 ore di luce al giorno.",
-            "La lavanda preferisce terreni ben drenati. Aggiungi della sabbia al terreno per migliorare il drenaggio.",
-            "Prova a potare le erbe aromatiche regolarmente per stimolare una crescita più folta.",
-            "Ruota le tue piante di un quarto di giro ogni settimana per garantire una crescita uniforme.",
-            "Le piante grasse richiedono pochissima acqua: annaffiale solo quando il terreno è completamente asciutto.",
-            "Posiziona le piante d'appartamento lontano da correnti d'aria e fonti di calore per evitare stress termici.",
-            "Usa il caffè avanzato come fertilizzante naturale: è ricco di azoto e benefico per le piante acidofile come le ortensie.",
-            "I peperoncini crescono meglio in vasi piccoli con terriccio ben drenato. Non dimenticare di tenerli al sole.",
-            "Aggiungi uno strato di pacciamatura al terreno dei tuoi vasi per trattenere l'umidità durante l'estate.",
-            "Controlla le foglie delle piante una volta a settimana per identificare tempestivamente eventuali parassiti.",
-            "Le piante aromatiche come il rosmarino preferiscono terreni poveri e ben drenati. Evita di fertilizzarle troppo.",
-            "Rimuovi regolarmente i fiori appassiti dalle tue piante per incoraggiarne di nuovi e prolungare la fioritura.",
-            "Durante i periodi caldi, annaffia le piante la mattina presto per ridurre l'evaporazione e migliorare l'assorbimento.",
-            "Se hai poco spazio, prova a coltivare fragole in vasi sospesi o verticali: sono belle e facili da curare.",
-            "Il timo è una pianta rustica che cresce bene anche in terreni sassosi. Annaffialo solo quando il terreno è asciutto.",
-            "Ruota i vasi delle piante d'appartamento ogni due settimane per favorire una crescita omogenea e simmetrica.",
-            "Le erbe aromatiche come la menta crescono rapidamente: tienile in un vaso separato per evitare che invadano altre piante.",
-            "Usa l'acqua di cottura delle verdure, raffreddata, per annaffiare le piante: contiene nutrienti utili per la loro crescita.",
-            "Se coltivi piante in balcone, considera di aggiungere dei supporti per proteggerle dal vento forte."
-        ]
-    };
+    const [userInfo, setUserInfo] = useState({ recentPurchases: [] });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        axios.get("http://localhost:8081/visualizzaprofilo")
+            .then((response) => {
+                setUserInfo(response.data); // Assegna i dati a userInfo
+                setLoading(false); // Imposta loading a false
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false); // Imposta loading a false anche in caso di errore
+            });
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>; // Mostra un messaggio di caricamento
+    }
+
+    console.log(userInfo.recentPurchases);
+
 
     const handleBioChange = (e) => {
         setBio(e.target.value);
@@ -171,7 +153,7 @@ const Profilo = () => {
                             </div>
                             <div className="card-body">
                                 <ul className="list-group list-group-flush">
-                                    {userInfo.recentPurchases.map((purchase) => (
+                                    {userInfo.recentPurchases.slice(0, 3).map((purchase) => (
                                         <li key={purchase.id} className="list-group-item d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h6 className="mb-0" style={{ fontWeight: 600 }}>{purchase.name}</h6>
@@ -188,7 +170,7 @@ const Profilo = () => {
                     <div className="col-lg-4 mb-4">
                         <div className="card shadow-sm" style={{ borderColor: '#2e7d32', borderRadius: '15px', overflow: 'hidden', height: '100%', fontFamily: fontFamily }}>
                             <img
-                                src="https://via.placeholder.com/400x200?text=Le+Mie+Piante"
+                                src={gardenImg}
                                 className="card-img-top"
                                 alt="Le Mie Piante"
                                 style={{height: '200px', objectFit: 'cover'}}

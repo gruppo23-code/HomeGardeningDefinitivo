@@ -452,6 +452,15 @@ const Community = () => {
         }
     };
 
+    const isLoggedIn = () => {
+        const token = Cookies.get('token');
+        return !!token;
+    };
+
+    const alertClick = () => {
+        alert("Accesso Negato. Devi essere loggato per inserire un nuovo post!");
+    };
+
     const filteredPosts = activeTopic === "Tutti"
         ? posts
         : posts.filter(post => post.topic === activeTopic);
@@ -472,13 +481,24 @@ const Community = () => {
                         <MessageSquare className="icon" />
                         Post
                     </button>
-                    <button
-                        className={`community-tab-button ${activeTab === "new" ? "active" : ""}`}
-                        onClick={() => setActiveTab("new")}
-                    >
-                        <PlusCircle className="icon" />
-                        Nuovo Post
-                    </button>
+                    {isLoggedIn() ? (
+                        <button
+                            className={`community-tab-button ${activeTab === "new" ? "active" : ""}`}
+                            onClick={() => setActiveTab("new")}
+                        >
+                            <PlusCircle className="icon"/>
+                            Nuovo Post
+                        </button>
+                    ) : (
+                        <button
+                            className={`community-tab-button ${activeTab === "new" ? "active" : ""}`}
+                            onClick={alertClick}
+                        >
+                            <PlusCircle className="icon"/>
+                            Nuovo Post
+                        </button>
+                    )}
+
                 </div>
 
                 {error && (
@@ -490,7 +510,7 @@ const Community = () => {
 
                 {activeTab === "posts" && (
                     <>
-                        <div className="community-topic-filter">
+                    <div className="community-topic-filter">
                             {topics.map(topic => (
                                 <button
                                     key={topic}
