@@ -4,19 +4,25 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Leaf, PencilLine } from 'lucide-react';
+import { Plus, Trash2, Leaf, PencilLine, X } from 'lucide-react';
 import './css/dashboard.css';
 
 function Dashboard() {
     const navigate = useNavigate();
     const [plants, setPlants] = useState([]);
     const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [formData, setFormData] = useState({
         plantId: '',
         nickname: '',
         plantDate: '',
         image: null
+    });
+    const [editData, setEditData] = useState({
+        id: '',
+        nickname: ''
     });
     const [availablePlants, setAvailablePlants] = useState([]);
     const [error, setError] = useState(null);
@@ -112,6 +118,7 @@ function Dashboard() {
         if (!window.confirm('Sei sicuro di voler eliminare questa pianta?')) {
             return;
         }
+
         try {
             await axios.post('http://localhost:8081/delete', { plantId });
             setPlants(plants.filter(plant => plant.id !== plantId));
@@ -122,11 +129,33 @@ function Dashboard() {
     };
 
     const handleEdit = (plant) => {
-        // Implement your edit logic here
-        console.log("Editing plant:", plant);
-        // You might want to setFormData based on plant data and show the modal
+        setEditData({
+            id: plant.id,
+            nickname: plant.soprannome_pianta || ''
+        });
+        setShowEditModal(true);
     };
 
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:8081/updateplant', editData);
+            setShowEditModal(false);
+            await loadPlants();
+            resetEditForm();
+        } catch (err) {
+            setError("Errore durante l'aggiornamento della pianta");
+            console.error(err);
+        }
+    };
+
+    const resetEditForm = () => {
+        setEditData({
+            id: '',
+            nickname: ''
+        });
+        setShowEditModal(false);
+    };
 
     const resetForm = () => {
         setFormData({
@@ -139,83 +168,17 @@ function Dashboard() {
         setError(null);
     };
 
+    const handleImageClick = (imageUrl) => {
+        setSelectedImage(imageUrl);
+    };
+
+    const closeImagePopup = () => {
+        setSelectedImage(null);
+    };
+
     if (!Cookies.get('token')) {
         return null;
     }
-
-    const renderForm = (onSubmit) => (
-        <form onSubmit={onSubmit}>
-            <div className="mb-3">
-                <label className="form-label">Seleziona Pianta</label>
-                <select
-                    className="form-select custom-select"
-                    value={formData.plantId}
-                    onChange={(e) => setFormData({
-                        ...formData,
-                        plantId: e.target.value
-                    })}
-                    required
-                >
-                    <option value="">Seleziona una pianta</option>
-                    {availablePlants.map(plant => (
-                        <option key={plant.id} value={plant.id}>
-                            {plant.name}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Soprannome</label>
-                <input
-                    type="text"
-                    className="form-control custom-input"
-                    value={formData.nickname}
-                    onChange={(e) => setFormData({
-                        ...formData,
-                        nickname: e.target.value
-                    })}
-                    required
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Data di Piantagione</label>
-                <input
-                    type="date"
-                    className="form-control custom-input"
-                    value={formData.plantDate}
-                    onChange={(e) => setFormData({
-                        ...formData,
-                        plantDate: e.target.value
-                    })}
-                    required
-                />
-            </div>
-
-            <div className="mb-3">
-                <label className="form-label">Immagine</label>
-                <input
-                    type="file"
-                    className="form-control custom-input"
-                    onChange={(e) => setFormData({
-                        ...formData,
-                        image: e.target.files[0]
-                    })}
-                    accept="image/*"
-                />
-            </div>
-
-            <div className="modal-footer px-0 pb-0">
-                <button type="button" className="btn btn-secondary" onClick={resetForm}>
-                    Annulla
-                </button>
-                <button type="submit" className="btn btn-custom">
-                    Salva
-                </button>
-            </div>
-        </form>
-    );
 
     return (
         <div className="dashboard-container">
@@ -260,15 +223,16 @@ function Dashboard() {
                             <p className="mt-2 loading-text">Caricamento piante in corso...</p>
                         </div>
                     ) : (
-                        <div className="row row-cols-1 row-cols-lg-2 g-4">
+                        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                             {plants.map(plant => (
                                 <div key={plant.id} className="col">
-                                    <div className="custom-card h-100">
-                                        <div className="position-relative">
+                                    <div className="custom-card">
+                                        <div className="position-relative card-image-container">
                                             <img
                                                 src={plant.imageUrl}
                                                 alt={plant.name}
                                                 className="card-img-top"
+                                                onClick={() => handleImageClick(plant.imageUrl)}
                                             />
                                             <span className="plant-type-badge">
                                                 {plant.type}
@@ -299,16 +263,155 @@ function Dashboard() {
                         </div>
                     )}
 
-                    {/* Modal Aggiungi */}
-                    {showModal && (
-                        <div className="popup-modal">
-                            <div className="popup-content">
-                                <div className="popup-header">
-                                    <h5 className="popup-title">Aggiungi una nuova pianta</h5>
-                                    <button className="close-button" onClick={resetForm}>×</button>
+                    {selectedImage && (
+                        <div className="image-popup-overlay" onClick={closeImagePopup}>
+                            <div className="image-popup-content" onClick={e => e.stopPropagation()}>
+                                <button className="image-popup-close" onClick={closeImagePopup}>
+                                    <X size={24} />
+                                </button>
+                                <img src={selectedImage} alt="Plant detail" className="image-popup-img" />
+                            </div>
+                        </div>
+                    )}
+
+                    {showEditModal && (
+                        <div className="popup-overlay">
+                            <div className="popup-modal">
+                                <div className="popup-content">
+                                    <div className="popup-header">
+                                        <h5 className="popup-title">Modifica Soprannome</h5>
+                                        <button
+                                            className="close-button"
+                                            onClick={resetEditForm}
+                                            aria-label="Chiudi modale"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                    <div className="popup-body">
+                                        <form onSubmit={handleEditSubmit}>
+                                            <div className="form-group">
+                                                <label className="form-label" htmlFor="nickname">
+                                                    Soprannome
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    id="nickname"
+                                                    className="custom-input"
+                                                    value={editData.nickname}
+                                                    onChange={(e) => setEditData({
+                                                        ...editData,
+                                                        nickname: e.target.value
+                                                    })}
+                                                    placeholder="Inserisci un soprannome"
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="modal-footer">
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-secondary"
+                                                    onClick={resetEditForm}
+                                                >
+                                                    Annulla
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    className="btn btn-custom"
+                                                >
+                                                    Salva
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <div className="popup-body">
-                                    {renderForm(handleSubmit)}
+                            </div>
+                        </div>
+                    )}
+
+                    {showModal && (
+                        <div className="popup-overlay">
+                            <div className="popup-modal">
+                                <div className="popup-content">
+                                    <div className="popup-header">
+                                        <h5 className="popup-title">Aggiungi una nuova pianta</h5>
+                                        <button className="close-button" onClick={resetForm}>×</button>
+                                    </div>
+                                    <div className="popup-body">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="form-group">
+                                                <label className="form-label">Seleziona Pianta</label>
+                                                <select
+                                                    className="custom-input"
+                                                    value={formData.plantId}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        plantId: e.target.value
+                                                    })}
+                                                    required
+                                                >
+                                                    <option value="">Seleziona una pianta</option>
+                                                    {availablePlants.map(plant => (
+                                                        <option key={plant.id} value={plant.id}>
+                                                            {plant.name}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label" htmlFor="nickname">
+                                                    Il tuo soprannome
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="custom-input"
+                                                    value={formData.nickname}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        nickname: e.target.value
+                                                    })}
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label">Data di Piantagione</label>
+                                                <input
+                                                    type="date"
+                                                    className="custom-input"
+                                                    value={formData.plantDate}
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        plantDate: e.target.value
+                                                    })}
+                                                    required
+                                                />
+                                            </div>
+
+                                            <div className="form-group">
+                                                <label className="form-label">Immagine</label>
+                                                <input
+                                                    type="file"
+                                                    className="custom-input"
+                                                    onChange={(e) => setFormData({
+                                                        ...formData,
+                                                        image: e.target.files[0]
+                                                    })}
+                                                    accept="image/*"
+                                                />
+                                            </div>
+
+                                            <div className="modal-footer">
+                                                <button type="button" className="btn btn-secondary" onClick={resetForm}>
+                                                    Annulla
+                                                </button>
+                                                <button type="submit" className="btn btn-custom">
+                                                    Salva
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
