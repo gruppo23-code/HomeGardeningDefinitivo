@@ -90,7 +90,13 @@ const Profilo  =  () => {
 
     // Schermata di caricamento
     if (loading) {
-        return <div>Caricamento...</div>;
+        return (
+            <div className="flex justify-center items-center h-full w-full">
+                <div className="spinner-border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        )
     }
 
 
