@@ -226,7 +226,7 @@ body {
 }
 
 .card-text {
-    color: var(--primary-green);
+    color: black;
     font-size: 1.1rem;
     line-height: 1.6;
     flex: 1;
