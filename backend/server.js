@@ -661,6 +661,55 @@ app.post("/cambiabio", verificaToken, (req, res) => {
     })
 })
 
+app.post("/cambiaimmagineprofilo", verificaToken,upload.single('img') , (req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let imgBuffer = null;
+        if (req.file) {
+            imgBuffer = req.file.buffer;
+        }
+        let id_utente = result[0].id;
+        console.log(imgBuffer);
+        const query_cambia_immagine = "UPDATE utenti SET img = ? WHERE id = ?";
+        connessione.query(query_cambia_immagine,[imgBuffer,id_utente] , (err, result) => {
+            if (err) {
+                console.error("Errore durante l'upload: ",err);
+            }
+            console.log(result);
+        })
+    })
+})
+
+app.get('/visualizzaimgprofilo', verificaToken, (req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_img = "SELECT img FROM utenti WHERE id = ?";
+        connessione.query(query_img,id_utente , (err, result) => {
+            if (err) {
+                console.error(err);
+            }
+            res.json(JSON.parse(JSON.stringify(result[0])));
+        })
+    })
+})
+
 //Fine gestione profilo
 
 

@@ -112,7 +112,6 @@ function Dashboard() {
         if (!window.confirm('Sei sicuro di voler eliminare questa pianta?')) {
             return;
         }
-
         try {
             await axios.post('http://localhost:8081/delete', { plantId });
             setPlants(plants.filter(plant => plant.id !== plantId));

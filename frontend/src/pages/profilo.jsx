@@ -1,10 +1,11 @@
-import React, {useEffect, useState} from 'react';
-import { MapPin, Calendar, Mail, Phone, User, ShoppingBag, Edit2, Leaf } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Carousel } from 'react-bootstrap';
+import React, {useEffect, useRef, useState} from 'react';
+import {Calendar, Edit2, Leaf, Mail, MapPin, Phone, ShoppingBag, User} from 'lucide-react';
+import {Link} from 'react-router-dom';
+import {Carousel} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import gardenImg from '../assets/img/Garden.jpg';
 import axios from "axios";
+import profileTemplate from '../assets/img/profile-circle.svg';
 
 const fontFamily = "'Poppins', 'Roboto', sans-serif";
 
@@ -18,6 +19,9 @@ const carouselStyle = `
 `;
 
 const Profilo  =  () => {
+    const fileInputRef = useRef(null);
+    const [img, setImg] = useState(null);
+
     const [isEditing, setIsEditing] = useState(false);
     const [bio, setBio] = useState("");
     const [editingBio, setEditingBio] = useState("");
@@ -50,11 +54,28 @@ const Profilo  =  () => {
             }
         };
 
+        const fetchImg = async () => {
+            try {
+                const response = await axios.get("http://localhost:8081/visualizzaimgprofilo");
+                if (response.data.img) {
+                    console.log(response.data.img);
+                    const base64String = btoa(String.fromCharCode(...new Uint8Array(response.data.img.data)));
+                    setImg(`data:image/jpg;base64,${base64String}`);
+                }
+                if (response.data.img == null) {
+                    setImg(profileTemplate);
+                }
+            } catch (error) {
+                console.error("Errore nel caricamento dell'immagine profilo: ", error);
+            }
+        }
+
         // Esecuzione dei caricamenti
         fetchBio();
         fetchProfile();
+        fetchImg();
     }, []);
-
+    console.log(img);
     // Gestore del cambio biografia in modalità modifica
     const handleBioChange = (e) => {
         setEditingBio(e.target.value);
@@ -100,6 +121,33 @@ const Profilo  =  () => {
     }
 
 
+
+    const handleImageClick = () => {
+        fileInputRef.current.click();
+    };
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0]; // Estrai il file selezionato
+        if (file) {
+            const formData = new FormData();
+            formData.append('img', file); // Usa il file selezionato
+            //console.log(file);
+            console.log(formData.get('img'));
+            axios.post('http://localhost:8081/cambiaimmagineprofilo', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(response => {
+                    window.location.reload(); // Ricarica la pagina dopo il successo
+                })
+                .catch(error => {
+                    console.log(error); // Gestisci eventuali errori
+                });
+        }
+        window.location.reload();
+    };
+
     <style>{carouselStyle}</style>
 
     return (
@@ -114,23 +162,55 @@ const Profilo  =  () => {
                     <div className="col-lg-4 mb-4">
                         <div className="card shadow-sm" style={{ borderColor: '#2e7d32', borderRadius: '15px', overflow: 'hidden', height: '100%', fontFamily: fontFamily }}>
                             <div className="card-body text-center">
-                                <img src="https://via.placeholder.com/150" alt={userInfo.name}
-                                     className="rounded-circle mb-3"
-                                     style={{width: '150px', height: '150px', objectFit: 'cover'}}/>
-                                <h2 className="card-title" style={{ fontWeight: 600 }}>{userInfo.name}</h2>
+                                <div>
+                                    <img
+                                        src={img}
+                                        alt={userInfo.name}
+                                        className="rounded-circle mb-3"
+                                        style={{
+                                            width: '150px',
+                                            height: '150px',
+                                            objectFit: 'cover',
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={handleImageClick}
+                                    />
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        style={{display: 'none'}}
+                                        onChange={handleFileChange}
+                                        accept="image/*"
+                                    />
+                                    {/* Div cliccabile per mostrare il cursore */}
+                                    <div
+                                        onClick={handleImageClick}
+                                        style={{
+                                            width: '150px',
+                                            height: '150px',
+                                            cursor: 'pointer',
+                                            position: 'absolute',
+                                            top: '0',
+                                            left: '0'
+                                        }}
+                                    />
+                                </div>
+                                <h2 className="card-title" style={{fontWeight: 600}}>{userInfo.name}</h2>
                                 <p className="text-muted mb-3">
                                     <MapPin className="me-1" size={18}/>
                                     {userInfo.location}
                                 </p>
                                 <div className="d-flex justify-content-center mb-3">
-                                    <span className="badge" style={{ backgroundColor: '#43a047', color: 'white' }}>
-                                        <Calendar className="me-1" size={14} />
+                                    <span className="badge" style={{backgroundColor: '#43a047', color: 'white'}}>
+                                        <Calendar className="me-1" size={14}/>
                                         Iscritto da {userInfo.joinDate}
                                     </span>
                                 </div>
                                 <ul className="list-group list-group-flush">
-                                    <li className="list-group-item"><Mail className="me-2" size={18} /> {userInfo.email}</li>
-                                    <li className="list-group-item"><Phone className="me-2" size={18} /> {userInfo.phone}</li>
+                                    <li className="list-group-item"><Mail className="me-2" size={18}/> {userInfo.email}
+                                    </li>
+                                    <li className="list-group-item"><Phone className="me-2" size={18}/> {userInfo.phone}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -150,8 +230,8 @@ const Profilo  =  () => {
                                 borderBottom: '2px solid #1b5e20',
                                 padding: '15px'
                             }}>
-                                <h3 className="mb-0 d-flex align-items-center" style={{ fontWeight: 600 }}>
-                                    <User className="me-2" size={24} />
+                                <h3 className="mb-0 d-flex align-items-center" style={{fontWeight: 600}}>
+                                    <User className="me-2" size={24}/>
                                     Chi sono
                                 </h3>
                             </div>
