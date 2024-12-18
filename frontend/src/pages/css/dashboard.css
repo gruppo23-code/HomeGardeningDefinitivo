@@ -207,6 +207,13 @@ body {
     margin: 0;
     width: 100%;
 }
+.popup-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent;
+    border: none !important;
+}
+
 
 .card-subtitle {
     color: black;
