@@ -19,34 +19,80 @@ const carouselStyle = `
 
 const Profilo  =  () => {
     const [isEditing, setIsEditing] = useState(false);
-    const [bio, setBio] = useState("Appassionata di giardinaggio urbano. Amo coltivare erbe aromatiche e verdure sul mio balcone. Sempre alla ricerca di nuovi consigli per rendere il mio spazio più verde!");
-
-    const [userInfo, setUserInfo] = useState({ recentPurchases: [] });
+    const [bio, setBio] = useState("");
+    const [editingBio, setEditingBio] = useState("");
+    const [userInfo, setUserInfo] = useState({
+        recentPurchases: [],
+        personalizedTips: []
+    });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get("http://localhost:8081/visualizzaprofilo")
-            .then((response) => {
-                setUserInfo(response.data); // Assegna i dati a userInfo
-                setLoading(false); // Imposta loading a false
-            })
-            .catch((error) => {
-                console.log(error);
-                setLoading(false); // Imposta loading a false anche in caso di errore
-            });
+        // Caricamento biografia
+        const fetchBio = async () => {
+            try {
+                const response = await axios.get("http://localhost:8081/visualizzabio");
+                setBio(response.data);
+            } catch (error) {
+                console.error("Errore nel caricamento della biografia:", error);
+            }
+        };
+
+        // Caricamento informazioni profilo
+        const fetchProfile = async () => {
+            try {
+                const response = await axios.get("http://localhost:8081/visualizzaprofilo");
+                setUserInfo(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Errore nel caricamento del profilo:", error);
+                setLoading(false);
+            }
+        };
+
+        // Esecuzione dei caricamenti
+        fetchBio();
+        fetchProfile();
     }, []);
 
-    if (loading) {
-        return <div>Loading...</div>; // Mostra un messaggio di caricamento
-    }
-
+    // Gestore del cambio biografia in modalità modifica
     const handleBioChange = (e) => {
-        setBio(e.target.value);
+        setEditingBio(e.target.value);
     };
 
+    // Attivazione/disattivazione modalità modifica
     const toggleEditing = () => {
+        if (!isEditing) {
+            // Quando si entra in modalità modifica, inizializza editingBio
+            setEditingBio(bio);
+        }
         setIsEditing(!isEditing);
     };
+
+    // Invio della nuova biografia al server
+    const invioBio = async () => {
+        try {
+            await axios.post('http://localhost:8081/cambiabio', { bio: editingBio });
+            // Aggiorna lo stato della biografia
+            setBio(editingBio);
+            setIsEditing(false);
+        } catch (error) {
+            console.error('Errore durante l\'aggiornamento della biografia:', error);
+            alert('Impossibile salvare la biografia. Riprova.');
+        }
+    };
+
+    // Gestore del salvataggio
+    const handleSave = () => {
+        invioBio();
+        window.location.reload();
+    };
+
+    // Schermata di caricamento
+    if (loading) {
+        return <div>Caricamento...</div>;
+    }
+
 
     <style>{carouselStyle}</style>
 
@@ -106,11 +152,15 @@ const Profilo  =  () => {
                             <div className="card-body" style={{ padding: '20px' }}>
                                 <div className="d-flex justify-content-between align-items-center mb-4">
                                     <h4 style={{ fontWeight: 600, color: '#2e7d32' }}>Biografia</h4>
-                                    <button className="btn btn-outline-success" style={{
-                                        borderColor: '#2e7d32',
-                                        color: '#2e7d32',
-                                        transition: 'all 0.3s ease'
-                                    }} onClick={toggleEditing}>
+                                    <button
+                                        className="btn btn-outline-success"
+                                        style={{
+                                            borderColor: '#2e7d32',
+                                            color: '#2e7d32',
+                                            transition: 'all 0.3s ease'
+                                        }}
+                                        onClick={isEditing ? handleSave : toggleEditing}
+                                    >
                                         <Edit2 size={20} className="me-2" />
                                         {isEditing ? 'Salva' : 'Modifica'}
                                     </button>
@@ -118,13 +168,26 @@ const Profilo  =  () => {
                                 {isEditing ? (
                                     <textarea
                                         className="form-control mb-4"
-                                        value={bio}
+                                        value={editingBio}
                                         onChange={handleBioChange}
                                         rows="5"
-                                        style={{ borderColor: '#4caf50', color: '#333333', fontSize: '1.1rem', fontWeight: 500, fontFamily: fontFamily }}
+                                        style={{
+                                            borderColor: '#4caf50',
+                                            color: '#333333',
+                                            fontSize: '1.1rem',
+                                            fontWeight: 500,
+                                            fontFamily: fontFamily
+                                        }}
                                     />
                                 ) : (
-                                    <p className="mb-4" style={{ color: '#333333', fontSize: '1.1rem', lineHeight: '1.6', fontWeight: 500 }}>{bio}</p>
+                                    <p className="mb-4" style={{
+                                        color: '#333333',
+                                        fontSize: '1.1rem',
+                                        lineHeight: '1.6',
+                                        fontWeight: 500
+                                    }}>
+                                        {bio}
+                                    </p>
                                 )}
                                 <h4 className="mb-3" style={{ fontWeight: 600, color: '#2e7d32' }}>Informazioni utente</h4>
                                 <ul className="list-group mb-4">

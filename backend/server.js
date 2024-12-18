@@ -620,6 +620,47 @@ app.get("/visualizzaprofilo", verificaToken, (req, res) => {
     })
 })
 
+app.get("/visualizzabio", verificaToken, (req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_bio = "SELECT bio FROM utenti WHERE id = ?";
+        connessione.query(query_bio,id_utente , (err, result) => {
+            res.send(result[0].bio);
+        })
+    })
+})
+
+app.post("/cambiabio", verificaToken, (req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_bio = "UPDATE utenti SET bio = ? WHERE id = ?";
+        connessione.query(query_bio,[req.body.bio,id_utente] , (err, result) => {
+            if (err) {
+                console.error("Errore: ",err);
+            }
+            console.log("Modifica della bio effettuata con successo!!!");
+        })
+    })
+})
+
 //Fine gestione profilo
 
 
