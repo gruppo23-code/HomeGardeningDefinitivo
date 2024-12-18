@@ -1,366 +1,268 @@
+'use client';
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { Plus, Trash2 } from 'lucide-react';
 import './css/dashboard.css';
 
 function Dashboard() {
     const navigate = useNavigate();
-    const [showModal, setShowModal] = useState(false);
     const [plants, setPlants] = useState([]);
-    const [searchablePlants, setSearchablePlants] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [showDropdown, setShowDropdown] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [formValues, setFormValues] = useState({
-        id: null,
-        soprannome: "",
-        data: "",
-        img: null
+    const [formData, setFormData] = useState({
+        plantId: '',
+        nickname: '',
+        plantDate: '',
+        image: null
     });
+    const [availablePlants, setAvailablePlants] = useState([]);
+    const [error, setError] = useState(null);
 
-    // Verifica autenticazione
     useEffect(() => {
         const token = Cookies.get('token');
         if (!token) {
             navigate('/?showModal=true');
+            return;
         }
+        loadPlants();
+        loadAvailablePlants();
     }, [navigate]);
 
-    // Carica lista piante per la ricerca
-    useEffect(() => {
-        const fetchSearchablePlants = async () => {
-            try {
-                const response = await axios.get('http://localhost:8081/listapiante');
-                if (Array.isArray(response.data)) {
-                    setSearchablePlants(response.data);
-                }
-            } catch (err) {
-                console.error('Errore nel caricamento delle piante:', err);
-                setError('Errore nel caricamento delle piante disponibili');
-            }
-        };
+    const arrayBufferToBase64 = (buffer) => {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i]);
+        }
+        return window.btoa(binary);
+    };
 
-        fetchSearchablePlants();
-    }, []);
+    const loadPlants = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get('http://localhost:8081/cards');
+            const processedPlants = response.data.map(plant => {
+                let imageUrl = '/placeholder.svg?height=300&width=300';
 
-    // Carica piante dell'utente
-    useEffect(() => {
-        const fetchUserPlants = async () => {
-            try {
-                setLoading(true);
-                const response = await axios.get('http://localhost:8081/cards');
-                const processedPlants = response.data.map((plant) => {
-                    if (plant.image) {
-                        const base64String = btoa(
-                            String.fromCharCode(...new Uint8Array(plant.image.data))
-                        );
-                        return {
-                            ...plant,
-                            imageUrl: `data:image/jpeg;base64,${base64String}`
-                        };
+                if (plant.image && plant.image.data) {
+                    try {
+                        const base64 = arrayBufferToBase64(plant.image.data);
+                        imageUrl = `data:image/jpeg;base64,${base64}`;
+                    } catch (err) {
+                        console.error('Errore nella conversione dell\'immagine:', err);
                     }
-                    return {
-                        ...plant,
-                        imageUrl: '/placeholder.svg?height=200&width=200'
-                    };
-                });
-                setPlants(processedPlants);
-            } catch (err) {
-                console.error('Errore nel caricamento delle piante:', err);
-                setError('Errore nel caricamento delle tue piante');
-            } finally {
-                setLoading(false);
-            }
-        };
+                }
 
-        fetchUserPlants();
-    }, []);
-
-    // Gestione file immagine
-    const handleFileChange = (e) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
-            if (validTypes.includes(file.type)) {
-                setFormValues(prev => ({ ...prev, img: file }));
-            } else {
-                setError('Formato file non supportato. Usa JPG o PNG.');
-            }
+                return {
+                    ...plant,
+                    imageUrl
+                };
+            });
+            setPlants(processedPlants);
+        } catch (err) {
+            setError("Errore nel caricamento delle piante");
+            console.error(err);
+        } finally {
+            setLoading(false);
         }
     };
 
-    // Invio form nuova pianta
+    const loadAvailablePlants = async () => {
+        try {
+            const response = await axios.get('http://localhost:8081/listapiante');
+            setAvailablePlants(response.data);
+        } catch (err) {
+            console.error("Errore nel caricamento della lista piante:", err);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!formValues.id) {
-            setError('Seleziona una pianta dalla lista');
+
+        if (!formData.plantId) {
+            setError("Seleziona una pianta dalla lista");
             return;
         }
 
-        const formData = new FormData();
-        if (formValues.img) {
-            formData.append('img', formValues.img);
+        const submitData = new FormData();
+        submitData.append('id', formData.plantId);
+        submitData.append('soprannome', formData.nickname);
+        submitData.append('data', formData.plantDate);
+        if (formData.image) {
+            submitData.append('img', formData.image);
         }
-        formData.append('id', formValues.id.toString());
-        formData.append('soprannome', formValues.soprannome);
-        formData.append('data', formValues.data);
 
         try {
-            await axios.post('http://localhost:8081/inviapianta', formData, {
+            await axios.post('http://localhost:8081/inviapianta', submitData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-            window.location.reload();
+            setShowModal(false);
+            await loadPlants();
+            resetForm();
         } catch (err) {
-            console.error('Errore durante il salvataggio:', err);
-            setError('Errore durante il salvataggio della pianta');
+            setError("Errore durante il salvataggio della pianta");
+            console.error(err);
         }
     };
 
-    // Eliminazione pianta
     const handleDelete = async (plantId) => {
-        if (window.confirm('Sei sicuro di voler eliminare questa pianta?')) {
-            try {
-                await axios.post('http://localhost:8081/delete', { plantId });
-                setPlants(plants.filter(plant => plant.id !== plantId));
-            } catch (err) {
-                console.error('Errore durante l\'eliminazione:', err);
-                setError('Errore durante l\'eliminazione della pianta');
-            }
+        if (!window.confirm('Sei sicuro di voler eliminare questa pianta?')) {
+            return;
+        }
+
+        try {
+            await axios.post('http://localhost:8081/delete', { plantId });
+            setPlants(plants.filter(plant => plant.id !== plantId));
+        } catch (err) {
+            setError("Errore durante l'eliminazione della pianta");
+            console.error(err);
         }
     };
 
-    // Modifica pianta
-    const handleEdit = (plant) => {
-        setFormValues({
-            id: plant.id,
-            soprannome: plant.soprannome_pianta,
-            data: plant.data || '',
-            img: null
-        });
-        setSearchTerm(plant.name);
-        setShowModal(true);
-    };
-
-    // Reset form
     const resetForm = () => {
-        setFormValues({
-            id: null,
-            soprannome: "",
-            data: "",
-            img: null
+        setFormData({
+            plantId: '',
+            nickname: '',
+            plantDate: '',
+            image: null
         });
-        setSearchTerm("");
         setShowModal(false);
         setError(null);
     };
 
-    // Filtra piante per la ricerca
-    const filteredPlants = searchablePlants.filter(plant =>
-        plant.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     if (!Cookies.get('token')) {
-        return (
-            <div className="container mt-5">
-                <div className="alert alert-danger text-center" role="alert">
-                    Devi effettuare l'accesso per visualizzare questa pagina
-                </div>
-            </div>
-        );
+        return null;
     }
 
     return (
-        <div className="dashboard-container">
-            {error && (
-                <div className="alert alert-danger alert-dismissible fade show" role="alert">
-                    {error}
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={() => setError(null)}
-                    />
-                </div>
-            )}
-
-            <header className="dashboard-header">
-                <h1 className="dashboard-title">Le tue Piante</h1>
-                <p className="dashboard-subtitle">Gestisci la tua collezione di piante e tieni traccia della loro crescita</p>
-                <button
-                    className="add-plant-btn"
-                    onClick={() => setShowModal(true)}
-                >
-                    <i className="fas fa-plus me-2"></i>
-                    Aggiungi Nuova Pianta
-                </button>
-            </header>
-
-            {loading ? (
-                <div className="text-center my-5">
-                    <div className="spinner-border text-success" role="status">
-                        <span className="visually-hidden">Caricamento...</span>
+        <div className="dashboard">
+            <div className="dashboard-container">
+                {error && (
+                    <div className="error-alert">
+                        {error}
+                        <button onClick={() => setError(null)}>&times;</button>
                     </div>
+                )}
+
+                <div className="dashboard-header">
+                    <h1>Le tue Piante</h1>
+                    <button className="add-plant-button" onClick={() => setShowModal(true)}>
+                        <Plus size={20} />
+                        Aggiungi Pianta
+                    </button>
                 </div>
-            ) : (
-                <div className="plants-container">
-                    {plants.map(plant => (
-                        <div key={plant.id} className="plant-card">
-                            <div className="plant-image-wrapper">
-                                <img
-                                    src={plant.imageUrl}
-                                    className="plant-image"
-                                    alt={plant.name}
-                                />
-                                <div className="plant-type">
-                                    {plant.type}
+
+                {loading ? (
+                    <div className="loading">Caricamento piante in corso...</div>
+                ) : (
+                    <div className="plants-grid">
+                        {plants.map(plant => (
+                            <div key={plant.id} className="plant-card">
+                                <div className="plant-image-container">
+                                    <img
+                                        src={plant.imageUrl}
+                                        alt={plant.name}
+                                        className="plant-image"
+                                    />
+                                    <span className="plant-type">{plant.type}</span>
+                                </div>
+                                <div className="plant-info">
+                                    <h2 className="plant-name">{plant.name}</h2>
+                                    <p className="plant-nickname">{plant.soprannome_pianta}</p>
+                                    <p className="plant-description">{plant.description}</p>
+                                    <div className="plant-actions">
+                                        <button
+                                            className="delete-button"
+                                            onClick={() => handleDelete(plant.id)}
+                                        >
+                                            <Trash2 size={20} />
+                                            Elimina
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="card-content">
-                                <h3 className="plant-name">{plant.name}</h3>
-                                <p className="plant-nickname">{plant.soprannome_pianta}</p>
-                                <p className="plant-description">{plant.description}</p>
-                            </div>
-                            <div className="card-actions">
-                                <button
-                                    className="btn btn-edit"
-                                    onClick={() => handleEdit(plant)}
-                                >
-                                    <i className="fas fa-edit me-2"></i>
-                                    Modifica
-                                </button>
-                                <button
-                                    className="btn btn-delete"
-                                    onClick={() => handleDelete(plant.id)}
-                                >
-                                    <i className="fas fa-trash-alt me-2"></i>
-                                    Elimina
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                )}
 
-            {/* Modal Aggiungi/Modifica Pianta */}
-            {showModal && (
-                <div className="modal show d-block" tabIndex={-1}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">
-                                    {formValues.id ? 'Modifica Pianta' : 'Aggiungi una Nuova Pianta'}
-                                </h5>
-                                <button
-                                    type="button"
-                                    className="btn-close"
-                                    onClick={resetForm}
-                                />
-                            </div>
+                {showModal && (
+                    <div className="modal-overlay">
+                        <div className="modal">
+                            <h2>Aggiungi una nuova pianta</h2>
                             <form onSubmit={handleSubmit}>
-                                <div className="modal-body">
-                                    <div className="mb-3">
-                                        <label className="form-label">Seleziona Pianta</label>
-                                        <div className="dropdown">
-                                            <input
-                                                type="text"
-                                                className="form-control"
-                                                placeholder="Cerca una pianta..."
-                                                value={searchTerm}
-                                                onChange={(e) => {
-                                                    setSearchTerm(e.target.value);
-                                                    setShowDropdown(true);
-                                                }}
-                                                onFocus={() => setShowDropdown(true)}
-                                            />
-                                            {showDropdown && (
-                                                <ul className="dropdown-menu show w-100">
-                                                    {filteredPlants.length > 0 ? (
-                                                        filteredPlants.map(plant => (
-                                                            <li
-                                                                key={plant.id}
-                                                                className="dropdown-item"
-                                                                style={{ cursor: 'pointer' }}
-                                                                onClick={() => {
-                                                                    setSearchTerm(plant.name);
-                                                                    setFormValues(prev => ({
-                                                                        ...prev,
-                                                                        id: plant.id
-                                                                    }));
-                                                                    setShowDropdown(false);
-                                                                }}
-                                                            >
-                                                                {plant.name}
-                                                            </li>
-                                                        ))
-                                                    ) : (
-                                                        <li className="dropdown-item disabled">
-                                                            Nessuna pianta trovata
-                                                        </li>
-                                                    )}
-                                                </ul>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Soprannome</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            value={formValues.soprannome}
-                                            onChange={(e) => setFormValues(prev => ({
-                                                ...prev,
-                                                soprannome: e.target.value
-                                            }))}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Data di Piantagione</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            value={formValues.data}
-                                            onChange={(e) => setFormValues(prev => ({
-                                                ...prev,
-                                                data: e.target.value
-                                            }))}
-                                            required
-                                        />
-                                    </div>
-
-                                    <div className="mb-3">
-                                        <label className="form-label">Foto della Pianta</label>
-                                        <input
-                                            type="file"
-                                            className="form-control"
-                                            onChange={handleFileChange}
-                                            accept="image/jpeg,image/png,image/jpg"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="modal-footer">
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
-                                        onClick={resetForm}
+                                <div className="form-group">
+                                    <label>Seleziona Pianta</label>
+                                    <select
+                                        value={formData.plantId}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            plantId: e.target.value
+                                        })}
+                                        required
                                     >
+                                        <option value="">Seleziona una pianta</option>
+                                        {availablePlants.map(plant => (
+                                            <option key={plant.id} value={plant.id}>
+                                                {plant.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Soprannome</label>
+                                    <input
+                                        type="text"
+                                        value={formData.nickname}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            nickname: e.target.value
+                                        })}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Data di Piantagione</label>
+                                    <input
+                                        type="date"
+                                        value={formData.plantDate}
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            plantDate: e.target.value
+                                        })}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label>Immagine</label>
+                                    <input
+                                        type="file"
+                                        onChange={(e) => setFormData({
+                                            ...formData,
+                                            image: e.target.files[0]
+                                        })}
+                                        accept="image/*"
+                                    />
+                                </div>
+
+                                <div className="modal-actions">
+                                    <button type="button" onClick={resetForm} className="cancel-button">
                                         Annulla
                                     </button>
-                                    <button
-                                        type="submit"
-                                        className="btn btn-success"
-                                    >
-                                        {formValues.id ? 'Salva Modifiche' : 'Salva'}
+                                    <button type="submit" className="submit-button">
+                                        Salva
                                     </button>
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }
