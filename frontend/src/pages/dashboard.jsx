@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Leaf, PencilLine } from 'lucide-react';
 import './css/dashboard.css';
 
 function Dashboard() {
@@ -121,6 +121,13 @@ function Dashboard() {
         }
     };
 
+    const handleEdit = (plant) => {
+        // Implement your edit logic here
+        console.log("Editing plant:", plant);
+        // You might want to setFormData based on plant data and show the modal
+    };
+
+
     const resetForm = () => {
         setFormData({
             plantId: '',
@@ -136,131 +143,177 @@ function Dashboard() {
         return null;
     }
 
+    const renderForm = (onSubmit) => (
+        <form onSubmit={onSubmit}>
+            <div className="mb-3">
+                <label className="form-label">Seleziona Pianta</label>
+                <select
+                    className="form-select custom-select"
+                    value={formData.plantId}
+                    onChange={(e) => setFormData({
+                        ...formData,
+                        plantId: e.target.value
+                    })}
+                    required
+                >
+                    <option value="">Seleziona una pianta</option>
+                    {availablePlants.map(plant => (
+                        <option key={plant.id} value={plant.id}>
+                            {plant.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Soprannome</label>
+                <input
+                    type="text"
+                    className="form-control custom-input"
+                    value={formData.nickname}
+                    onChange={(e) => setFormData({
+                        ...formData,
+                        nickname: e.target.value
+                    })}
+                    required
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Data di Piantagione</label>
+                <input
+                    type="date"
+                    className="form-control custom-input"
+                    value={formData.plantDate}
+                    onChange={(e) => setFormData({
+                        ...formData,
+                        plantDate: e.target.value
+                    })}
+                    required
+                />
+            </div>
+
+            <div className="mb-3">
+                <label className="form-label">Immagine</label>
+                <input
+                    type="file"
+                    className="form-control custom-input"
+                    onChange={(e) => setFormData({
+                        ...formData,
+                        image: e.target.files[0]
+                    })}
+                    accept="image/*"
+                />
+            </div>
+
+            <div className="modal-footer px-0 pb-0">
+                <button type="button" className="btn btn-secondary" onClick={resetForm}>
+                    Annulla
+                </button>
+                <button type="submit" className="btn btn-custom">
+                    Salva
+                </button>
+            </div>
+        </form>
+    );
+
     return (
-        <div className="dashboard">
-            <div className="dashboard-container">
-                {error && (
-                    <div className="error-alert">
-                        {error}
-                        <button onClick={() => setError(null)}>&times;</button>
-                    </div>
-                )}
-
-                <div className="dashboard-header">
-                    <h1>Le tue Piante</h1>
-                    <button className="add-plant-button" onClick={() => setShowModal(true)}>
-                        <Plus size={20} />
-                        Aggiungi Pianta
-                    </button>
-                </div>
-
-                {loading ? (
-                    <div className="loading">Caricamento piante in corso...</div>
-                ) : (
-                    <div className="plants-grid">
-                        {plants.map(plant => (
-                            <div key={plant.id} className="plant-card">
-                                <div className="plant-image-container">
-                                    <img
-                                        src={plant.imageUrl}
-                                        alt={plant.name}
-                                        className="plant-image"
-                                    />
-                                    <span className="plant-type">{plant.type}</span>
-                                </div>
-                                <div className="plant-info">
-                                    <h2 className="plant-name">{plant.name}</h2>
-                                    <p className="plant-nickname">{plant.soprannome_pianta}</p>
-                                    <p className="plant-description">{plant.description}</p>
-                                    <div className="plant-actions">
-                                        <button
-                                            className="delete-button"
-                                            onClick={() => handleDelete(plant.id)}
-                                        >
-                                            <Trash2 size={20} />
-                                            Elimina
-                                        </button>
+        <div className="dashboard-container">
+            <div className="dashboard-content">
+                <div className="hero-container">
+                    <div className="hero-section">
+                        <div className="container">
+                            <div className="header-content">
+                                <div className="header-left">
+                                    <div className="icon-wrapper">
+                                        <Leaf className="leaf-icon" size={32} />
+                                    </div>
+                                    <div className="title-wrapper">
+                                        <h1 className="dashboard-title">Le tue Piante</h1>
+                                        <p className="header-subtitle">Coltiva il tuo giardino personale</p>
                                     </div>
                                 </div>
+                                <button className="btn btn-custom d-flex align-items-center gap-2" onClick={() => setShowModal(true)}>
+                                    <Plus size={20} />
+                                    Aggiungi Pianta
+                                </button>
                             </div>
-                        ))}
-                    </div>
-                )}
-
-                {showModal && (
-                    <div className="modal-overlay">
-                        <div className="modal">
-                            <h2>Aggiungi una nuova pianta</h2>
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label>Seleziona Pianta</label>
-                                    <select
-                                        value={formData.plantId}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            plantId: e.target.value
-                                        })}
-                                        required
-                                    >
-                                        <option value="">Seleziona una pianta</option>
-                                        {availablePlants.map(plant => (
-                                            <option key={plant.id} value={plant.id}>
-                                                {plant.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Soprannome</label>
-                                    <input
-                                        type="text"
-                                        value={formData.nickname}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            nickname: e.target.value
-                                        })}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Data di Piantagione</label>
-                                    <input
-                                        type="date"
-                                        value={formData.plantDate}
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            plantDate: e.target.value
-                                        })}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label>Immagine</label>
-                                    <input
-                                        type="file"
-                                        onChange={(e) => setFormData({
-                                            ...formData,
-                                            image: e.target.files[0]
-                                        })}
-                                        accept="image/*"
-                                    />
-                                </div>
-
-                                <div className="modal-actions">
-                                    <button type="button" onClick={resetForm} className="cancel-button">
-                                        Annulla
-                                    </button>
-                                    <button type="submit" className="submit-button">
-                                        Salva
-                                    </button>
-                                </div>
-                            </form>
                         </div>
                     </div>
-                )}
+                </div>
+            </div>
+
+            <div className="main-content">
+                <div className="container py-4">
+                    {error && (
+                        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                            {error}
+                            <button type="button" className="btn-close" onClick={() => setError(null)} aria-label="Close"></button>
+                        </div>
+                    )}
+
+                    {loading ? (
+                        <div className="text-center py-5">
+                            <div className="spinner-border text-success" role="status">
+                                <span className="visually-hidden">Caricamento...</span>
+                            </div>
+                            <p className="mt-2 loading-text">Caricamento piante in corso...</p>
+                        </div>
+                    ) : (
+                        <div className="row row-cols-1 row-cols-lg-2 g-4">
+                            {plants.map(plant => (
+                                <div key={plant.id} className="col">
+                                    <div className="custom-card h-100">
+                                        <div className="position-relative">
+                                            <img
+                                                src={plant.imageUrl}
+                                                alt={plant.name}
+                                                className="card-img-top"
+                                            />
+                                            <span className="plant-type-badge">
+                                                {plant.type}
+                                            </span>
+                                        </div>
+                                        <div className="card-body">
+                                            <h5 className="card-title">{plant.name}</h5>
+                                            <div className="nickname-wrapper">
+                                                <h6 className="card-subtitle">{plant.soprannome_pianta}</h6>
+                                                <button className="btn btn-icon" onClick={() => handleEdit(plant)}>
+                                                    <PencilLine size={16} />
+                                                </button>
+                                            </div>
+                                            <p className="card-text">{plant.description}</p>
+                                            <div className="action-buttons">
+                                                <button
+                                                    className="btn btn-delete d-flex align-items-center gap-2"
+                                                    onClick={() => handleDelete(plant.id)}
+                                                >
+                                                    <Trash2 size={18} />
+                                                    Elimina
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Modal Aggiungi */}
+                    {showModal && (
+                        <div className="popup-modal">
+                            <div className="popup-content">
+                                <div className="popup-header">
+                                    <h5 className="popup-title">Aggiungi una nuova pianta</h5>
+                                    <button className="close-button" onClick={resetForm}>×</button>
+                                </div>
+                                <div className="popup-body">
+                                    {renderForm(handleSubmit)}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

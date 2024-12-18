@@ -1,371 +1,400 @@
-/* Variables */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 :root {
-    --color-leaf: #4CAF50;
-    --color-earth: #795548;
-    --color-sky: #03A9F4;
-    --color-sunlight: #FFC107;
-    --font-family: 'Poppins', sans-serif;
+    --primary-green: #4CAF50;
+    --light-green: #E8F5E9;
+    --hover-green: #43A047;
+    --text-dark: #2C3E50;
+    --text-light: #7F8C8D;
+    --header-green: #DCF5DD;
 }
 
-/* Base Layout */
-.dashboard {
-    padding: 2rem;
-    background-color: #F1F8E9;
+html {
+    background-color: var(--light-green);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-green);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
     min-height: 100vh;
-    font-family: var(--font-family);
     width: 100%;
+    overflow-x: hidden;
+}
+
+#root {
+    background-color: var(--light-green);
+    min-height: 100vh;
 }
 
 .dashboard-container {
-    max-width: 1400px;
+    min-height: 100vh;
+    background-color: var(--light-green);
+    padding: 2rem 0;
     margin: 0 auto;
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    /* Remove box-shadow */
+}
+
+.dashboard-content {
+    padding-top: 2rem;  /* Reduced from 4rem */
+    background-color: transparent;
     width: 100%;
 }
 
-/* Header Section */
-.dashboard-header {
+.hero-container {
+    background-color: transparent;
+    padding: 0;
+    width: 100%;
+    margin: 0 auto;
+    max-width: 1400px;
+}
+
+.hero-section {
+    background-color: var(--primary-green);
+    padding: 4rem 2rem;  /* Changed from 5rem to 4rem */
+    border-radius: 8px;
+    margin: 0 auto;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem;
-    background-color: var(--color-leaf);
-    border-radius: 12px;
-    color: white;
-    margin-bottom: 2rem;
 }
 
-.dashboard-header h1 {
-    font-size: 2.8em;
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;  /* Increased from 1rem */
+}
+
+.icon-wrapper {
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 56px;  /* Reduced from 64px */
+    height: 56px; /* Reduced from 64px */
+    border-radius: 14px; /* Adjusted from 16px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.leaf-icon {
+    color: white;
+}
+
+.title-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.dashboard-title {
+    font-weight: 700;
+    color: white;
+    font-size: 2.25rem;  /* Reduced from 2.5rem */
+    margin: 0;
+    line-height: 1.2;  /* Added for better spacing */
+}
+
+.header-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;  /* Reduced from 1.25rem */
+    margin: 0;
+    margin-top: 0.4rem;  /* Increased from 0.2rem */
+}
+
+.main-content {
+    background-color: var(--light-green);
+    min-height: calc(100vh - 160px);
+    padding: 0;
+    width: 100%;
+}
+
+.main-content .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+.btn-custom {
+    background-color: var(--primary-green) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 1.5rem !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-custom:hover {
+    background-color: var(--hover-green) !important;
+    transform: translateY(-2px);
+}
+
+.custom-card {
+    background: white;
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.card-title {
     font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.nickname-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.card-subtitle {
+    color: var(--text-light);
+    font-weight: 500;
+    font-size: 0.9rem;
     margin: 0;
 }
 
-.add-plant-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: white;
-    color: var(--color-leaf);
-    border: none;
-    padding: 8px 12px;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+.btn-icon {
+    padding: 0.35rem !important;
+    color: var(--text-light) !important;
+    border: none !important;
+    background: transparent !important;
+    transition: all 0.3s ease !important;
+    line-height: 1 !important;
 }
 
-.add-plant-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.btn-icon:hover {
+    color: var(--primary-green) !important;
+    background-color: var(--light-green) !important;
+    border-radius: 6px;
 }
 
-/* Plants List */
-.plants-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+.card-text {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    line-height: 1.5;
 }
 
-/* Plant Card */
-.plant-card {
-    display: flex;
-    background-color: white;
-    border: 1px solid #AED581;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    min-height: 300px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.plant-card:hover {
-    transform: translateY(-5px) scale(1.01);
-    box-shadow: 0 8px 24px rgba(76, 175, 80, 0.15);
-}
-
-.plant-image-container {
-    flex: 0 0 400px;
-    position: relative;
-    overflow: hidden;
-    transition: flex-basis 0.3s ease;
-}
-
-.plant-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.plant-card:hover .plant-image {
-    transform: scale(1.05);
-}
-
-.plant-type {
+.plant-type-badge {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 0.5rem 1rem;
+    background-color: var(--primary-green);
+    color: white;
+    padding: 0.4rem 0.8rem;
     border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--color-leaf);
-    font-weight: 500;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(4px);
-}
-
-.plant-info {
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    min-width: 0; /* Permette il text-overflow */
-}
-
-.plant-name {
-    color: var(--color-earth);
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin: 0;
-    line-height: 1.2;
-}
-
-.plant-nickname {
-    color: #7f8c8d;
-    font-size: 1.2rem;
-    margin: 0.75rem 0;
+    font-size: 0.75rem;
     font-weight: 500;
 }
 
-.plant-description {
-    color: #666;
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin: 1rem 0;
-    flex: 1;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+.btn-delete {
+    background-color: transparent !important;
+    color: #E74C3C !important;
+    border: 1px solid #E74C3C !important;
+    padding: 0.4rem 0.8rem !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.85rem !important;
 }
 
-.plant-actions {
-    margin-top: auto;
-    padding-top: 1rem;
+.btn-delete:hover {
+    background-color: #E74C3C !important;
+    color: white !important;
 }
 
-.delete-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: auto;
-    padding: 0.75rem 1.5rem;
-    background-color: white;
-    color: #e74c3c;
-    border: 2px solid #e74c3c;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.custom-modal {
 }
 
-.delete-button:hover {
-    background-color: #e74c3c;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
-}
-
-/* Modal */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
-}
-
-.modal {
-    background-color: white;
-    padding: 2.5rem;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.modal h2 {
-    color: var(--color-earth);
-    margin-bottom: 2rem;
-    font-weight: 600;
-    font-size: 1.8rem;
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--color-earth);
-    font-weight: 500;
-    font-size: 1.1rem;
-}
-
-.form-group input,
-.form-group select {
-    width: 100%;
-    padding: 0.875rem;
-    border: 2px solid var(--color-leaf);
-    border-radius: 8px;
-    font-family: var(--font-family);
-    font-size: 1rem;
-    transition: all 0.2s ease;
-}
-
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: var(--color-leaf);
-    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-}
-
-.modal-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2.5rem;
-}
-
-.cancel-button,
-.submit-button {
-    flex: 1;
-    padding: 1rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.cancel-button {
-    background-color: white;
-    color: #666;
-    border: 2px solid #e0e0e0;
-}
-
-.cancel-button:hover {
-    background-color: #f5f5f5;
-    border-color: #d0d0d0;
-}
-
-.submit-button {
-    background-color: var(--color-leaf);
-    color: white;
+.modal-content {
+    border-radius: 15px;
     border: none;
 }
 
-.submit-button:hover {
-    background-color: #43A047;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+.modal-header {
+    border-bottom: 1px solid #E8E8E8;
+    padding: 1.5rem;
 }
 
-/* Utility Classes */
-.error-alert {
-    background-color: #fee2e2;
-    border: 1px solid #fecaca;
-    color: #dc2626;
-    padding: 1rem;
+.modal-title {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.custom-input, .custom-select {
+    border: 1px solid #E8E8E8;
     border-radius: 8px;
-    margin-bottom: 1rem;
-    font-size: 1rem;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus, .custom-select:focus {
+    border-color: var(--primary-green);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.loading-text {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.card-img-top {
+    height: 300px !important;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 1.5rem !important;
+}
+
+.action-buttons {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.loading {
-    text-align: center;
-    padding: 3rem;
-    font-size: 1.2rem;
-    color: #666;
-}
-
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .plant-image-container {
-        flex: 0 0 350px;
-    }
-}
-
-@media (max-width: 992px) {
-    .plant-card {
-        flex-direction: column;
-        min-height: auto;
-    }
-
-    .plant-image-container {
-        flex: none;
-        height: 300px;
-    }
-
-    .plant-info {
-        padding: 1.5rem;
-    }
-
-    .plant-name {
-        font-size: 1.5rem;
-    }
-
-    .plant-description {
-        -webkit-line-clamp: 3;
-    }
+    margin-top: 1rem;
 }
 
 @media (max-width: 768px) {
-    .dashboard {
-        padding: 1rem;
+    .dashboard-title {
+        font-size: 1.75rem;
     }
-
-    .dashboard-header {
+    .header-content {
         flex-direction: column;
-        gap: 1rem;
+        gap: 1.5rem;
         text-align: center;
-        padding: 1.5rem;
     }
 
-    .dashboard-header h1 {
-        font-size: 2rem;
+    .header-left {
+        flex-direction: column;
     }
 
-    .modal {
-        padding: 1.5rem;
+    .custom-card {
+        margin-bottom: 1rem;
+    }
+
+    .nickname-wrapper {
+        justify-content: center;
     }
 }
 
-@media (max-width: 480px) {
-    .plant-image-container {
-        height: 200px;
+@media (min-width: 992px) {
+    .col {
+        padding: 0 1.5rem;
     }
+}
 
-    .plant-info {
-        padding: 1rem;
-    }
+.popup-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    width: 90%;
+    max-width: 500px;
+    background: transparent;
+}
 
-    .modal-actions {
-        flex-direction: column;
+.popup-content {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    position: relative;
+    animation: popupFadeIn 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.popup-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #E8E8E8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    border-radius: 15px 15px 0 0;
+}
+
+.popup-body {
+    padding: 1.5rem;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    background: white;
+    border-radius: 0 0 15px 15px;
+}
+
+.popup-title {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.3s ease;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.close-button:hover {
+    color: var(--text-dark);
+}
+
+.navbar {
+    position: relative;
+    z-index: 10;
 }
 
