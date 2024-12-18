@@ -14,19 +14,19 @@ function Home() {
     return (
         <div className="home-container">
             {/* Hero Section */}
-            <section className="hero-section">
+            <section className="home-hero-section">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-6">
-                            <h1 className="hero-title">
+                            <h1 className="home-hero-title">
                                 Coltiva il tuo giardino ideale con Home Gardening
                             </h1>
-                            <p className="hero-subtitle">
+                            <p className="home-hero-subtitle">
                                 Unisciti alla nostra community di appassionati di giardinaggio.
                                 Monitora le tue piante, ricevi consigli personalizzati e condividi
                                 la tua esperienza verde.
                             </p>
-                            <div className="hero-buttons">
+                            <div className="home-hero-buttons">
                                 <button className="btn btn-success btn-lg me-3">
                                     Inizia Gratuitamente
                                 </button>
@@ -39,7 +39,7 @@ function Home() {
                             <img
                                 src="/placeholder.svg?height=400&width=600"
                                 alt="Giardinaggio"
-                                className="hero-image"
+                                className="home-hero-image"
                             />
                         </div>
                     </div>
@@ -47,15 +47,15 @@ function Home() {
             </section>
 
             {/* Features Section */}
-            <section className="features-section">
+            <section className="home-features-section">
                 <div className="container">
-                    <h2 className="section-title text-center mb-5">
+                    <h2 className="home-section-title text-center mb-5">
                         Perché scegliere Home Gardening?
                     </h2>
                     <div className="row g-4">
                         <div className="col-md-4">
-                            <div className="feature-card">
-                                <div className="feature-icon">
+                            <div className="home-feature-card">
+                                <div className="home-feature-icon">
                                     <img
                                         src="/placeholder.svg?height=80&width=80"
                                         alt="Monitoraggio piante"
@@ -69,8 +69,8 @@ function Home() {
                             </div>
                         </div>
                         <div className="col-md-4">
-                            <div className="feature-card">
-                                <div className="feature-icon">
+                            <div className="home-feature-card">
+                                <div className="home-feature-icon">
                                     <img
                                         src="/placeholder.svg?height=80&width=80"
                                         alt="Community"
@@ -84,8 +84,8 @@ function Home() {
                             </div>
                         </div>
                         <div className="col-md-4">
-                            <div className="feature-card">
-                                <div className="feature-icon">
+                            <div className="home-feature-card">
+                                <div className="home-feature-icon">
                                     <img
                                         src="/placeholder.svg?height=80&width=80"
                                         alt="Guida esperta"
@@ -103,26 +103,26 @@ function Home() {
             </section>
 
             {/* Weather Widget */}
-            <div className="weather-widget">
-                <div className="weather-header">
-                    <Sun className="weather-icon" size={24} />
+            <div className="home-weather-widget">
+                <div className="home-weather-header">
+                    <Sun className="home-weather-icon" size={24} />
                     <h4>Meteo Locale</h4>
                 </div>
-                <div className="weather-content">
-                    <div className="weather-info">
-                        <div className="weather-stat">
+                <div className="home-weather-content">
+                    <div className="home-weather-info">
+                        <div className="home-weather-stat">
                             <Sun size={20} />
                             <span>{weather.temperature}°C</span>
                         </div>
-                        <div className="weather-stat">
+                        <div className="home-weather-stat">
                             <Cloud size={20} />
                             <span>{weather.condition}</span>
                         </div>
-                        <div className="weather-stat">
+                        <div className="home-weather-stat">
                             <Droplets size={20} />
                             <span>{weather.humidity}%</span>
                         </div>
-                        <div className="weather-stat">
+                        <div className="home-weather-stat">
                             <Wind size={20} />
                             <span>{weather.windSpeed} km/h</span>
                         </div>
@@ -131,25 +131,24 @@ function Home() {
             </div>
 
             {/* Chatbot Widget */}
-            <div className={`chatbot-widget ${showChatbot ? 'open' : ''}`}>
+            <div className={`home-chatbot-widget ${showChatbot ? 'open' : ''}`}>
                 {showChatbot ? (
-                    <div className="chatbot-container">
-                        <div className="chatbot-header">
+                    <div className="home-chatbot-container">
+                        <div className="home-chatbot-header">
                             <h4>Assistente Virtuale</h4>
                             <button
-                                className="btn-close-chat"
+                                className="home-btn-close-chat"
                                 onClick={() => setShowChatbot(false)}
                             >
                                 <X size={20} />
                             </button>
                         </div>
-                        <div className="chatbot-messages">
-                            {/* Qui verranno renderizzati i messaggi del chatbot */}
-                            <div className="message bot">
+                        <div className="home-chatbot-messages">
+                            <div className="home-message bot">
                                 Ciao! Come posso aiutarti con il tuo giardino oggi?
                             </div>
                         </div>
-                        <div className="chatbot-input">
+                        <div className="home-chatbot-input">
                             <input
                                 type="text"
                                 placeholder="Scrivi un messaggio..."
@@ -160,7 +159,7 @@ function Home() {
                     </div>
                 ) : (
                     <button
-                        className="chatbot-trigger"
+                        className="home-chatbot-trigger"
                         onClick={() => setShowChatbot(true)}
                     >
                         <MessageCircle size={24} />

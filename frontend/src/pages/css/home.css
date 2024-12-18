@@ -1,12 +1,12 @@
 /* Hero Section */
-.hero-section {
+.home-hero-section {
     padding: 5rem 0;
     background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
     position: relative;
     overflow: hidden;
 }
 
-.hero-title {
+.home-hero-title {
     font-size: 3.5rem;
     font-weight: 700;
     color: #2E7D32;
@@ -14,21 +14,21 @@
     line-height: 1.2;
 }
 
-.hero-subtitle {
+.home-hero-subtitle {
     font-size: 1.25rem;
     color: #1B5E20;
     margin-bottom: 2rem;
     line-height: 1.6;
 }
 
-.hero-image {
+.home-hero-image {
     width: 100%;
     height: auto;
     border-radius: 20px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
-.hero-buttons .btn {
+.home-hero-buttons .btn {
     padding: 0.8rem 2rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -36,19 +36,19 @@
 }
 
 /* Features Section */
-.features-section {
+.home-features-section {
     padding: 5rem 0;
     background-color: #fff;
 }
 
-.section-title {
+.home-section-title {
     font-size: 2.5rem;
     font-weight: 700;
     color: #2E7D32;
     margin-bottom: 3rem;
 }
 
-.feature-card {
+.home-feature-card {
     background: white;
     border-radius: 16px;
     padding: 2rem;
@@ -58,30 +58,30 @@
     height: 100%;
 }
 
-.feature-card:hover {
+.home-feature-card:hover {
     transform: translateY(-10px);
 }
 
-.feature-icon {
+.home-feature-icon {
     width: 80px;
     height: 80px;
     margin: 0 auto 1.5rem;
 }
 
-.feature-card h3 {
+.home-feature-card h3 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #2E7D32;
     margin-bottom: 1rem;
 }
 
-.feature-card p {
+.home-feature-card p {
     color: #4A5568;
     line-height: 1.6;
 }
 
 /* Weather Widget */
-.weather-widget {
+.home-weather-widget {
     position: fixed;
     top: 100px;
     right: 20px;
@@ -92,7 +92,7 @@
     z-index: 100;
 }
 
-.weather-header {
+.home-weather-header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -102,23 +102,23 @@
     border-radius: 16px 16px 0 0;
 }
 
-.weather-header h4 {
+.home-weather-header h4 {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
 }
 
-.weather-content {
+.home-weather-content {
     padding: 1rem;
 }
 
-.weather-info {
+.home-weather-info {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
 }
 
-.weather-stat {
+.home-weather-stat {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -126,14 +126,14 @@
 }
 
 /* Chatbot Widget */
-.chatbot-widget {
+.home-chatbot-widget {
     position: fixed;
     bottom: 20px;
     right: 20px;
     z-index: 1000;
 }
 
-.chatbot-trigger {
+.home-chatbot-trigger {
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -147,11 +147,11 @@
     transition: transform 0.3s ease;
 }
 
-.chatbot-trigger:hover {
+.home-chatbot-trigger:hover {
     transform: translateY(-2px);
 }
 
-.chatbot-container {
+.home-chatbot-container {
     width: 350px;
     height: 500px;
     background: white;
@@ -161,7 +161,7 @@
     flex-direction: column;
 }
 
-.chatbot-header {
+.home-chatbot-header {
     padding: 1rem;
     background-color: #2E7D32;
     color: white;
@@ -171,13 +171,13 @@
     align-items: center;
 }
 
-.chatbot-header h4 {
+.home-chatbot-header h4 {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
 }
 
-.btn-close-chat {
+.home-btn-close-chat {
     background: none;
     border: none;
     color: white;
@@ -188,84 +188,84 @@
     justify-content: center;
 }
 
-.chatbot-messages {
+.home-chatbot-messages {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;
 }
 
-.message {
+.home-message {
     margin-bottom: 1rem;
     padding: 0.75rem 1rem;
     border-radius: 12px;
     max-width: 80%;
 }
 
-.message.bot {
+.home-message.bot {
     background-color: #E8F5E9;
     color: #2E7D32;
     margin-right: auto;
 }
 
-.message.user {
+.home-message.user {
     background-color: #2E7D32;
     color: white;
     margin-left: auto;
 }
 
-.chatbot-input {
+.home-chatbot-input {
     padding: 1rem;
     border-top: 1px solid #E2E8F0;
     display: flex;
     gap: 0.5rem;
 }
 
-.chatbot-input input {
+.home-chatbot-input input {
     flex: 1;
 }
 
 /* Responsive Design */
 @media (max-width: 992px) {
-    .hero-title {
+    .home-hero-title {
         font-size: 2.5rem;
     }
 
-    .weather-widget {
+    .home-weather-widget {
         display: none;
     }
 }
 
 @media (max-width: 768px) {
-    .hero-section {
+    .home-hero-section {
         padding: 3rem 0;
     }
 
-    .hero-title {
+    .home-hero-title {
         font-size: 2rem;
     }
 
-    .hero-subtitle {
+    .home-hero-subtitle {
         font-size: 1.1rem;
     }
 
-    .chatbot-container {
+    .home-chatbot-container {
         width: 300px;
         height: 450px;
     }
 }
 
 @media (max-width: 576px) {
-    .hero-buttons {
+    .home-hero-buttons {
         display: flex;
         flex-direction: column;
         gap: 1rem;
     }
 
-    .hero-buttons .btn {
+    .home-hero-buttons .btn {
         width: 100%;
     }
 
-    .chatbot-trigger span {
+    .home-chatbot-trigger span {
         display: none;
     }
 }
