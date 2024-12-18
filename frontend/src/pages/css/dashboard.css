@@ -362,6 +362,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top-left-radius: 8px; /* Arrotonda l'angolo in alto a sinistra */
+    border-top-right-radius: 8px; /* Arrotonda l'angolo in alto a destra */
 }
 
 .popup-title {
