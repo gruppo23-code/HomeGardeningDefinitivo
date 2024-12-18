@@ -187,24 +187,30 @@ body {
 
 .card-title {
     font-weight: 700;
-    color: var(--primary-green);
+    color: black;
     font-size: 1.75rem;
     margin: 0;
-
     width: 100%;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.card-title:hover {
+    color: var(--primary-green);
 }
 
 .nickname-wrapper {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* Aligned to the left as requested */
+    justify-content: flex-start;
     gap: 0.25rem;
     margin: 0;
     width: 100%;
 }
 
 .card-subtitle {
-    color: var(--primary-green);
+    color: black;
     font-weight: 500;
     font-size: 1.25rem;
     margin: 0;
@@ -335,36 +341,37 @@ body {
     max-width: 500px;
     margin: auto;
     position: relative;
+    display: flex;
 }
 
 .popup-content {
     background: white;
-    border-radius: 24px;
+    border-radius: 0;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    margin: 0;
 }
 
 .popup-header {
-    padding: 1.75rem;
+    padding: 1.5rem 2rem;
     background: var(--primary-green);
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: none;
-    border-radius: 24px 24px 0 0;
+    border-radius: 0;
 }
 
 .popup-title {
     color: white;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin: 0;
-    letter-spacing: -0.01em;
 }
 
 .close-button {
@@ -389,55 +396,61 @@ body {
 }
 
 .popup-body {
-    padding: 2.5rem;
+    padding: 2rem;
     background: white;
-    flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+}
+
+.popup-body form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
 }
 
 .form-group {
-    margin-bottom: 1.75rem;
-    flex: 1;
+    margin-bottom: 0;
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 }
 
 .popup-body .form-label {
     color: var(--text-dark);
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0;
     display: block;
-    padding-left: 0.25rem;
 }
 
 .popup-body .custom-input {
     width: 100%;
-    padding: 0.875rem 1rem;
-    border: 2px solid #E8E8E8;
-    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    border: 1.5px solid #E8E8E8;
+    border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s ease;
-    background: #F8FAFC;
+    background: white;
     min-height: unset;
     resize: none;
-    flex: 1;
 }
 
 .popup-body .custom-input:hover {
-    border-color: #D1D5DB;
+    border-color: var(--primary-green);
 }
 
 .popup-body .custom-input:focus {
     outline: none;
     border-color: var(--primary-green);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .popup-body .modal-footer {
-    margin-top: 2rem;
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;

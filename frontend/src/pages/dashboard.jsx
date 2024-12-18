@@ -176,9 +176,24 @@ function Dashboard() {
         setSelectedImage(null);
     };
 
+    const handlePlantClick = async (plantId) => {
+        try {
+            // Predisposizione per la chiamata al backend
+            // const response = await axios.get(`http://localhost:8081/plant/${plantId}`);
+            // Gestione della navigazione o apertura dettaglio
+            console.log('Plant clicked:', plantId);
+            // In futuro potrai implementare qui la navigazione o l'apertura di un modale
+        } catch (error) {
+            console.error('Errore nel caricamento dei dettagli della pianta:', error);
+            setError("Errore nel caricamento dei dettagli della pianta");
+        }
+    };
+
+
     if (!Cookies.get('token')) {
         return null;
     }
+
 
     return (
         <div className="dashboard-container">
@@ -239,7 +254,19 @@ function Dashboard() {
                                             </span>
                                         </div>
                                         <div className="card-body">
-                                            <h5 className="card-title">{plant.name}</h5>
+                                            <h5
+                                                className="card-title"
+                                                onClick={() => handlePlantClick(plant.id)}
+                                                role="button"
+                                                tabIndex={0}
+                                                onKeyPress={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        handlePlantClick(plant.id);
+                                                    }
+                                                }}
+                                            >
+                                                {plant.name}
+                                            </h5>
                                             <div className="nickname-wrapper">
                                                 <h6 className="card-subtitle">{plant.soprannome_pianta}</h6>
                                                 <button className="btn btn-icon" onClick={() => handleEdit(plant)}>
