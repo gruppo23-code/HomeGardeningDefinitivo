@@ -3,7 +3,7 @@ import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind ,Droplets
 import './css/home.css';
 import axios from "axios";
 import Cookies from "js-cookie";
-import Logo from '../assets/img/Logo.jpg';
+import Logo from '../assets/img/Logo.png';
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -140,8 +140,10 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src="https://image.pollinations.ai/prompt/%20%20%20%20%20%20%20%20%20%20%20%20Tieni%20traccia%20della%20crescita%20delle%20tue%20piante%20e%20ricevi%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20notifiche%20personalizzate%20per%20la%20loro%20cura.%0A%0AMonitoraggio%20Intelligente?width=768&height=768&model=flux"
                                         alt="Monitoraggio piante"
+                                        height="80"
+                                        width="80"
                                     />
                                 </div>
                                 <h3>Monitoraggio Intelligente</h3>
@@ -155,8 +157,10 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src="https://image.pollinations.ai/prompt/Community%20Attiva%0AConnettiti%20con%20altri%20appassionati%2C%20condividi%20consigli%20e%20scopri%20nuove%20tecniche%20di%20giardinaggio?width=768&height=768&model=flux"
                                         alt="Community"
+                                        height="80"
+                                        width="80"
                                     />
                                 </div>
                                 <h3>Community Attiva</h3>
@@ -170,8 +174,10 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src="https://image.pollinations.ai/prompt/Guide%20di%20esperti%20sulle%20piante%20e%20sulla%20coltivazione?width=768&height=768&model=flux"
                                         alt="Guida esperta"
+                                        height="80"
+                                        width="80"
                                     />
                                 </div>
                                 <h3>Guida Esperta</h3>
