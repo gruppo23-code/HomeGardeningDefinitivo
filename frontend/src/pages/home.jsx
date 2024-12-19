@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sun, Cloud, Droplets, Wind, MessageCircle, X } from 'lucide-react';
+import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind ,Droplets, Wind, MessageCircle, X } from 'lucide-react';
 import './css/home.css';
+import axios from "axios";
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -10,7 +11,33 @@ function Home() {
         condition: '--',
         windSpeed: '--'
     });
+    const [weatherCode, setWeatherCode] = useState('');
 
+    const richiestaMeteo = async () => {
+        try {
+            //Recupero latitudine e longitudine dell'utente
+            const latLong = await axios.get("http://localhost:8081/latlong");
+            //console.log(latLong.data);
+            const response = await axios.get('http://localhost:8081/api/weather', {
+                params: {
+                    latitude: latLong.data.latitudine,
+                    longitude: latLong.data.longitudine,
+                },
+            });
+            console.log(response.data.current);
+            setWeather({
+                temperature: response.data.current.temperature_2m,
+                humidity: response.data.current.relative_humidity_2m,
+                condition: response.data.current.cloud_cover,
+                windSpeed: response.data.current.wind_speed_10m,
+            })
+            setWeatherCode(response.data.current.weather_code);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    window.onload = richiestaMeteo;
+    console.log(weatherCode)
     return (
         <div className="home-container">
             {/* Hero Section */}
@@ -105,17 +132,23 @@ function Home() {
             {/* Weather Widget */}
             <div className="home-weather-widget">
                 <div className="home-weather-header">
-                    <Sun className="home-weather-icon" size={24} />
-                    <h4>Meteo Locale</h4>
+                    <div className="home-weather-header">
+                        {weatherCode >= 0 && weatherCode <= 49 && <Sun className="home-weather-icon" size={24}/>}
+                        {weatherCode >= 50 && weatherCode <= 59 && <CloudDrizzle className="home-weather-icon" size={24}/>}
+                        {weatherCode >= 60 && weatherCode <= 69 && <CloudRain className="home-weather-icon" size={24}/>}
+                        {weatherCode >= 70 && weatherCode <= 79 && <Snowflake className="home-weather-icon" size={24}/>}
+                        {weatherCode >= 80 && weatherCode <= 99 && <CloudRainWind className="home-weather-icon" size={24}/>}
+                        <h4>Meteo Locale</h4>
+                    </div>
                 </div>
                 <div className="home-weather-content">
                     <div className="home-weather-info">
                         <div className="home-weather-stat">
-                            <Sun size={20} />
+                            <Sun size={20}/>
                             <span>{weather.temperature}°C</span>
                         </div>
                         <div className="home-weather-stat">
-                            <Cloud size={20} />
+                            <Cloud size={20}/>
                             <span>{weather.condition}</span>
                         </div>
                         <div className="home-weather-stat">

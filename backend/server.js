@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import multer from 'multer';
 
 import 'dotenv/config'
+import axios from "axios";
 
 const app = express();
 app.use(express.json());
@@ -734,6 +735,53 @@ app.get('/visualizzaimgprofilo', verificaToken, (req, res) => {
 })
 
 //Fine gestione profilo
+
+//Gestione api meteo (Richieste al db per dati personalizzati)
+
+app.get("/latlong",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_latlong = "SELECT c.lat AS latitudine, c.lng AS longitudine FROM utenti u " +
+            "JOIN comuni c ON u.location = c.istat " +
+            "WHERE id = ?";
+        connessione.query(query_latlong,id_utente , (err, latLongRes) => {
+            if (err) {
+                console.error(err);
+            }
+            res.send(latLongRes[0]);
+        })
+    })
+})
+
+app.get('/api/weather', async (req, res) => {
+    const { latitude, longitude } = req.query; // Ricevi latitudine e longitudine come parametri
+    try {
+        const response = await axios.get('https://api.open-meteo.com/v1/forecast', {
+            params: {
+                latitude: latitude || 41.8919, // Valore predefinito per Roma
+                longitude: longitude || 12.5113,
+                current: 'temperature_2m,relative_humidity_2m,is_day,weather_code,cloud_cover,wind_speed_10m',
+                timezone: 'auto',
+                forecast_days: 1,
+            },
+        });
+        res.json(response.data); // Rispondi con i dati ricevuti dall'API Open-Meteo
+    } catch (error) {
+        console.error('Errore durante la richiesta a Open-Meteo:', error.message);
+        res.status(500).json({ error: 'Errore durante la richiesta meteo.' });
+    }
+});
+
+//Fine gestione api meteo
 
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {
