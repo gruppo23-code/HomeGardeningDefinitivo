@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind ,Droplets, Wind, MessageCircle, X } from 'lucide-react';
 import './css/home.css';
 import axios from "axios";
+import Cookies from "js-cookie";
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -37,7 +38,12 @@ function Home() {
         }
     };
     window.onload = richiestaMeteo;
-    console.log(weatherCode)
+
+    const isLoggedIn = () => {
+        const token = Cookies.get('token');
+        return !!token;
+    };
+
     return (
         <div className="home-container">
             {/* Hero Section */}
@@ -130,38 +136,40 @@ function Home() {
             </section>
 
             {/* Weather Widget */}
-            <div className="home-weather-widget">
-                <div className="home-weather-header">
+            {isLoggedIn() && (
+                <div className="home-weather-widget">
                     <div className="home-weather-header">
-                        {weatherCode >= 0 && weatherCode <= 49 && <Sun className="home-weather-icon" size={24}/>}
-                        {weatherCode >= 50 && weatherCode <= 59 && <CloudDrizzle className="home-weather-icon" size={24}/>}
-                        {weatherCode >= 60 && weatherCode <= 69 && <CloudRain className="home-weather-icon" size={24}/>}
-                        {weatherCode >= 70 && weatherCode <= 79 && <Snowflake className="home-weather-icon" size={24}/>}
-                        {weatherCode >= 80 && weatherCode <= 99 && <CloudRainWind className="home-weather-icon" size={24}/>}
-                        <h4>Meteo Locale</h4>
-                    </div>
-                </div>
-                <div className="home-weather-content">
-                    <div className="home-weather-info">
-                        <div className="home-weather-stat">
-                            <Sun size={20}/>
-                            <span>{weather.temperature}°C</span>
-                        </div>
-                        <div className="home-weather-stat">
-                            <Cloud size={20}/>
-                            <span>{weather.condition}</span>
-                        </div>
-                        <div className="home-weather-stat">
-                            <Droplets size={20} />
-                            <span>{weather.humidity}%</span>
-                        </div>
-                        <div className="home-weather-stat">
-                            <Wind size={20} />
-                            <span>{weather.windSpeed} km/h</span>
+                        <div className="home-weather-header">
+                            {weatherCode >= 0 && weatherCode <= 49 && <Sun className="home-weather-icon" size={24}/>}
+                            {weatherCode >= 50 && weatherCode <= 59 && <CloudDrizzle className="home-weather-icon" size={24}/>}
+                            {weatherCode >= 60 && weatherCode <= 69 && <CloudRain className="home-weather-icon" size={24}/>}
+                            {weatherCode >= 70 && weatherCode <= 79 && <Snowflake className="home-weather-icon" size={24}/>}
+                            {weatherCode >= 80 && weatherCode <= 99 && <CloudRainWind className="home-weather-icon" size={24}/>}
+                            <h4>Meteo Locale</h4>
                         </div>
                     </div>
+                    <div className="home-weather-content">
+                        <div className="home-weather-info">
+                            <div className="home-weather-stat">
+                                <Sun size={20}/>
+                                <span>{weather.temperature}°C</span>
+                            </div>
+                            <div className="home-weather-stat">
+                                <Cloud size={20}/>
+                                <span>{weather.condition}</span>
+                            </div>
+                            <div className="home-weather-stat">
+                                <Droplets size={20} />
+                                <span>{weather.humidity}%</span>
+                            </div>
+                            <div className="home-weather-stat">
+                                <Wind size={20} />
+                                <span>{weather.windSpeed} km/h</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Chatbot Widget */}
             <div className={`home-chatbot-widget ${showChatbot ? 'open' : ''}`}>
