@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Alert from '../Components/Alert2';
 import './css/register.css';
 
 function Register() {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -19,21 +23,11 @@ function Register() {
         password: false,
         confirmPassword: false
     });
+
     const [locationSuggestions, setLocationSuggestions] = useState([]);
     const [errors, setErrors] = useState({});
-
-    // Simula la ricerca delle località
-    const searchLocations = (query) => {
-        const mockLocations = [
-            "Roma, Italia",
-            "Milano, Italia",
-            "Napoli, Italia",
-            "Torino, Italia",
-            "Firenze, Italia"
-        ].filter(loc => loc.toLowerCase().includes(query.toLowerCase()));
-
-        setLocationSuggestions(query ? mockLocations : []);
-    };
+    const [isLoading, setIsLoading] = useState(false);
+    const [alert, setAlert] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -46,13 +40,26 @@ function Register() {
             searchLocations(value);
         }
 
-        // Clear error when user starts typing
+        // Pulisce l'errore quando l'utente inizia a digitare
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
                 [name]: ''
             }));
         }
+    };
+
+    const searchLocations = (query) => {
+        // Qui andrà la chiamata API per la ricerca delle località
+        const mockLocations = [
+            "Roma, Italia",
+            "Milano, Italia",
+            "Napoli, Italia",
+            "Torino, Italia",
+            "Firenze, Italia"
+        ].filter(loc => loc.toLowerCase().includes(query.toLowerCase()));
+
+        setLocationSuggestions(query ? mockLocations : []);
     };
 
     const selectLocation = (location) => {
@@ -104,12 +111,41 @@ function Register() {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (validateForm()) {
-            // Qui inserisci la logica per inviare i dati al backend
-            console.log('Form data:', formData);
+            setIsLoading(true);
+            try {
+                const response = await axios.post('http://localhost:8081/auth/register', {
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                    email: formData.email,
+                    password: formData.password,
+                    phone: formData.phone,
+                    username: formData.username,
+                    location: formData.location,
+                    bio: formData.bio
+                });
+
+                setAlert({
+                    type: 'success',
+                    message: 'Registrazione avvenuta con successo!'
+                });
+
+                // Reindirizza alla home dopo 2 secondi
+                setTimeout(() => {
+                    navigate('/');
+                }, 2000);
+
+            } catch (error) {
+                setAlert({
+                    type: 'danger',
+                    message: error.response?.data?.message || 'Errore durante la registrazione'
+                });
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -122,6 +158,13 @@ function Register() {
 
     return (
         <div className="register-container font-secondary">
+            {alert && (
+                <Alert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
+            )}
             <div className="register-card">
                 <div className="text-center mb-5">
                     <h2 className="font-primary mb-3">Registrazione</h2>
@@ -297,8 +340,19 @@ function Register() {
                         />
                     </div>
 
-                    <button type="submit" className="btn btn-success w-100">
-                        Registrati
+                    <button
+                        type="submit"
+                        className="btn btn-success w-100"
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Registrazione in corso...
+                            </>
+                        ) : (
+                            'Registrati'
+                        )}
                     </button>
                 </form>
             </div>
