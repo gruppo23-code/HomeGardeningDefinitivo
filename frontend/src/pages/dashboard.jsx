@@ -86,7 +86,7 @@ function Dashboard() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
 
         if (!formData.plantId) {
             setError("Seleziona una pianta dalla lista");
@@ -112,6 +112,8 @@ function Dashboard() {
             setError("Errore durante il salvataggio della pianta");
             console.error(err);
         }
+        console.log("Sas");
+        window.location.reload();
     };
 
     const handleDelete = async (plantId) => {
@@ -137,9 +139,9 @@ function Dashboard() {
     };
 
     const handleEditSubmit = async (e) => {
-        e.preventDefault();
+        //e.preventDefault();
         try {
-            await axios.post('http://localhost:8081/updateplant', editData);
+            await axios.post('http://localhost:8081/aggiornapianta', editData);
             setShowEditModal(false);
             await loadPlants();
             resetEditForm();
