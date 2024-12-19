@@ -242,6 +242,27 @@ app.post('/delete',verificaToken,(req, res) => {
         })
     })
 })
+
+app.post("/aggiornapianta",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query = "UPDATE piante_utenti SET nome_pianta = ? WHERE id = ?";
+        connessione.query(query, [req.body.nickname,req.body.id], (err, result) => {
+            if (err) {
+                console.error("Errore durante la query: ", err);
+            }
+        })
+    })
+})
 //Fine dashboard
 
 //Inizio gestione guide di coltivazione
@@ -595,10 +616,12 @@ app.get("/visualizzaprofilo", verificaToken, (req, res) => {
         }
         let id_utente = result[0].id;
         const query_utente = "SELECT CONCAT(nome, ' ', cognome) AS name, " +
-            "location, " +
+            "comuni.comune AS location, " +
             "CONCAT(MONTHNAME(DATE(data_registrazione)), ' ', YEAR(DATE(data_registrazione))) AS joinDate, " +
             "email, telefono AS phone, username, DATE_FORMAT(data_registrazione, '%d-%m-%Y') AS registrationDate " +
-            "FROM utenti WHERE id = ?";
+            "FROM utenti " +
+            "JOIN comuni ON utenti.location = comuni.istat " +
+            "WHERE id = ?";
         connessione.query(query_utente,id_utente,(err, result) => {
             let userInfo = result[0];
             const query_acquisti = "SELECT a.id, an.nome AS name,DATE_FORMAT(a.data, '%d-%m-%Y') AS date,CONCAT('€',an.prezzo) AS price FROM acquisti a " +
