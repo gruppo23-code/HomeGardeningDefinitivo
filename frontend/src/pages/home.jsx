@@ -3,6 +3,7 @@ import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind ,Droplets
 import './css/home.css';
 import axios from "axios";
 import Cookies from "js-cookie";
+import Logo from '../assets/img/Logo.jpg';
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -119,7 +120,7 @@ function Home() {
                         </div>
                         <div className="col-lg-6">
                             <img
-                                src="/placeholder.svg?height=400&width=600"
+                                src={Logo}
                                 alt="Giardinaggio"
                                 className="home-hero-image"
                             />
