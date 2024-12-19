@@ -8,6 +8,7 @@ import multer from 'multer';
 
 import 'dotenv/config'
 import axios from "axios";
+import { OpenAI } from 'openai';
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,10 @@ app.use(cors({
 }));
 app.use(cookieParser());
 const upload = multer();
+
+const openai = new OpenAI({
+    apiKey: process.env.GPT_KEY
+});
 
 const connessione = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -782,6 +787,55 @@ app.get('/api/weather', async (req, res) => {
 });
 
 //Fine gestione api meteo
+
+//Gestione chatbot
+
+app.post('/api/chat', async (req, res) => {
+    const { messages } = req.body;
+
+    if (!Array.isArray(messages) || messages.length === 0) {
+        return res.status(400).json({
+            error: 'Formato messaggi non valido',
+            details: 'È richiesto un array di messaggi non vuoto'
+        });
+    }
+
+    try {
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [
+                {
+                    role: "system",
+                    content: "Sei un assistente esperto di giardinaggio. Fornisci consigli utili e pratici sulla cura delle piante, la gestione del giardino e il giardinaggio in generale. Rispondi in maniera molto breve e coincisa."
+                },
+                ...messages
+            ],
+            temperature: 0.7,
+            max_tokens: 500
+        });
+
+        const botResponse = completion.choices[0].message.content;
+        res.json({ message: botResponse });
+
+    } catch (error) {
+        console.error('Errore OpenAI:', error);
+
+        if (error.error?.code === 'insufficient_quota') {
+            return res.status(429).json({
+                error: 'Servizio temporaneamente non disponibile',
+                details: 'Il servizio di chat è momentaneamente non disponibile. Riprova più tardi.',
+                technicalDetails: 'Quota API esaurita'
+            });
+        }
+
+        res.status(500).json({
+            error: 'Errore nella comunicazione con il servizio di chat',
+            details: 'Si è verificato un problema durante l\'elaborazione della richiesta'
+        });
+    }
+});
+
+//Fine gestione chatbot
 
 
 app.listen(process.env.LISTEN_PORT || 8081, () => {

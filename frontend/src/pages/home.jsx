@@ -25,7 +25,7 @@ function Home() {
                     longitude: latLong.data.longitudine,
                 },
             });
-            console.log(response.data.current);
+            //console.log(response.data.current);
             setWeather({
                 temperature: response.data.current.temperature_2m,
                 humidity: response.data.current.relative_humidity_2m,
@@ -42,6 +42,55 @@ function Home() {
     const isLoggedIn = () => {
         const token = Cookies.get('token');
         return !!token;
+    };
+
+
+// All'interno del componente Home, aggiungi questi nuovi stati
+    const [messages, setMessages] = useState([
+        {
+            role: 'assistant',
+            content: 'Ciao! Come posso aiutarti con il tuo giardino oggi?'
+        }
+    ]);
+    const [inputMessage, setInputMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+// Aggiungi questa funzione per gestire l'invio dei messaggi
+    const handleSendMessage = async () => {
+        if (!inputMessage.trim()) return;
+
+        const newMessage = {
+            role: 'user',
+            content: inputMessage
+        };
+
+        setMessages(prev => [...prev, newMessage]);
+        setInputMessage('');
+        setIsLoading(true);
+
+        try {
+            const response = await axios.post('http://localhost:8081/api/chat', {
+                messages: [...messages, newMessage]
+            });
+
+            const botResponse = {
+                role: 'assistant',
+                content: response.data.message
+            };
+
+            setMessages(prev => [...prev, botResponse]);
+        } catch (error) {
+            console.error('Errore durante l\'invio del messaggio:', error);
+
+            const errorMessage = {
+                role: 'assistant',
+                content: 'Mi dispiace, si è verificato un errore. Riprova più tardi.'
+            };
+
+            setMessages(prev => [...prev, errorMessage]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -185,17 +234,46 @@ function Home() {
                             </button>
                         </div>
                         <div className="home-chatbot-messages">
-                            <div className="home-message bot">
-                                Ciao! Come posso aiutarti con il tuo giardino oggi?
-                            </div>
+                            {messages.map((message, index) => (
+                                <div
+                                    key={index}
+                                    className={`home-message ${message.role === 'assistant' ? 'bot' : 'user'}`}
+                                >
+                                    {message.content}
+                                </div>
+                            ))}
+                            {isLoading && (
+                                <div className="home-message bot">
+                                    <div className="typing-indicator">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className="home-chatbot-input">
                             <input
                                 type="text"
                                 placeholder="Scrivi un messaggio..."
                                 className="form-control"
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter' && !e.shiftKey) {
+                                        e.preventDefault();
+                                        handleSendMessage();
+                                    }
+                                }}
+                                disabled={isLoading}
                             />
-                            <button className="btn btn-success">Invia</button>
+                            <button
+                                className="btn btn-success"
+                                onClick={handleSendMessage}
+                                disabled={isLoading}
+                            >
+                                Invia
+                            </button>
                         </div>
                     </div>
                 ) : (
