@@ -205,7 +205,7 @@ function Home() {
                             </div>
                             <div className="home-weather-stat">
                                 <Cloud size={20}/>
-                                <span>{weather.condition}</span>
+                                <span>{weather.condition}%</span>
                             </div>
                             <div className="home-weather-stat">
                                 <Droplets size={20} />
