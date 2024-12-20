@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Leaf, PencilLine, X } from 'lucide-react';
+import { Plus, Trash2, Leaf, PencilLine, X, Droplets } from 'lucide-react';
 import './css/dashboard.css';
 
 function Dashboard() {
@@ -86,8 +86,6 @@ function Dashboard() {
     };
 
     const handleSubmit = async (e) => {
-        //e.preventDefault();
-
         if (!formData.plantId) {
             setError("Seleziona una pianta dalla lista");
             return;
@@ -112,7 +110,6 @@ function Dashboard() {
             setError("Errore durante il salvataggio della pianta");
             console.error(err);
         }
-        console.log("Sas");
         window.location.reload();
     };
 
@@ -139,7 +136,6 @@ function Dashboard() {
     };
 
     const handleEditSubmit = async (e) => {
-        //e.preventDefault();
         try {
             await axios.post('http://localhost:8081/aggiornapianta', editData);
             setShowEditModal(false);
@@ -180,22 +176,26 @@ function Dashboard() {
 
     const handlePlantClick = async (plantId) => {
         try {
-            // Predisposizione per la chiamata al backend
-            // const response = await axios.get(`http://localhost:8081/plant/${plantId}`);
-            // Gestione della navigazione o apertura dettaglio
             console.log('Plant clicked:', plantId);
-
         } catch (error) {
             console.error('Errore nel caricamento dei dettagli della pianta:', error);
             setError("Errore nel caricamento dei dettagli della pianta");
         }
     };
 
+    const handleWater = async (plantId) => {
+        try {
+            console.log('Watering plant:', plantId);
+            // Here you can add the actual API call to water the plant
+        } catch (error) {
+            console.error('Errore durante l\'irrigazione della pianta:', error);
+            setError("Errore durante l'irrigazione della pianta");
+        }
+    };
 
     if (!Cookies.get('token')) {
         return null;
     }
-
 
     return (
         <div className="dashboard-container">
@@ -278,6 +278,13 @@ function Dashboard() {
                                             </div>
                                             <p className="card-text">{plant.description}</p>
                                             <div className="action-buttons">
+                                                <button
+                                                    className="btn btn-water d-flex align-items-center gap-2"
+                                                    onClick={() => handleWater(plant.id)}
+                                                >
+                                                    <Droplets size={18} />
+                                                    Irriga
+                                                </button>
                                                 <button
                                                     className="btn btn-delete d-flex align-items-center gap-2"
                                                     onClick={() => handleDelete(plant.id)}
