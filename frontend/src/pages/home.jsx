@@ -155,7 +155,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src="https://citynews-veneziatoday.stgy.ovh/~media/horizontal-low/56294647864321/turetta.jpeg"
                                         alt="Community"
                                     />
                                 </div>
