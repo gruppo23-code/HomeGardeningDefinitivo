@@ -179,10 +179,33 @@ app.get('/cards', verificaToken,(req, res) => {
         if (result.length === 0) {
             return res.status(404).send("Utente non trovato");
         }
-        const plants = "SELECT pu.id, p.nome AS name, pu.foto AS image, p.descrizione AS description, nome_pianta AS soprannome_pianta, p.id AS id_univoco_pianta FROM piante_utenti AS pu " +
-            "JOIN piante AS p ON pu.pianta_id = p.id " +
-            "WHERE utente_id = ?";
+        const plants = "SELECT " +
+            "pu.id, " +
+            "p.nome AS name, " +
+            "pu.foto AS image, " +
+            "p.descrizione AS description, " +
+            "p.nome AS soprannome_pianta, " +
+            "p.id AS id_univoco_pianta, " +
+            "CASE " +
+            "WHEN pi.data_irrigazione IS NOT NULL THEN DATE_FORMAT(pi.data_irrigazione, '%d-%m-%Y') " +
+            "ELSE NULL " +
+            "END AS data, " +
+            "CASE " +
+            "WHEN pi.data_irrigazione IS NOT NULL THEN CAST(pi.data_irrigazione AS TIME) " +
+            "ELSE NULL " +
+            "END AS ora_irrigazione " +
+            "FROM " +
+            "piante_utenti AS pu " +
+            "JOIN " +
+            "piante AS p ON pu.pianta_id = p.id " +
+            "LEFT JOIN " +
+            "(SELECT id_pianta, MAX(data_irrigazione) AS data_irrigazione " +
+            "FROM piante_irrigate " +
+            "GROUP BY id_pianta) AS pi ON pu.id = pi.id_pianta " +
+            "WHERE " +
+            "pu.utente_id = ?";
         connessione.query(plants,result[0].id ,(err, piante) => {
+            console.log(piante);
             res.json(piante);
         })
     })
@@ -287,6 +310,29 @@ app.post("/aggiornapianta",verificaToken,(req, res) => {
         })
     })
 })
+
+app.post("/irrigapianta",verificaToken,(req, res) => {
+    const mail = req.user.email;
+    const sql_id_utente = "SELECT id FROM utenti WHERE email = ?";
+    connessione.query(sql_id_utente,[mail] , (err, result) => {
+        if (err) {
+            console.error("Errore durante la query: ", err);
+            return res.status(500).send("Errore del server");
+        }
+        if (result.length === 0) {
+            return res.status(404).send("Utente non trovato");
+        }
+        let id_utente = result[0].id;
+        const query_irrigazione =  "INSERT INTO piante_irrigate (id_pianta) VALUES (?)"
+        connessione.query(query_irrigazione,req.body.id_pianta , (err, result) => {
+            if (err) {
+                console.error("Errore durante la registrazione dell'irrigazione: ",err)
+            }
+        })
+    })
+})
+
+
 //Fine dashboard
 
 //Inizio gestione guide di coltivazione

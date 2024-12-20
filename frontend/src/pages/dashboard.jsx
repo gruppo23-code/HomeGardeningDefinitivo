@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { Plus, Trash2, Leaf, PencilLine, X, Droplets } from 'lucide-react';
 import './css/dashboard.css';
+import {OverlayTrigger, Tooltip} from "react-bootstrap";
 
 function Dashboard() {
     const navigate = useNavigate();
@@ -185,12 +186,18 @@ function Dashboard() {
 
     const handleWater = async (plantId) => {
         try {
-            console.log('Watering plant:', plantId);
-            // Here you can add the actual API call to water the plant
+            axios.post('http://localhost:8081/irrigapianta', {id_pianta: plantId})
+                .then(response => {
+                    console.log("Registrazione avvenuta con successo!!!");
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         } catch (error) {
             console.error('Errore durante l\'irrigazione della pianta:', error);
             setError("Errore durante l'irrigazione della pianta");
         }
+        window.location.reload();
     };
 
     if (!Cookies.get('token')) {
@@ -278,18 +285,30 @@ function Dashboard() {
                                             </div>
                                             <p className="card-text">{plant.description}</p>
                                             <div className="action-buttons">
-                                                <button
-                                                    className="btn btn-water d-flex align-items-center gap-2"
-                                                    onClick={() => handleWater(plant.id)}
+
+                                                <OverlayTrigger
+                                                    placement="top"
+                                                    overlay={
+                                                        <Tooltip id={`tooltip-${plant.id}`}>
+                                                            {`Data e ora dell'ultima irrigazione: `}
+                                                            <br/>
+                                                            {`${plant.data || "Non ancora irrigata"}   ${plant.ora_irrigazione || ""}`}
+                                                        </Tooltip>
+                                                    }
                                                 >
-                                                    <Droplets size={18} />
-                                                    Irriga
-                                                </button>
+                                                    <button
+                                                        className="btn btn-water d-flex align-items-center gap-2"
+                                                        onClick={() => handleWater(plant.id)}
+                                                    >
+                                                        <Droplets size={18}/>
+                                                        Irriga
+                                                    </button>
+                                                </OverlayTrigger>
                                                 <button
                                                     className="btn btn-delete d-flex align-items-center gap-2"
                                                     onClick={() => handleDelete(plant.id)}
                                                 >
-                                                    <Trash2 size={18} />
+                                                    <Trash2 size={18}/>
                                                     Elimina
                                                 </button>
                                             </div>
