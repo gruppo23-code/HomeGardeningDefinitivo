@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
-import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind ,Droplets, Wind, MessageCircle, X } from 'lucide-react';
+import { Sun, Cloud, CloudDrizzle, CloudRain, Snowflake, CloudRainWind, Droplets, Wind, MessageCircle, X } from 'lucide-react';
 import './css/home.css';
 import axios from "axios";
 import Cookies from "js-cookie";
 import Logo from '../assets/img/Logo.svg';
+import Monitor from '../assets/img/Monitor.jpeg';
+import Community from '../assets/img/Community.jpeg';
+import Guide from '../assets/img/Guide.jpeg';
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -17,16 +20,13 @@ function Home() {
 
     const richiestaMeteo = async () => {
         try {
-            //Recupero latitudine e longitudine dell'utente
             const latLong = await axios.get("http://localhost:8081/latlong");
-            //console.log(latLong.data);
             const response = await axios.get('http://localhost:8081/api/weather', {
                 params: {
                     latitude: latLong.data.latitudine,
                     longitude: latLong.data.longitudine,
                 },
             });
-            //console.log(response.data.current);
             setWeather({
                 temperature: response.data.current.temperature_2m,
                 humidity: response.data.current.relative_humidity_2m,
@@ -45,8 +45,6 @@ function Home() {
         return !!token;
     };
 
-
-// All'interno del componente Home, aggiungi questi nuovi stati
     const [messages, setMessages] = useState([
         {
             role: 'assistant',
@@ -56,7 +54,6 @@ function Home() {
     const [inputMessage, setInputMessage] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-// Aggiungi questa funzione per gestire l'invio dei messaggi
     const handleSendMessage = async () => {
         if (!inputMessage.trim()) return;
 
@@ -99,7 +96,7 @@ function Home() {
             {/* Hero Section */}
             <section className="home-hero-section">
                 <div className="container">
-                    <div className="row align-items-center">
+                    <div className="row align-items-center justify-content-between">
                         <div className="col-lg-6">
                             <h1 className="home-hero-title">
                                 Coltiva il tuo giardino ideale con Home Gardening
@@ -109,16 +106,8 @@ function Home() {
                                 Monitora le tue piante, ricevi consigli personalizzati e condividi
                                 la tua esperienza verde.
                             </p>
-                            <div className="home-hero-buttons">
-                                <button className="btn btn-success btn-lg me-3">
-                                    Inizia Gratuitamente
-                                </button>
-                                <button className="btn btn-outline-success btn-lg">
-                                    Scopri di più
-                                </button>
-                            </div>
                         </div>
-                        <div className="col-lg-6">
+                        <div className="col-lg-6 d-flex justify-content-center">
                             <img
                                 src={Logo}
                                 alt="Giardinaggio"
@@ -140,7 +129,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src={Monitor}
                                         alt="Monitoraggio piante"
                                     />
                                 </div>
@@ -155,7 +144,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="https://citynews-veneziatoday.stgy.ovh/~media/horizontal-low/56294647864321/turetta.jpeg"
+                                        src={Community}
                                         alt="Community"
                                     />
                                 </div>
@@ -170,7 +159,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src={Guide}
                                         alt="Guida esperta"
                                     />
                                 </div>
