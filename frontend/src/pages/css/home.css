@@ -88,8 +88,8 @@
 }
 
 .home-feature-icon {
-    width: 250px;
-    height: 250px;
+    width:300px;
+    height: 300px;
     margin: 0 auto 1rem; /* Update: Adjusted margin */
 
     border-radius: 24px;

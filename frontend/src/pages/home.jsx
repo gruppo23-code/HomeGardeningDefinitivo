@@ -4,6 +4,9 @@ import './css/home.css';
 import axios from "axios";
 import Cookies from "js-cookie";
 import Logo from '../assets/img/Logo.svg';
+import Monitor from '../assets/img/Monitor.jpeg';
+import Community from '../assets/img/Community.jpeg';
+import Guide from '../assets/img/Guide.jpeg';
 
 function Home() {
     const [showChatbot, setShowChatbot] = useState(false);
@@ -140,7 +143,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src={Monitor}
                                         alt="Monitoraggio piante"
                                     />
                                 </div>
@@ -155,7 +158,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="https://citynews-veneziatoday.stgy.ovh/~media/horizontal-low/56294647864321/turetta.jpeg"
+                                        src={Community}
                                         alt="Community"
                                     />
                                 </div>
@@ -170,7 +173,7 @@ function Home() {
                             <div className="home-feature-card">
                                 <div className="home-feature-icon">
                                     <img
-                                        src="/placeholder.svg?height=80&width=80"
+                                        src={Guide}
                                         alt="Guida esperta"
                                     />
                                 </div>
