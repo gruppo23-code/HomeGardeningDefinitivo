@@ -25,7 +25,12 @@
     width: 100%;
     height: auto;
     border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
 
+.home-hero-image:hover {
+    transform: translateY(-5px);
 }
 
 .home-hero-buttons .btn {
@@ -37,47 +42,92 @@
 
 /* Features Section */
 .home-features-section {
-    padding: 5rem 0;
-    background-color: #fff;
+    padding: 3rem 0; /* Update: Reduced section padding */
 }
 
 .home-section-title {
     font-size: 2.5rem;
     font-weight: 700;
     color: #2E7D32;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem; /* Update: Reduced section title margin */
+    position: relative;
+    display: inline-block;
+}
+
+.home-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background-color: #4CAF50;
+    border-radius: 2px;
 }
 
 .home-feature-card {
     background: white;
     border-radius: 16px;
-    padding: 2rem;
+    padding: 1rem; /* Update: Reduced card padding */
     text-align: center;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(76, 175, 80, 0.1);
+    gap: 1rem; /* Update: Added gap between elements inside card */
 }
 
 .home-feature-card:hover {
     transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    border-color: rgba(76, 175, 80, 0.3);
 }
 
 .home-feature-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto 1rem; /* Update: Adjusted margin */
+
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
 }
+
+.home-feature-card:hover .home-feature-icon {
+    transform: scale(1.05);
+}
+
+.home-feature-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
 
 .home-feature-card h3 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #2E7D32;
     margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.home-feature-card:hover h3 {
+    color: #1B5E20;
 }
 
 .home-feature-card p {
     color: #4A5568;
     line-height: 1.6;
+    font-size: 1.1rem;
+    margin: 0;
 }
 
 /* Weather Widget */
@@ -229,10 +279,14 @@
     .home-hero-title {
         font-size: 2.5rem;
     }
-
+    .home-feature-icon {
+        width: 180px;
+        height: 180px;
+    }
     .home-weather-widget {
         display: none;
     }
+
 }
 
 @media (max-width: 768px) {
@@ -252,6 +306,24 @@
         width: 300px;
         height: 450px;
     }
+
+    .home-feature-card {
+        padding: 2rem;
+    }
+
+    .home-feature-icon {
+        width: 160px;
+        height: 160px;
+        margin-bottom: 1.5rem;
+    }
+
+    .home-feature-card h3 {
+        font-size: 1.25rem;
+    }
+
+    .home-feature-card p {
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -268,5 +340,14 @@
     .home-chatbot-trigger span {
         display: none;
     }
+
+    .home-feature-icon {
+        width: 140px;
+        height: 140px;
+    }
+}
+
+.row.g-4 { /* Update: Adjust row spacing */
+    --bs-gutter-y: 2rem;
 }
 
