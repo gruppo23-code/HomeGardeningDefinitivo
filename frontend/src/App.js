@@ -20,6 +20,8 @@ import Modal from "./Components/modal.jsx";
 import Navbar from "./Components/navbar.jsx";
 import Footer from "./Components/footer.jsx";
 
+import './assets/css_globale.css';
+
 // Componente OUTLET utilizzato nelle rotte "genitore" per visualizzare le rotte "figlio"
 const Comuni = () => {
     return (

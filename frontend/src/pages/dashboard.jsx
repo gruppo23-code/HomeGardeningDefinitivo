@@ -184,7 +184,7 @@ function Dashboard() {
             // const response = await axios.get(`http://localhost:8081/plant/${plantId}`);
             // Gestione della navigazione o apertura dettaglio
             console.log('Plant clicked:', plantId);
-            // In futuro potrai implementare qui la navigazione o l'apertura di un modale
+
         } catch (error) {
             console.error('Errore nel caricamento dei dettagli della pianta:', error);
             setError("Errore nel caricamento dei dettagli della pianta");
@@ -256,7 +256,7 @@ function Dashboard() {
                                             </span>
                                         </div>
                                         <div className="card-body">
-                                            <h5
+                                            <a
                                                 className="card-title"
                                                 onClick={() => handlePlantClick(plant.id)}
                                                 role="button"
@@ -266,9 +266,10 @@ function Dashboard() {
                                                         handlePlantClick(plant.id);
                                                     }
                                                 }}
+                                                href={`/guide?id=${plant.id_univoco_pianta}`}
                                             >
                                                 {plant.name}
-                                            </h5>
+                                            </a>
                                             <div className="nickname-wrapper">
                                                 <h6 className="card-subtitle">{plant.soprannome_pianta}</h6>
                                                 <button className="btn btn-icon" onClick={() => handleEdit(plant)}>
@@ -390,7 +391,7 @@ function Dashboard() {
 
                                             <div className="form-group">
                                                 <label className="form-label" htmlFor="nickname">
-                                                    Il tuo soprannome
+                                                    Nickname pianta
                                                 </label>
                                                 <input
                                                     type="text"
