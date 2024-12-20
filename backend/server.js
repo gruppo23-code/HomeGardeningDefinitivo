@@ -184,7 +184,7 @@ app.get('/cards', verificaToken,(req, res) => {
             "p.nome AS name, " +
             "pu.foto AS image, " +
             "p.descrizione AS description, " +
-            "p.nome AS soprannome_pianta, " +
+            "pu.nome_pianta AS soprannome_pianta, " +
             "p.id AS id_univoco_pianta, " +
             "CASE " +
             "WHEN pi.data_irrigazione IS NOT NULL THEN DATE_FORMAT(pi.data_irrigazione, '%d-%m-%Y') " +
