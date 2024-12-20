@@ -3,14 +3,23 @@
     --font-secondary: 'Roboto', sans-serif;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+body {
+    position: relative;
+}
+
 .register-container {
     min-height: 100vh;
     padding: 2rem;
     background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-primary);
+    position: relative; /* Aggiunto */
+    overflow-y: auto;
 }
 
 .register-card {

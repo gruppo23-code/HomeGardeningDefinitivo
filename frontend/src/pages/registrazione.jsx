@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { Eye, EyeOff, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -28,19 +28,41 @@ function Register() {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [alert, setAlert] = useState(null);
+    const [comuni, setComuni] = useState([]);
+
+    useEffect(() => {
+        const fetchComuni = async () => {
+            try {
+                const res = await axios.get("http://localhost:8081/getcomuni");
+                setComuni(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        fetchComuni();
+    }, []);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        document.body.style.overflow = 'auto';
+    }, []);
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-
         if (name === 'location') {
+            setFormData(prev => ({
+                ...prev,
+                locationName: value,
+                location: '' // Resetta l'ISTAT quando l'utente digita
+            }));
             searchLocations(value);
+        } else {
+            setFormData(prev => ({
+                ...prev,
+                [name]: value
+            }));
         }
 
-        // Pulisce l'errore quando l'utente inizia a digitare
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -50,22 +72,16 @@ function Register() {
     };
 
     const searchLocations = (query) => {
-        // Qui andrà la chiamata API per la ricerca delle località
-        const mockLocations = [
-            "Roma, Italia",
-            "Milano, Italia",
-            "Napoli, Italia",
-            "Torino, Italia",
-            "Firenze, Italia"
-        ].filter(loc => loc.toLowerCase().includes(query.toLowerCase()));
-
-        setLocationSuggestions(query ? mockLocations : []);
+        const filteredLocations = comuni
+            .filter(loc => loc.comune.toLowerCase().includes(query.toLowerCase()));
+        setLocationSuggestions(query ? filteredLocations : []);
     };
 
     const selectLocation = (location) => {
         setFormData(prev => ({
             ...prev,
-            location
+            location: location.istat.toString(), // Salva l'ISTAT
+            locationName: location.comune // Mostra il nome del comune
         }));
         setLocationSuggestions([]);
     };
@@ -117,7 +133,7 @@ function Register() {
         if (validateForm()) {
             setIsLoading(true);
             try {
-                const response = await axios.post('http://localhost:8081/auth/register', {
+                const response = await axios.post('http://localhost:8081/registrazione', {
                     firstName: formData.firstName,
                     lastName: formData.lastName,
                     email: formData.email,
@@ -133,8 +149,8 @@ function Register() {
                     message: 'Registrazione avvenuta con successo!'
                 });
 
-                // Reindirizza alla home dopo 2 secondi
                 setTimeout(() => {
+                    setIsLoading(false);
                     navigate('/');
                 }, 2000);
 
@@ -143,7 +159,6 @@ function Register() {
                     type: 'danger',
                     message: error.response?.data?.message || 'Errore durante la registrazione'
                 });
-            } finally {
                 setIsLoading(false);
             }
         }
@@ -237,7 +252,7 @@ function Register() {
                                 className="btn btn-outline-secondary"
                                 onClick={() => togglePasswordVisibility('password')}
                             >
-                                {showPassword.password ? <EyeOff size={20} /> : <Eye size={20} />}
+                                {showPassword.password ? <EyeOff size={20}/> : <Eye size={20}/>}
                             </button>
                             {errors.password && <div className="invalid-feedback">{errors.password}</div>}
                         </div>
@@ -260,7 +275,7 @@ function Register() {
                                 className="btn btn-outline-secondary"
                                 onClick={() => togglePasswordVisibility('confirmPassword')}
                             >
-                                {showPassword.confirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                {showPassword.confirmPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
                             </button>
                             {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
                         </div>
@@ -296,15 +311,15 @@ function Register() {
                         <label htmlFor="location" className="form-label">Località *</label>
                         <div className="location-search-container">
                             <div className="input-group">
-                                <span className="input-group-text">
-                                    <Search size={20} />
-                                </span>
+                    <span className="input-group-text">
+                        <Search size={20}/>
+                    </span>
                                 <input
                                     type="text"
                                     className={`form-control ${errors.location ? 'is-invalid' : ''}`}
                                     id="location"
                                     name="location"
-                                    value={formData.location}
+                                    value={formData.locationName} // Usa locationName invece di location
                                     onChange={handleInputChange}
                                     placeholder="Cerca la tua città..."
                                     required
@@ -313,13 +328,13 @@ function Register() {
                             </div>
                             {locationSuggestions.length > 0 && (
                                 <ul className="location-suggestions">
-                                    {locationSuggestions.map((location, index) => (
+                                    {locationSuggestions.map((location) => (
                                         <li
-                                            key={index}
+                                            key={location.istat}
                                             onClick={() => selectLocation(location)}
                                             className="location-suggestion-item"
                                         >
-                                            {location}
+                                            {location.comune}
                                         </li>
                                     ))}
                                 </ul>
@@ -347,7 +362,8 @@ function Register() {
                     >
                         {isLoading ? (
                             <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm me-2" role="status"
+                                      aria-hidden="true"></span>
                                 Registrazione in corso...
                             </>
                         ) : (

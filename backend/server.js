@@ -1,4 +1,4 @@
-import express from 'express';
+import express, {query} from 'express';
 import mysql from 'mysql2';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
@@ -65,7 +65,7 @@ app.get('/verifica-token', verificaToken, (req, res) => {
 
 //Funzione per la registrazione
 app.post('/registrazione', (req, res) => {
-    const sql = 'INSERT INTO  utenti (nome,cognome,email,password) VALUES (?)';
+    const sql = 'INSERT INTO  utenti (nome,cognome,email,telefono,username,password,bio,location) VALUES (?)';
 
     const saltRounds = 10; // Maggiore è il numero, più sicuro sarà l'hashing, ma richiederà più tempo
     //Commentato per utilizzo di variabili d'ambiente
@@ -74,11 +74,17 @@ app.post('/registrazione', (req, res) => {
         if (err) {
             console.error("Errore durante l'hashing della password: ", err);
         }
+        console.log(req.body);
+        const n_telefono = "+39 " + req.body.phone;
         const values = [
-            req.body.nome,
-            req.body.cognome,
+            req.body.firstName,
+            req.body.lastName,
             req.body.email,
+            n_telefono,
+            req.body.username,
             hash,
+            req.body.bio,
+            req.body.location,
         ]
         connessione.query(sql, [values], (err, result) => {
             //console.log(result);
@@ -95,6 +101,19 @@ app.post('/registrazione', (req, res) => {
         })
     })
 })
+
+app.get("/getcomuni", (req, res) => {
+    const query = "SELECT istat, comune FROM comuni";
+    connessione.query(query, (err, result) => {
+        if (err) {
+            console.error("Errore durante il recupero della lista dei comuni italiani: ",err);
+        }
+        console.log(result);
+        res.send(result);
+    })
+})
+
+//Fine funzioni per register
 
 //Funzione per il login
 app.post('/login', (req, res) => {
